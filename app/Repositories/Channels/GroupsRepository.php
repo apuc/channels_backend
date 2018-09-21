@@ -72,4 +72,24 @@ class GroupsRepository
 
         throw new \DomainException('Error deleting group');
     }
+
+    /**
+     * @param int $id
+     * @return Group|null
+     */
+    public function findById(int $id) :?Group
+    {
+        return $this->model::findOrFail($id);
+    }
+
+    /**
+     * @param $id
+     * @return Group|null
+     */
+    public function findOneWithTrashed($id) :?Group
+    {
+        return $this->model::where($this->model->getRouteKeyName(), $id)
+            ->withTrashed()
+            ->first();
+    }
 }

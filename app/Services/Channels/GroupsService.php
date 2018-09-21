@@ -53,10 +53,11 @@ class GroupsService
     /**
      * Method for destroy group
      *
-     * @param GroupRequest $request
+     * @param Group $group
+     * @return bool
      */
-    public function destroy(GroupRequest $request)
+    public function destroy(Group $group)
     {
-
+        return $this->repository->destroy($group);
     }
 }
