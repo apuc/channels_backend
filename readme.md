@@ -5,5 +5,6 @@
 3. Скопировать содержимое файла ```.env.example``` в ```.env```
 4. Прописать свои локальные настройки в ```.env```
 5. Выполнить команды:
+   * ```php artisan key:generate```
    * ```php artisan migrate```
    * ```php artisan db:seed```
