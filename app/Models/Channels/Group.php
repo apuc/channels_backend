@@ -23,6 +23,8 @@ class Group extends Model
 
     protected $table = 'channels_group';
 
+    public $primaryKey = 'channels_group_id';
+
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
@@ -33,11 +35,6 @@ class Group extends Model
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at'
     ];
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 
     public static function getStatuses()
     {
