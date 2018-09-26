@@ -17,10 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['as' => 'api.v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
+Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
-        Route::resource('group', 'Channels\GroupsController');
-        /*Route::middleware('auth:api')->group(function () {
+//        Route::resource('group', 'Channels\GroupsController');
+        Route::middleware('auth:api')->group(function () {
             Route::resource('group', 'Channels\GroupsController');
-        });*/
+        });
     });

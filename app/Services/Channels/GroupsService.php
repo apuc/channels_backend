@@ -35,7 +35,13 @@ class GroupsService
      */
     public function create(GroupRequest $request): Group
     {
-        return $this->repository->create($request);
+        return \DB::transaction(function () use ($request) {
+            $group = $this->repository->create($request);
+
+            $group->users()->sync($request->get('user_ids'));
+
+            return $group;
+        });
     }
 
     /**
