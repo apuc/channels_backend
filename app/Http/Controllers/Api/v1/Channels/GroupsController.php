@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Channels;
+namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Http\Resources\v1\GroupsResource;
 use App\Models\Channels\Group;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\GroupsRepository;
@@ -34,7 +35,7 @@ class GroupsController extends Controller
     {
         $groups = Group::withTrashed()->paginate(10);
 
-        return view('admin.groups.index', compact('groups'));
+        return GroupsResource::collection($groups);
     }
 
     /**
