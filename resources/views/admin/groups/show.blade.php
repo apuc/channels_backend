@@ -19,6 +19,11 @@
             <th>Email</th>
             <td>{{ $group->slug }}</td>
         </tr>
+
+        <tr>
+            <th>Users</th>
+            <td>{{ $group->users()->pluck('email')->implode(', ') }}</td>
+        </tr>
         </tbody>
     </table>
 

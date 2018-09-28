@@ -27,14 +27,18 @@ class GroupRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|min:3',
             'slug' => 'required|string|max:255|min:3',
-            'status' => 'required|in:' . implode(',', Group::getStatuses())
+            'status' => 'required|in:' . implode(',', Group::getStatuses()),
+            'user_ids' => 'array|required',
+            'user_ids.*' => 'exists:users,user_id'
         ];
     }
 
     public function messages()
     {
         return [
-            '*.required' => 'Это поле обязательно'
+            '*.required' => 'Это поле обязательно',
+            'user_ids.array' => 'Должен быть массив',
+            'user_ids.*.exists' => 'Запись не найдена'
         ];
     }
 }

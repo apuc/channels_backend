@@ -2,10 +2,12 @@
 
 namespace App;
 
+use App\Models\Channels\Group;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * App\User
@@ -31,7 +33,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -55,9 +57,21 @@ class User extends Authenticatable
 
     ];
 
+    public $primaryKey = 'user_id';
+
 
     public function getDate()
     {
         $date = Carbon::now();
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'channels_group_users',
+            'user_id',
+            'channels_group_id'
+        );
     }
 }

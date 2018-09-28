@@ -2,6 +2,7 @@
 
 namespace App\Models\Channels;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -42,5 +43,15 @@ class Group extends Model
             'active' => self::STATUS_ACTIVE,
             'disable' => self::STATUS_DISABLE
         ];
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'channels_group_users',
+            'channels_group_id',
+            'user_id'
+        );
     }
 }
