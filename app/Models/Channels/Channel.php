@@ -5,6 +5,17 @@ namespace App\Models\Channels;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Channel
+ * @package App\Models\Channels
+ * @property string $title
+ * @property string $slug
+ * @property string $status
+ * @property boolean $private
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Channel extends Model
 {
     use SoftDeletes;
@@ -41,5 +52,10 @@ class Channel extends Model
             'chat' => self::TYPE_CHAT,
             'wall' => self::TYPE_WALL
         ];
+    }
+
+    public function isPrivate()
+    {
+        return $this->private;
     }
 }
