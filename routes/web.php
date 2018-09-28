@@ -20,3 +20,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('group', 'Admin\Channels\GroupsController');
+
+Route::resource('channel', 'Admin\Channels\ChannelController');
