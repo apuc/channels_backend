@@ -38,7 +38,13 @@ class ChannelService
      */
     public function create(ChannelRequest $request): Channel
     {
-        return $this->repository->create($request);
+        return \DB::transaction(function () use ($request) {
+            $channel = $this->repository->create($request);
+
+            $channel->users()->sync($request->get('user_ids'));
+
+            return $channel;
+        });
     }
 
     /**
