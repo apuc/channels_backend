@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <a href="{{ route('group.create') }}" class="btn btn-success">Create channel</a>
+    <a href="{{ route('channel.create') }}" class="btn btn-success">Create channel</a>
     
     <div class="row">
         <table class="table">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Channels;
 
+use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
@@ -63,6 +64,34 @@ class ChannelController extends Controller
 
             return redirect(route('channel.index'))
                 ->with(['success' => 'Канал успешно удален']);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.channel.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  ChannelRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ChannelRequest $request)
+    {
+        try {
+            $channel = $this->channelService->create($request);
+
+            return redirect(route('channel.show', $channel))
+                ->with(['success' => 'Успешно создано']);
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
