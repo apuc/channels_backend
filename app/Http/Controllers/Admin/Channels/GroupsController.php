@@ -33,8 +33,8 @@ class GroupsController extends Controller
     public function index()
     {
         /*$groups = Group::withTrashed()->paginate(10);*/
-        \Auth::user()->groups()
-            ->attach(Group::where('channels_group_id', '<', 10)->pluck('channels_group_id'));
+//        \Auth::user()->groups()
+//            ->attach(Group::where('channels_group_id', '<', 10)->pluck('channels_group_id'));
 
         $groups = \Auth::user()->groups()->paginate();
         return view('admin.groups.index', compact('groups'));

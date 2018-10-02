@@ -62,7 +62,7 @@ class ChannelController extends Controller
             $this->channelService->destroy($channel);
 
             return redirect(route('channel.index'))
-                ->with(['success' => 'Канал успешно добавлен']);
+                ->with(['success' => 'Канал успешно удален']);
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
