@@ -49,4 +49,22 @@ class ChannelController extends Controller
 
         return view('admin.channel.show', compact('channel'));
     }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $channel = $this->channelRepository->findOneWithTrashed($id);
+            $this->channelService->destroy($channel);
+
+            return redirect(route('channel.index'))
+                ->with(['success' => 'Канал успешно добавлен']);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+    }
 }
