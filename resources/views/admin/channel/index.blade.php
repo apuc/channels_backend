@@ -36,7 +36,7 @@
                     <td>
                         @if ($channel->deleted_at === null)
 
-                        <form action="{{ route('group.destroy', $channel) }}" method="post">
+                        <form action="{{ route('channel.destroy', $channel) }}" method="post">
                             @csrf
                             @method('DELETE')
 
