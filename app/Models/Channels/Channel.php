@@ -2,6 +2,7 @@
 
 namespace App\Models\Channels;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -57,5 +58,15 @@ class Channel extends Model
     public function isPrivate()
     {
         return $this->private;
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'channel_users',
+            'channel_id',
+            'user_id'
+        );
     }
 }

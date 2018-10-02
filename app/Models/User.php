@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
@@ -68,10 +69,21 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->belongsToMany(
-            Group::class,
+            Channel::class,
             'channels_group_users',
             'user_id',
             'channels_group_id'
         );
     }
+
+    public function channels()
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'channel_users',
+            'user_id',
+            'channel_id'
+        );
+    }
+
 }
