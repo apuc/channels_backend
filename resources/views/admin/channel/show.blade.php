@@ -1,6 +1,6 @@
 <?php /**@var \App\Models\Channels\Channel $channel */ ?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
 
 @section('content')

@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
-use App\User;
+use App\Models\User;
 
 /**
  * Created by PhpStorm.

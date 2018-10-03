@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 
 @section('content')
@@ -29,7 +29,7 @@
 
             <select name="user_ids[]" id="users" multiple>
                 <option></option>
-                @foreach(\App\User::where([['user_id', '<', 10], ['user_id', '<>', Auth::id()]])->get() as $user)
+                @foreach(\App\Models\User::where([['user_id', '<', 10], ['user_id', '<>', Auth::id()]])->get() as $user)
 
                     <option value="{{ $user->user_id }}">{{ $user->email }}</option>
 
