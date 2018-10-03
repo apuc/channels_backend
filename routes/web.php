@@ -11,12 +11,21 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::domain(getenv('ADMIN_URL'))->group(function () {
+    Route::group(['middleware' => 'auth'], function (){
+        Route::get('/', function () {
+            return view('welcome');
+        });
+
+        Route::get('/home', 'HomeController@index')->name('home');
+
+        Route::resource('group', 'Admin\Channels\GroupsController');
+
+        Route::resource('channel', 'Admin\Channels\ChannelController');
+    });
+
+    Auth::routes();
+
 });
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::resource('group', 'Admin\Channels\GroupsController');

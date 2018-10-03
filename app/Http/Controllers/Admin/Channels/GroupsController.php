@@ -4,18 +4,25 @@ namespace App\Http\Controllers\Admin\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
 use App\Models\Channels\Group;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\Channels\GroupsRepository;
 use App\Services\Channels\GroupsService;
 
 class GroupsController extends Controller
 {
-
+    /**
+     * @var GroupsService
+     */
     protected $groupsService;
+    /**
+     * @var GroupsRepository
+     */
+    protected $groupRepository;
 
-    public function __construct(GroupsService $service)
+    public function __construct(GroupsService $service, GroupsRepository $groupsRepository)
     {
-        $this->groupsService = $service;
+        $this->groupsService   = $service;
+        $this->groupRepository = $groupsRepository;
     }
 
     /**
@@ -26,7 +33,9 @@ class GroupsController extends Controller
     public function index()
     {
         $groups = Group::withTrashed()->paginate(10);
+//
 
+        //$groups = \Auth::user()->groups()->paginate();
         return view('admin.groups.index', compact('groups'));
     }
 
@@ -49,7 +58,6 @@ class GroupsController extends Controller
     public function store(GroupRequest $request)
     {
         try {
-
             $group = $this->groupsService->create($request);
 
             return redirect(route('group.show', $group))
@@ -62,45 +70,64 @@ class GroupsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Group $group
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $group)
+    public function show($id)
     {
-        //
+        $group = $this->groupRepository->findOneWithTrashed($id);
+
+        return view('admin.groups.show', compact('group'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param   $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $group = $this->groupRepository->findOneWithTrashed($id);
+
+        return view('admin.groups.edit', compact('group'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  GroupRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GroupRequest $request, $id)
     {
-        //
+        try {
+            $group = $this->groupRepository->findOneWithTrashed($id);
+            $group = $this->groupsService->update($request, $group);
+
+            return redirect(route('group.show', $group))
+                ->with(['success' => 'Успешно создано']);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        try {
+            $group = $this->groupRepository->findOneWithTrashed($id);
+            $this->groupsService->destroy($group);
+
+            return redirect(route('group.index'))
+                ->with(['success' => 'Группа успешно удалена']);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
     }
 }

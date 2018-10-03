@@ -14,6 +14,8 @@
                 <th scope="col">title</th>
                 <th scope="col">slug</th>
                 <th scope="col">status</th>
+                <th scope="col">is_deleted</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -24,6 +26,27 @@
                     <td><a href="{{ route('group.show', $group) }}">{{ $group->title }}</a></td>
                     <td>{{ $group->slug }}</td>
                     <td>{{ $group->status }}</td>
+                    <td>
+                        @if($group->deleted_at === null)
+                            No
+                        @else
+                            Yes
+                        @endif
+                    </td>
+                    <td>
+                        @if ($group->deleted_at === null)
+
+                        <form action="{{ route('group.destroy', $group) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                        @endif
+
+                        <a href="{{ route('group.edit', $group) }}" class="btn btn-info">Edit</a>
+                    </td>
                 </tr>
             @endforeach
 

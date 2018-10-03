@@ -2,6 +2,7 @@
 
 namespace App\Models\Channels;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,6 +24,8 @@ class Group extends Model
 
     protected $table = 'channels_group';
 
+    public $primaryKey = 'channels_group_id';
+
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
@@ -34,16 +37,21 @@ class Group extends Model
         'created_at', 'updated_at', 'deleted_at'
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
-
     public static function getStatuses()
     {
         return [
             'active' => self::STATUS_ACTIVE,
             'disable' => self::STATUS_DISABLE
         ];
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'channels_group_users',
+            'channels_group_id',
+            'user_id'
+        );
     }
 }
