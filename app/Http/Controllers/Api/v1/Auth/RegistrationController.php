@@ -6,6 +6,7 @@ use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
 use App\Services\Auth\RegisterService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
 {
@@ -21,7 +22,7 @@ class RegistrationController extends Controller
         try{
             $this->registerService->register($request);
 
-            return response(201);
+            return response()->json(['msg' => 'success'], 201);
         }
         catch (\Throwable $e){
             abort(500);

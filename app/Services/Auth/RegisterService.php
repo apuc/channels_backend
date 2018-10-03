@@ -33,6 +33,7 @@ class RegisterService
     public function register(RegistrationRequest $request)
     {
         $request->password = bcrypt($request->password);
+        $request->login = $request->email;
         return $this->repository->register($request);
     }
 
