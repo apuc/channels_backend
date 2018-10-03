@@ -9,4 +9,4 @@
    * ```php artisan migrate```
    * ```php artisan db:seed```
    
-[API Докуметнация](doc/main.md)
+[API Докуметнация](doc/v1/main.md)
