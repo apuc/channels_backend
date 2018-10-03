@@ -6,7 +6,7 @@
 use App\Models\Channels\Group;
 ?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
 
 @section('content')

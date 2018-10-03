@@ -1,12 +1,14 @@
 <?php /**@var \App\Models\Channels\Group[] $groups*/?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', __('Groups'))
 
 @section('content')
-
-    <a href="{{ route('group.create') }}" class="btn btn-success">Create group</a>
+    <div class="row mr-3 ml-3">
+    <a href="{{ route('group.create') }}" class="btn btn-success mt-2 mb-2">Create group</a>
     
-    <div class="row">
+
         <table class="table">
             <thead>
             <tr>
@@ -53,7 +55,9 @@
 
             </tbody>
         </table>
+    </div>
 
+    <div class="row justify-content-center">
         {{ $groups->links() }}
     </div>
 

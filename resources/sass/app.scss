@@ -6,7 +6,12 @@
 @import 'variables';
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/bootstrap';
+
+//Admin-Lte
+@import '~admin-lte/dist/css/adminlte.css';
+
+@import "~font-awesome/css/font-awesome";
 
 .navbar-laravel {
   background-color: #fff;

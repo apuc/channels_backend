@@ -1,7 +1,8 @@
 <?php /**@var \App\Models\Channels\Group $group */ ?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
+@section('title', __('Group') . ': ' . $group->title )
 
 @section('content')
 
