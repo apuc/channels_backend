@@ -61,7 +61,7 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->belongsToMany(
-            Channel::class,
+            Group::class,
             'channels_group_users',
             'user_id',
             'channels_group_id'
@@ -74,7 +74,7 @@ class User extends Authenticatable
     public function channels()
     {
         return $this->belongsToMany(
-            Group::class,
+            Channel::class,
             'channel_users',
             'user_id',
             'channel_id'

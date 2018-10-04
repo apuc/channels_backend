@@ -15,6 +15,7 @@ class GroupsResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'group_id' => $this->channels_group_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status

@@ -29,11 +29,11 @@ class GroupsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $groups = Group::withTrashed()->paginate(10);
+        $groups = \Auth::user()->groups;
 
         return GroupsResource::collection($groups);
     }

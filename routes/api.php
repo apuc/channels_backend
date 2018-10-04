@@ -22,7 +22,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
         });
 
         Route::middleware('auth:api')->group(function () {
-            Route::resource('group', 'Channels\GroupsController');
+            Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
         });
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
