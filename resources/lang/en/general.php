@@ -16,5 +16,8 @@ return [
     'users' => 'Users',
     'type' => 'Type',
     'private' => 'Private',
-    'enter' => 'Enter'
+    'enter' => 'Enter',
+    'choose_your_language' => 'Choose your language',
+    'dashboard' => 'Dashboard',
+    'more_info' => 'More info'
 ];

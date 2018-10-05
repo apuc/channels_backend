@@ -12,16 +12,14 @@
 */
 
 Route::group(['middleware' => 'auth'], function (){
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/', 'Admin\DashboardController@index')->name('dashboard');
 
     Route::resource('group', 'Admin\Channels\GroupsController');
 
     Route::resource('channel', 'Admin\Channels\ChannelController');
 });
+// Route for changing language...
+Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
 
 Auth::routes();
 

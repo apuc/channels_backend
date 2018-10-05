@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group">
-            <label for="status">Type</label>
+            <label for="status">@lang('general.type')</label>
             <select class="form-control" id="type" name="type">
                 <option></option>
                 <option value="{{ \App\Models\Channels\Channel::TYPE_CHAT }}">Chat</option>
@@ -57,7 +57,7 @@
         </div>
 
         <div class="form-group">
-            <label for="status">Private</label>
+            <label for="status">@lang('general.private')</label>
             <select class="form-control" id="private" name="private">
                 <option></option>
                 <option value="0">No</option>
@@ -70,7 +70,7 @@
         </div>
 
         <div class="form-group">
-            <label for="status">Status</label>
+            <label for="status">@lang('general.status')</label>
             <select class="form-control" id="status" name="status">
                 <option></option>
                 <option value="{{ \App\Models\Channels\Channel::STATUS_ACTIVE }}">Active</option>

@@ -16,14 +16,14 @@
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+    <nav class="main-header navbar navbar-expand border-bottom navbar-dark bg-info">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="index3.html" class="nav-link">Home</a>
+                <a href="{{route('dashboard')}}" class="nav-link">@lang('general.dashboard')</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Contact</a>
@@ -146,13 +146,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">Dashboard v2</h1>
+                        <h1 class="m-0 text-dark">@yield('h1', trans('general.dashboard'))</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Dashboard v2</li>
-                        </ol>
+
+                        @section('breadcrumbs', Breadcrumbs::render())
+                        @yield('breadcrumbs')
+
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -177,12 +177,21 @@
 
     <!-- Main Footer -->
     <footer class="main-footer">
-        <!-- To the right -->
-        <div class="float-right d-sm-none d-md-block">
-            Anything you want
+
+        <div class="container-fluid">
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2014-2018 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            <p class="text-muted text-center">
+                @lang('general.choose_your_language'):
+                <a href="{{ url('/setting/change-language/en') }}">
+                    <img width="50" class="footer-img" src="{{ asset('img/united-kingdom.png') }}">
+                </a>
+                <a href="{{ url('/setting/change-language/ru') }}">
+                    <img width="50" class="footer-img" src="{{ asset('img/russia.png') }}">
+                </a>
+            </p>
         </div>
-        <!-- Default to the left -->
-        <strong>Copyright &copy; 2014-2018 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+
     </footer>
 </div>
 <!-- ./wrapper -->
