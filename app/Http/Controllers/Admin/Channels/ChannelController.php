@@ -98,9 +98,4 @@ class ChannelController extends Controller
         }
     }
 
-    public function testimg()
-    {
-        //phpinfo();
-        return Image::make(storage_path('app/public/img/itka.jpg' ))->fit(200, 200)->response();
-    }
 }
