@@ -2,8 +2,8 @@
 
 @extends('layouts.admin')
 
-@section('title', __('general.channels'))
-
+@section('title', trans('general.channels'))
+@section('h1', trans('general.channels'))
 @section('content')
     <div class="row ml-3 mr-3">
     <a href="{{ route('channel.create') }}" class="btn btn-success mt-2 mb-2">@lang('general.create_channel')</a>
@@ -47,7 +47,7 @@
 
                         @endif
 
-                        <a href="{{ route('group.edit', $channel) }}" class="btn btn-info">@lang('general.edit')</a>
+                        {{--<a href="{{ route('group.edit', $channel) }}" class="btn btn-info">@lang('general.edit')</a>--}}
                     </td>
                 </tr>
             @endforeach
