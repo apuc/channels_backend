@@ -29,6 +29,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
         });
 
+        Route::middleware('auth:api')->group(function () {
+            Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel avatar');
+        });
+
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
     });

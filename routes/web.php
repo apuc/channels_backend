@@ -14,6 +14,8 @@
 Route::group(['middleware' => 'auth'], function (){
     Route::get('/', 'Admin\DashboardController@index')->name('dashboard');
 
+    Route::get('/testimg', 'Admin\Channels\ChannelController@testimg')->name('testimg');
+
     Route::resource('group', 'Admin\Channels\GroupsController');
 
     Route::resource('channel', 'Admin\Channels\ChannelController');
