@@ -8,6 +8,7 @@ use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Image;
 
 class ChannelController extends Controller
 {
@@ -22,7 +23,7 @@ class ChannelController extends Controller
 
     public function __construct(ChannelService $service, ChannelRepository $channelRepository)
     {
-        $this->channelService   = $service;
+        $this->channelService = $service;
         $this->channelRepository = $channelRepository;
     }
 
@@ -95,5 +96,11 @@ class ChannelController extends Controller
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function testimg()
+    {
+        //phpinfo();
+        return Image::make(storage_path('app/public/img/itka.jpg' ))->fit(200, 200)->response();
     }
 }
