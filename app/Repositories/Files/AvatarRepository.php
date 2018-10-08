@@ -37,7 +37,7 @@ class AvatarRepository
     public function create(AvatarRequest $request) :Avatar
     {
         return $this->model::create([
-            'original' => $request->original,
+            'original' => $request->origin,
             'average' => $request->average,
             'small' => $request->small,
             'status' => $request->status
@@ -54,7 +54,7 @@ class AvatarRepository
     public function update(AvatarRequest $request, Avatar $avatar)
     {
         $result = $avatar->update([
-            'original' => $request->original,
+            'original' => $request->origin,
             'average' => $request->average,
             'small' => $request->small,
             'status' => $request->status

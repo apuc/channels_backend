@@ -39,7 +39,7 @@ class AvatarService
         $ext = $file->getClientOriginalExtension();
 
         $request = $this->createRequest([
-            'original' => $folder . $hash . '.' . $ext,
+            'origin' => $folder . $hash . '.' . $ext,
             'average' => $folder . $hash . '_' . Avatar::SIZE_AVERAGE . '.' . $ext,
             'small' => $folder . $hash . '_' . Avatar::SIZE_SMALL . '.' . $ext,
             'status' => Avatar::STATUS_ACTIVE,
@@ -67,7 +67,7 @@ class AvatarService
     public function createRequest($data)
     {
         $request = new AvatarRequest();
-        $request->original = $data['original'];
+        $request->origin = $data['origin'];
         $request->average = $data['average'];
         $request->small = $data['small'];
         $request->status = $data['status'];

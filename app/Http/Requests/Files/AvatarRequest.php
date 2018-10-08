@@ -15,7 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class AvatarRequest
  * @package App\Http\Requests\Files
- * @property string $original
+ * @property string $origin
  * @property string $average
  * @property string $small
  * @property string $status
