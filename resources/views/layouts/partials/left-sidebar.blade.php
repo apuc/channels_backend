@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="{{ route('dashboard') }}" class="brand-link bg-info">
         <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
     </a>
 
@@ -20,19 +20,19 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('group.index') }}" class="nav-link">
+                    <a href="{{ route('group.index') }}" class="nav-link {{ Request::is('group', 'group/*', 'group/create') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-th"></i>
                         <p>
-                            @lang('Groups')
+                            @lang('general.groups')
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('channel.index') }}" class="nav-link">
+                    <a href="{{ route('channel.index') }}" class="nav-link {{ Request::is('channel', 'channel/*', 'channel/create') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-th"></i>
                         <p>
-                            @lang('Channels')
+                            @lang('general.channels')
                         </p>
                     </a>
                 </li>
