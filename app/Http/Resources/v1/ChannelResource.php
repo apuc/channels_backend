@@ -26,7 +26,12 @@ class ChannelResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
-            'private' => $this->private
+            'private' => $this->private,
+            'avatar' => [
+                'origin' => ($this->avatar) ? $this->avatar->getOrigin() : null,
+                'average' => ($this->avatar) ? $this->avatar->getAverage() : null,
+                'small' => ($this->avatar) ? $this->avatar->getSmall() : null,
+            ]
         ];
     }
 }

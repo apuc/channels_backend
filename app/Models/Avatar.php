@@ -17,7 +17,7 @@ class Avatar extends Model
     public const SIZE_SMALL = 150;
 
     protected $fillable = [
-        'original', 'average', 'small', 'status'
+        'origin', 'average', 'small', 'status'
     ];
 
     protected $dates = [
@@ -30,5 +30,20 @@ class Avatar extends Model
             'active' => self::STATUS_ACTIVE,
             'disable' => self::STATUS_DISABLE
         ];
+    }
+
+    public function getOrigin()
+    {
+        return getenv('FILES_SERVER_URL') . $this->origin;
+    }
+
+    public function getAverage()
+    {
+        return getenv('FILES_SERVER_URL') . $this->average;
+    }
+
+    public function getSmall()
+    {
+        return getenv('FILES_SERVER_URL') . $this->small;
     }
 }

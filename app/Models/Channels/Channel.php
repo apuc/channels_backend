@@ -2,6 +2,7 @@
 
 namespace App\Models\Channels;
 
+use App\Models\Avatar;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -68,5 +69,13 @@ class Channel extends Model
             'channel_id',
             'user_id'
         );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function avatar()
+    {
+        return $this->belongsTo(Avatar::class, 'avatar_id');
     }
 }

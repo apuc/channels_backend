@@ -16,6 +16,7 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @mixin \Eloquent
  * @property int $user_id
+ * @property int $avatar_id
  * @property string $username
  * @property string $email
  * @property string|null $email_verified_at
@@ -34,7 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password', 'login',
+        'username', 'email', 'password', 'login', 'avatar_id'
     ];
 
     /**
@@ -58,6 +59,9 @@ class User extends Authenticatable
         $date = Carbon::now();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function groups()
     {
         return $this->belongsToMany(
@@ -89,6 +93,14 @@ class User extends Authenticatable
     public function getName()
     {
         return $this->username;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function avatar()
+    {
+        return $this->hasOne(Avatar::class, 'avatar_id', 'avatar_id');
     }
 
 }

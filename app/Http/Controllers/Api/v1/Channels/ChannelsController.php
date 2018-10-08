@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
+use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use App\Services\Files\AvatarService;
