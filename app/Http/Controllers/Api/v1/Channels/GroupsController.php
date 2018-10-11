@@ -69,10 +69,9 @@ class GroupsController extends Controller
         try {
             $group = $this->groupsService->create($request);
 
-            return redirect(route('group.show', $group))
-                ->with(['success' => 'Успешно создано']);
-        } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return new GroupsResource($group);
+        } catch (\Throwable $e){
+            abort(500);
         }
     }
 

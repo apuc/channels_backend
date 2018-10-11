@@ -46,6 +46,9 @@ class Group extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(
@@ -53,6 +56,19 @@ class Group extends Model
             'channels_group_users',
             'channels_group_id',
             'user_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function channels()
+    {
+        return $this->belongsToMany(
+            Channel::class,
+            'channel_users',
+            'channels_group_id',
+            'channel_id'
         );
     }
 

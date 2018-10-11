@@ -24,7 +24,7 @@ class AvatarResource extends JsonResource
     {
         return [
             'avatar_id' => $this->avatar_id,
-            'original' => $this->original,
+            'origin' => $this->origin,
             'average' => $this->average,
             'small' => $this->small,
             'status' => $this->status

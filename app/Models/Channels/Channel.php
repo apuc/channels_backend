@@ -78,4 +78,5 @@ class Channel extends Model
     {
         return $this->belongsTo(Avatar::class, 'avatar_id');
     }
+
 }
