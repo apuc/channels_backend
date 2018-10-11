@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\GroupsResource;
 use App\Models\Channels\Group;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\GroupsRepository;
 use App\Services\Channels\GroupsService;
+use App\Services\Files\AvatarService;
+use Illuminate\Http\Request;
 
 class GroupsController extends Controller
 {
@@ -15,15 +18,22 @@ class GroupsController extends Controller
      * @var GroupsService
      */
     protected $groupsService;
+
     /**
      * @var GroupsRepository
      */
     protected $groupRepository;
 
-    public function __construct(GroupsService $service, GroupsRepository $groupsRepository)
+    /**
+     * @var AvatarService
+     */
+    protected $avatarService;
+
+    public function __construct(GroupsService $service, GroupsRepository $groupsRepository, AvatarService $avatarService)
     {
         $this->groupsService   = $service;
         $this->groupRepository = $groupsRepository;
+        $this->avatarService = $avatarService;
     }
 
     /**
@@ -59,10 +69,9 @@ class GroupsController extends Controller
         try {
             $group = $this->groupsService->create($request);
 
-            return redirect(route('group.show', $group))
-                ->with(['success' => 'Успешно создано']);
-        } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return new GroupsResource($group);
+        } catch (\Throwable $e){
+            abort(500);
         }
     }
 
@@ -128,5 +137,18 @@ class GroupsController extends Controller
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function avatar(Request $request)
+    {
+        //dd($request->file('avatar')->getClientOriginalExtension());
+        $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'group');
+        $avatar = $this->avatarService->save($avatarRequest);
+
+        return new AvatarResource($avatar);
     }
 }

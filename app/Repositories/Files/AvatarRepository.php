@@ -37,7 +37,7 @@ class AvatarRepository
     public function create(AvatarRequest $request) :Avatar
     {
         return $this->model::create([
-            'original' => $request->origin,
+            'origin' => $request->origin,
             'average' => $request->average,
             'small' => $request->small,
             'status' => $request->status
