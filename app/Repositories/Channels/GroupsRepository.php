@@ -32,7 +32,8 @@ class GroupsRepository
         return $this->model::create([
             'title' => $request->title,
             'slug' => $request->slug,
-            'status' => $request->status
+            'status' => $request->status,
+            'avatar_id' => $request->avatar
         ]);
     }
 
@@ -48,7 +49,8 @@ class GroupsRepository
         $result = $group->update([
             'title' => $request->title,
             'slug' => $request->slug,
-            'status' => $request->status
+            'status' => $request->status,
+            'avatar_id' => $request->avatar
         ]);
 
         if ($result) {

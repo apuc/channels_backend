@@ -33,7 +33,7 @@ class Channel extends Model
     public const TYPE_WALL = 'wall';
 
     protected $fillable = [
-        'title', 'slug', 'status', 'type', 'private'
+        'title', 'slug', 'status', 'type', 'private', 'avatar_id'
     ];
 
     protected $dates = [
