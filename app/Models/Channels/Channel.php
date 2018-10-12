@@ -31,6 +31,7 @@ class Channel extends Model
 
     public const TYPE_CHAT = 'chat';
     public const TYPE_WALL = 'wall';
+    public const TYPE_DIALOG = 'dialog';
 
     protected $fillable = [
         'title', 'slug', 'status', 'type', 'private', 'avatar_id'

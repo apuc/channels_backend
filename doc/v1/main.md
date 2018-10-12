@@ -13,3 +13,5 @@
 [Группы](group.md)
 
 [Каналы](channel.md)
+
+[Аватарки](avatar.md)
