@@ -5,6 +5,14 @@ namespace App\Http\Requests\Channels;
 use App\Models\Channels\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class GroupRequest
+ * @package App\Http\Requests\Channels
+ * @property string $title
+ * @property string $slug
+ * @property string $status
+ * @property integer $avatar_id
+ */
 class GroupRequest extends FormRequest
 {
     /**
@@ -29,7 +37,8 @@ class GroupRequest extends FormRequest
             'slug' => 'required|string|max:255|min:3',
             'status' => 'required|in:' . implode(',', Group::getStatuses()),
             'user_ids' => 'array|required',
-            'user_ids.*' => 'exists:users,user_id'
+            'user_ids.*' => 'exists:users,user_id',
+            'avatar' => 'integer|exists:avatars,avatar_id|nullable'
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\Channels;
 
+use App\Http\Requests\ChannelRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Models\Channels\Channel;
@@ -58,5 +59,22 @@ class ChannelsController extends Controller
         $avatar = $this->avatarService->save($avatarRequest);
 
         return new AvatarResource($avatar);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  ChannelRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ChannelRequest $request)
+    {
+        try {
+            $channel = $this->channelService->create($request);
+
+            return new ChannelResource($channel);
+        } catch (\Throwable $e){
+            abort(500);
+        }
     }
 }

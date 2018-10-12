@@ -31,7 +31,7 @@ class Group extends Model
     public const STATUS_DISABLE = 'disable';
 
     protected $fillable = [
-        'title', 'slug', 'status'
+        'title', 'slug', 'status', 'avatar_id'
     ];
 
     protected $dates = [
