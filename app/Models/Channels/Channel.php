@@ -53,7 +53,8 @@ class Channel extends Model
     {
         return [
             'chat' => self::TYPE_CHAT,
-            'wall' => self::TYPE_WALL
+            'wall' => self::TYPE_WALL,
+            'dialog' => self::TYPE_DIALOG
         ];
     }
 

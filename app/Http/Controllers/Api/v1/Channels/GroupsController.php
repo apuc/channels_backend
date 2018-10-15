@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Http\Requests\SmartRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\GroupsResource;
 use App\Models\Channels\Group;
@@ -106,7 +107,7 @@ class GroupsController extends Controller
      *
      * @param  GroupRequest $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return GroupsResource
      */
     public function update(GroupRequest $request, $id)
     {
@@ -114,10 +115,9 @@ class GroupsController extends Controller
             $group = $this->groupRepository->findOneWithTrashed($id);
             $group = $this->groupsService->update($request, $group);
 
-            return redirect(route('group.show', $group))
-                ->with(['success' => 'Успешно создано']);
-        } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return new GroupsResource($group);
+        } catch (\Throwable $e){
+            abort(500);
         }
     }
 

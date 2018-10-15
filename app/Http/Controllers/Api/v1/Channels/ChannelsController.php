@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1\Channels;
 use App\Http\Requests\ChannelRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
+use App\Http\Resources\v1\GroupsResource;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
@@ -65,12 +66,31 @@ class ChannelsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  ChannelRequest $request
-     * @return \Illuminate\Http\Response
+     * @return ChannelResource
      */
     public function store(ChannelRequest $request)
     {
         try {
             $channel = $this->channelService->create($request);
+
+            return new ChannelResource($channel);
+        } catch (\Throwable $e){
+            abort(500);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  ChannelRequest $request
+     * @param  int $id
+     * @return ChannelResource
+     */
+    public function update(ChannelRequest $request, $id)
+    {
+        try {
+            $channel = $this->channelRepository->findOneWithTrashed($id);
+            $channel = $this->channelService->update($request, $channel);
 
             return new ChannelResource($channel);
         } catch (\Throwable $e){
