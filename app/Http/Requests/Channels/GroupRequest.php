@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Channels;
 
 use App\Models\Channels\Group;
+use App\Traits\SmartRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class GroupRequest
@@ -15,6 +17,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class GroupRequest extends FormRequest
 {
+    use SmartRequest;
+
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -50,4 +55,10 @@ class GroupRequest extends FormRequest
             'user_ids.*.exists' => 'Запись не найдена'
         ];
     }
+
+//    public function validationData()
+//    {
+//        dd($this->getPutArray());
+//        return $this->getPutArray();
+//    }
 }
