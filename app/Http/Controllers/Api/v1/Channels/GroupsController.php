@@ -132,8 +132,7 @@ class GroupsController extends Controller
             $group = $this->groupRepository->findOneWithTrashed($id);
             $this->groupsService->destroy($group);
 
-            return redirect(route('group.index'))
-                ->with(['success' => 'Группа успешно удалена']);
+            return response()->json(['msg' => 'success'], 204);
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }

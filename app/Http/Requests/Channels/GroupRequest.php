@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class GroupRequest extends FormRequest
 {
-    use SmartRequest;
-
 
     /**
      * Determine if the user is authorized to make this request.
@@ -56,9 +54,4 @@ class GroupRequest extends FormRequest
         ];
     }
 
-//    public function validationData()
-//    {
-//        dd($this->getPutArray());
-//        return $this->getPutArray();
-//    }
 }
