@@ -23,21 +23,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
         Route::middleware('auth:api')->group(function () {
             Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
-        });
-
-        Route::middleware('auth:api')->group(function () {
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
-        });
-
-        Route::middleware('auth:api')->group(function () {
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel avatar');
-        });
-
-        Route::middleware('auth:api')->group(function () {
+            Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group avatar');
-        });
-
-        Route::middleware('auth:api')->group(function () {
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });
 

@@ -87,7 +87,31 @@
 **avatar** - автарка канала, 
 принимает идентификатор заранее загруженной аватарки.
 
-### Удаление группы
+### Получение канала по channel_id
+
+Для того, чтобы получить канал, необходимо отправить 
+**`GET`** запрос на **`/v1/channel/{channel_id}`**
+
+Пример ответ:<br>
+
+```
+{
+    "data":{
+        "channel_id": 108,
+        "title": "test add",
+        "slug": "test_add",
+        "status": "active",
+        "private": "0",
+        "avatar":{
+            "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
+            "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",
+            "small": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_150.png"
+        }
+    }
+}
+```
+
+### Удаление канала
 
 Для того, чтобы удалить канал, необходимо отправить 
 **`DELETE`** запрос на **`/v1/channel/{channel_id}`**
