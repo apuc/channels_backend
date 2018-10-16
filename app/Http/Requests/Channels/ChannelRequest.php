@@ -30,6 +30,7 @@ class ChannelRequest extends FormRequest
             'status' => 'required|in:' . implode(',', Channel::getStatuses()),
             'type' => 'required|in:' . implode(',', Channel::getTypes()),
             'private' => 'required|in:0,1',
+            'avatar' => 'integer|exists:avatars,avatar_id|nullable',
         ];
     }
 

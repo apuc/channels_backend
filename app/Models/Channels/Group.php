@@ -2,7 +2,8 @@
 
 namespace App\Models\Channels;
 
-use App\User;
+use App\Models\Avatar;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -30,7 +31,7 @@ class Group extends Model
     public const STATUS_DISABLE = 'disable';
 
     protected $fillable = [
-        'title', 'slug', 'status'
+        'title', 'slug', 'status', 'avatar_id'
     ];
 
     protected $dates = [
@@ -45,6 +46,9 @@ class Group extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(
@@ -53,5 +57,26 @@ class Group extends Model
             'channels_group_id',
             'user_id'
         );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function channels()
+    {
+        return $this->belongsToMany(
+            Channel::class,
+            'channel_users',
+            'channels_group_id',
+            'channel_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function avatar()
+    {
+        return $this->hasOne(Avatar::class, 'avatar_id', 'avatar_id');
     }
 }

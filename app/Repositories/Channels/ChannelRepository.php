@@ -39,6 +39,7 @@ class ChannelRepository
             'status' => $request->status,
             'type' => $request->type,
             'private' => $request->private,
+            'avatar_id' => $request->avatar
         ]);
     }
 
@@ -57,6 +58,7 @@ class ChannelRepository
             'status' => $request->status,
             'type' => $request->type,
             'private' => $request->private,
+            'avatar_id' => $request->avatar
         ]);
 
         if ($result) {

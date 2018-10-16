@@ -1,20 +1,23 @@
 <?php /**@var \App\Models\Channels\Group[] $groups*/?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', trans('general.groups'))
+@section('h1', trans('general.groups'))
 
 @section('content')
-
-    <a href="{{ route('group.create') }}" class="btn btn-success">Create group</a>
+    <div class="row mr-3 ml-3">
+    <a href="{{ route('group.create') }}" class="btn btn-success mt-2 mb-2">@lang('general.create_group')</a>
     
-    <div class="row">
+
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">id</th>
-                <th scope="col">title</th>
-                <th scope="col">slug</th>
-                <th scope="col">status</th>
-                <th scope="col">is_deleted</th>
+                <th scope="col">ID</th>
+                <th scope="col">@lang('general.title')</th>
+                <th scope="col">@lang('general.slug')</th>
+                <th scope="col">@lang('general.status')</th>
+                <th scope="col">@lang('general.deleted')</th>
                 <th></th>
             </tr>
             </thead>
@@ -40,12 +43,12 @@
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger">@lang('general.delete')</button>
                         </form>
 
                         @endif
 
-                        <a href="{{ route('group.edit', $group) }}" class="btn btn-info">Edit</a>
+                        <a href="{{ route('group.edit', $group) }}" class="btn btn-info">@lang('general.edit')</a>
                     </td>
                 </tr>
             @endforeach
@@ -53,7 +56,9 @@
 
             </tbody>
         </table>
+    </div>
 
+    <div class="row justify-content-center">
         {{ $groups->links() }}
     </div>
 

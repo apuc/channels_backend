@@ -6,7 +6,7 @@
 use App\Models\Channels\Group;
 ?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
 
 @section('content')
@@ -16,7 +16,7 @@ use App\Models\Channels\Group;
         @method('PUT')
 
         <div class="form-group">
-            <label for="title">Title</label>
+            <label for="title">@lang('general.type')</label>
             <input type="text" name="title" class="form-control" id="title" placeholder="Enter title"
             value="{{ old('title', $group->title) }}">
             @if($errors->has('title'))
@@ -25,7 +25,7 @@ use App\Models\Channels\Group;
         </div>
 
         <div class="form-group">
-            <label for="slug">Slug</label>
+            <label for="slug">@lang('general.slug')</label>
             <input type="text" name="slug" class="form-control" id="slug" placeholder="Slug" value="{{ old('slug', $group->slug) }}">
             @if($errors->has('slug'))
                 <span class="invalid-feedback"><strong>{{ $errors->first('slug') }}</strong></span>
@@ -33,7 +33,7 @@ use App\Models\Channels\Group;
         </div>
 
         <div class="form-group">
-            <label for="status">Status</label>
+            <label for="status">@lang('general.status')</label>
             <select class="form-control" id="status" name="status">
                 <option></option>
                 <option {{(old('status', $group->status) === \App\Models\Channels\Group::STATUS_ACTIVE) ? 'selected' : '' }}

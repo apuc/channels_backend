@@ -1,19 +1,21 @@
 <?php /**@var \App\Models\Channels\Channel[] $channels*/?>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
+@section('title', trans('general.channels'))
+@section('h1', trans('general.channels'))
 @section('content')
-
-    <a href="{{ route('channel.create') }}" class="btn btn-success">Create channel</a>
+    <div class="row ml-3 mr-3">
+    <a href="{{ route('channel.create') }}" class="btn btn-success mt-2 mb-2">@lang('general.create_channel')</a>
     
-    <div class="row">
+
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">id</th>
-                <th scope="col">title</th>
-                <th scope="col">slug</th>
-                <th scope="col">status</th>
+                <th scope="col">@lang('ID')</th>
+                <th scope="col">@lang('general.title')</th>
+                <th scope="col">@lang('general.slug')</th>
+                <th scope="col">@lang('general.status')</th>
                 <th scope="col">is_deleted</th>
                 <th></th>
             </tr>
@@ -40,12 +42,12 @@
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger">@lang('general.delete')</button>
                         </form>
 
                         @endif
 
-                        <a href="{{ route('group.edit', $channel) }}" class="btn btn-info">Edit</a>
+                        {{--<a href="{{ route('group.edit', $channel) }}" class="btn btn-info">@lang('general.edit')</a>--}}
                     </td>
                 </tr>
             @endforeach
@@ -54,8 +56,10 @@
             </tbody>
         </table>
 
+
+    </div>
+    <div class="row justify-content-center">
         {{ $channels->links() }}
     </div>
-
 
 @endsection

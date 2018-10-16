@@ -11,21 +11,18 @@
 |
 */
 
-Route::domain(getenv('ADMIN_URL'))->group(function () {
-    Route::group(['middleware' => 'auth'], function (){
-        Route::get('/', function () {
-            return view('welcome');
-        });
+Route::group(['middleware' => 'auth'], function (){
+    Route::get('/', 'Admin\DashboardController@index')->name('dashboard');
 
-        Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/testimg', 'Admin\Channels\ChannelController@testimg')->name('testimg');
 
-        Route::resource('group', 'Admin\Channels\GroupsController');
+    Route::resource('group', 'Admin\Channels\GroupsController');
 
-        Route::resource('channel', 'Admin\Channels\ChannelController');
-    });
-
-    Auth::routes();
-
+    Route::resource('channel', 'Admin\Channels\ChannelController');
 });
+// Route for changing language...
+Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
+
+Auth::routes();
 
 
