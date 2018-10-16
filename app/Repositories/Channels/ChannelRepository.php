@@ -26,7 +26,7 @@ class ChannelRepository
     }
 
     /**
-     * Method for create group
+     * Method for create channel
      *
      * @param ChannelRequest $request
      * @return Channel
