@@ -49,7 +49,7 @@ class GroupsController extends Controller
 
         return GroupsResource::collection($groups);
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
