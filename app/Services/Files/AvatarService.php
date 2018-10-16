@@ -16,7 +16,7 @@ use App\Traits\FilePath;
 use File;
 use Hash;
 use Illuminate\Http\UploadedFile;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class AvatarService
 {
@@ -73,6 +73,19 @@ class AvatarService
         $request->status = $data['status'];
 
         return $request;
+    }
+
+    /**
+     * @param Avatar $avatar
+     */
+    public function destroy(Avatar $avatar)
+    {
+        $this->deleteFile([
+            storage_path('app/public' . $avatar->origin),
+            storage_path('app/public' . $avatar->average),
+            storage_path('app/public' . $avatar->small),
+        ]);
+        $this->repository->destroy($avatar);
     }
 
 }

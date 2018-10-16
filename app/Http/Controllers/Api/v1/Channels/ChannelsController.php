@@ -97,4 +97,21 @@ class ChannelsController extends Controller
             abort(500);
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        try {
+            $group = $this->channelRepository->findOneWithTrashed($id);
+            $this->channelService->destroy($group);
+
+            return response()->json(['msg' => 'success'], 204);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+    }
 }

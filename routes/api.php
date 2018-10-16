@@ -37,6 +37,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group avatar');
         });
 
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
+        });
+
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
     });

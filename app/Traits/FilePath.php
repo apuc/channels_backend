@@ -12,7 +12,7 @@ namespace App\Traits;
 trait FilePath
 {
 
-    public function makeFolder($path ,$mode = 0775)
+    public function makeFolder($path, $mode = 0775)
     {
         $folders = explode('/', $path);
 
@@ -20,12 +20,28 @@ trait FilePath
         foreach ($folders as $folder) {
             $currentFolder .= $folder . DIRECTORY_SEPARATOR;
             if (!file_exists($currentFolder)) {
-//                echo "<pre>";
-//                echo($currentFolder);
-//                echo "</pre>";
                 mkdir($currentFolder, $mode);
             }
         }
+    }
+
+    /**
+     * @param string|array $file
+     */
+    public function deleteFile($file)
+    {
+        if (is_string($file)) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        } else {
+            foreach ((array)$file as $item) {
+                if (file_exists($item)) {
+                    unlink($item);
+                }
+            }
+        }
+
     }
 
 }
