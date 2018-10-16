@@ -75,7 +75,7 @@
 **avatar** - автарка группы, 
 принимает идентификатор заранее загруженной аватарки.
 
-Пример ответ:<br>
+Пример ответа:<br>
 
 ```
 {
@@ -107,6 +107,31 @@
 **user_ids*** - массив пользователей группы.<br>
 **avatar** - автарка группы, 
 принимает идентификатор заранее загруженной аватарки.
+
+### Получение группы по group_id
+
+Для того, чтобы получить группу, необходимо отправить 
+**`GET`** запрос на **`/v1/group/{group_id}`**
+
+Пример ответа:<br>
+
+```
+{
+    "data":{
+        "group_id": 47,
+        "title": "test add",
+        "slug": "test_add",
+        "status": "active",
+        "avatar":{
+            "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
+            "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",
+            "small": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_150.png"
+        },
+        "channels":[
+        ]
+    }
+}
+```
 
 ### Удаление группы
 

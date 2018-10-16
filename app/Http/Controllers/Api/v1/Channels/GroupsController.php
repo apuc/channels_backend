@@ -50,15 +50,6 @@ class GroupsController extends Controller
         return GroupsResource::collection($groups);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('admin.groups.create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -81,27 +72,15 @@ class GroupsController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return GroupsResource
      */
     public function show($id)
     {
         $group = $this->groupRepository->findOneWithTrashed($id);
 
-        return view('admin.groups.show', compact('group'));
+        return new GroupsResource($group);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param   $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $group = $this->groupRepository->findOneWithTrashed($id);
-
-        return view('admin.groups.edit', compact('group'));
-    }
 
     /**
      * Update the specified resource in storage.

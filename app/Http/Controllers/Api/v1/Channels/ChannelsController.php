@@ -6,6 +6,7 @@ use App\Http\Requests\ChannelRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
+use App\Models\Avatar;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
@@ -80,6 +81,19 @@ class ChannelsController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return ChannelResource
+     */
+    public function show($id)
+    {
+        $channel = $this->channelRepository->findOneWithTrashed($id);
+
+        return new ChannelResource($channel);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  ChannelRequest $request
@@ -106,12 +120,19 @@ class ChannelsController extends Controller
     public function destroy($id)
     {
         try {
-            $group = $this->channelRepository->findOneWithTrashed($id);
-            $this->channelService->destroy($group);
+            $channel = $this->channelRepository->findOneWithTrashed($id);
+            $this->channelService->destroy($channel);
+            $this->avatarService->destroy($channel->avatar);
 
             return response()->json(['msg' => 'success'], 204);
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function delava($id)
+    {
+        $avatar = Avatar::where('avatar_id', $id)->first();
+        $this->avatarService->destroy($avatar);
     }
 }
