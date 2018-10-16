@@ -6,6 +6,7 @@ use App\Http\Requests\Channels\GroupRequest;
 use App\Http\Requests\SmartRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\GroupsResource;
+use App\Models\Avatar;
 use App\Models\Channels\Group;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\GroupsRepository;
@@ -32,7 +33,7 @@ class GroupsController extends Controller
 
     public function __construct(GroupsService $service, GroupsRepository $groupsRepository, AvatarService $avatarService)
     {
-        $this->groupsService   = $service;
+        $this->groupsService = $service;
         $this->groupRepository = $groupsRepository;
         $this->avatarService = $avatarService;
     }
@@ -71,7 +72,7 @@ class GroupsController extends Controller
             $group = $this->groupsService->create($request);
 
             return new GroupsResource($group);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -116,7 +117,7 @@ class GroupsController extends Controller
             $group = $this->groupsService->update($request, $group);
 
             return new GroupsResource($group);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -131,6 +132,7 @@ class GroupsController extends Controller
         try {
             $group = $this->groupRepository->findOneWithTrashed($id);
             $this->groupsService->destroy($group);
+            $this->avatarService->destroy($group->avatar);
 
             return response()->json(['msg' => 'success'], 204);
         } catch (\Throwable $e) {
@@ -149,5 +151,11 @@ class GroupsController extends Controller
         $avatar = $this->avatarService->save($avatarRequest);
 
         return new AvatarResource($avatar);
+    }
+
+    public function delava($id)
+    {
+        $avatar = Avatar::where('avatar_id', $id)->first();
+        $this->avatarService->destroy($avatar);
     }
 }
