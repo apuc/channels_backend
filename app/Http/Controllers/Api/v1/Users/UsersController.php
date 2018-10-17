@@ -40,7 +40,7 @@ class UsersController extends Controller
     /**
      * @return UserResource
      */
-    public function user()
+    public function me()
     {
         $user = \Auth::user();
 
