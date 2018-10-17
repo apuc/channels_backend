@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\ChannelRequest;
+use App\Http\Requests\Channels\User\AddRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
@@ -75,7 +76,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->create($request);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -107,7 +108,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->update($request, $channel);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -128,6 +129,23 @@ class ChannelsController extends Controller
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function addUser(AddRequest $request)
+    {
+        $channel = $this->channelService->addUser($request);
+        return new ChannelResource($channel);
+    }
+
+    public function deleteUser(AddRequest $request)
+    {
+        try{
+            $this->channelService->deleteUser($request);
+            return response()->json(['msg' => 'success'], 204);
+        }catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+
     }
 
     public function delava($id)
