@@ -37,12 +37,20 @@ class UsersController extends Controller
         $this->avatarService = $avatarService;
     }
 
+    /**
+     * @return UserResource
+     */
+    public function me()
+    {
+        $user = \Auth::user();
 
+        return new UserResource($user);
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  UserRequest  $request
+     * @param  UserRequest $request
      * @return UserResource
      */
     public function store(UserRequest $request)
@@ -51,7 +59,7 @@ class UsersController extends Controller
             $user = $this->userService->create($request);
 
             return new UserResource($user);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -59,7 +67,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return UserResource
      */
     public function show($id)
@@ -73,8 +81,8 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UserRequest  $request
-     * @param  int  $id
+     * @param  UserRequest $request
+     * @param  int $id
      * @return UserResource
      */
     public function update(UserRequest $request, $id)
@@ -84,7 +92,7 @@ class UsersController extends Controller
             $user = $this->userService->update($request, $user);
 
             return new UserResource($user);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -92,7 +100,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

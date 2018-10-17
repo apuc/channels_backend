@@ -23,17 +23,17 @@ status 200 - OK
 
 ```
 {
-"token_type": "Bearer",
-"expires_in": 86400,
-"access_token": "eyJ0eXAiOiJKV1Q...",
-"refresh_token": "def5020009c17a37..."
+    "token_type": "Bearer",
+    "expires_in": 86400,
+    "access_token": "eyJ0eXAiOiJKV1Q...",
+    "refresh_token": "def5020009c17a37..."
 }
 ```
 
-### Получение данных пользователя
+### Получение данных текущего пользователя
 
 Для получения данных пользователя нужно отправить **`GET`** 
-запрос на **`/v1/user`**, в заголовках передать параметры 
+запрос на **`/v1/user/me`**, в заголовках передать параметры 
 авторизации:<br>
 **`Authorization: Bearer eyJ0eXAiOiJKV1QiLC...`**
 
@@ -41,12 +41,15 @@ status 200 - OK
 
 ```
 {
-"user_id": 1,
-"username": "Mrs. Camylle Collier DVM",
-"email": "ruben39@example.com",
-"email_verified_at": "2018-09-29 12:40:34",
-"created_at": "2018-09-29 12:40:34",
-"updated_at": "2018-09-29 12:40:34",
-"login": null
+    "data":{
+        "user_id": 1,
+        "email": "ruben39@example.com",
+        "username": "Mrs. Camylle Collier DVM",
+        "avatar":{
+            "origin": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b.jpg",
+            "average": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_400.jpg",
+            "small": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_150.jpg"
+        }
+    }
 }
 ```
