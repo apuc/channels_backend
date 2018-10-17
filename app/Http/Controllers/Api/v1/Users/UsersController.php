@@ -40,7 +40,7 @@ class UsersController extends Controller
     /**
      * @return UserResource
      */
-    public function index()
+    public function user()
     {
         $user = \Auth::user();
 
