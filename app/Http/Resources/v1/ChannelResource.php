@@ -27,6 +27,8 @@ class ChannelResource extends JsonResource
             'slug' => $this->slug,
             'status' => $this->status,
             'private' => $this->private,
+            'type' => $this->type,
+            'user_count' => $this->getUserCount(),
             'avatar' => [
                 'origin' => ($this->avatar) ? $this->avatar->getOrigin() : null,
                 'average' => ($this->avatar) ? $this->avatar->getAverage() : null,

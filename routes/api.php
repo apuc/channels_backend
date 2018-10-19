@@ -30,6 +30,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel add user');
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel delete user');
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
+            Route::get('/channel/{channel}/users', 'Channels\ChannelsController@usersList')->name('users list');
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });

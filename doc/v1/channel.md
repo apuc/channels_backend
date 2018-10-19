@@ -16,6 +16,8 @@
             "slug": "mr",
             "status": "active",
             "private": 0,
+            "type": "chat",
+            "user_count": 2,
             "avatar":{
                 "origin": "http://files.newchannels.loc/var/www/newchannels.loc/storage/app/public/img/channel/b/b6/b6ba4c2140f71b3430a7aaf44a4bd2e1.jpg",
                 "average": "http://files.newchannels.loc/var/www/newchannels.loc/storage/app/public/img/channel/b/b6/b6ba4c2140f71b3430a7aaf44a4bd2e1_400.jpg",
@@ -28,6 +30,8 @@
             "slug": "eee",
             "status": "active",
             "private": 0,
+            "type": "wall",
+            "user_count": 2,
             "avatar":{
                 "origin": null,
                 "average": null,
@@ -59,15 +63,17 @@
 ```
 {
     "data":{
-        "channel_id": 108,
-        "title": "test add",
-        "slug": "test_add",
-        "status": "active",
-        "private": "0",
+        "channel_id": 1,
+        "title": "Ms.",
+        "slug": "ms",
+        "status": "disable",
+        "private": 1,
+        "type": "chat",
+        "user_count": 2,
         "avatar":{
-            "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
-            "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",
-            "small": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_150.png"
+            "origin": null,
+            "average": null,
+            "small": null
         }
     }
 }
@@ -99,15 +105,17 @@
 ```
 {
     "data":{
-        "channel_id": 108,
-        "title": "test add",
-        "slug": "test_add",
-        "status": "active",
-        "private": "0",
+        "channel_id": 1,
+        "title": "Ms.",
+        "slug": "ms",
+        "status": "disable",
+        "private": 1,
+        "type": "chat",
+        "user_count": 2,
         "avatar":{
-            "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
-            "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",
-            "small": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_150.png"
+            "origin": null,
+            "average": null,
+            "small": null
         }
     }
 }
@@ -130,6 +138,12 @@
 Параметры:<br>
 **user_id*** - идентификатор пользователя.<br>
 **channel_id*** - идентификатор канала.<br>
+
+### Получение пользователей канала
+
+Для получения пользователей необходимо отправить
+**`GET`** запрос на **`/v1/channel/{channel_id}/users`**
+
 
 ### Удаление канала
 
