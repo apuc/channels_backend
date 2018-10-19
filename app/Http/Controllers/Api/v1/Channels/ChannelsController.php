@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\ChannelRequest;
+use App\Http\Requests\Channels\User\AddRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
+use App\Http\Resources\v1\UserResource;
 use App\Models\Avatar;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
@@ -75,7 +77,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->create($request);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -107,7 +109,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->update($request, $channel);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             abort(500);
         }
     }
@@ -128,6 +130,41 @@ class ChannelsController extends Controller
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * @param AddRequest $request
+     * @return ChannelResource
+     */
+    public function addUser(AddRequest $request)
+    {
+        $channel = $this->channelService->addUser($request);
+        return new ChannelResource($channel);
+    }
+
+    /**
+     * @param AddRequest $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function deleteUser(AddRequest $request)
+    {
+        try {
+            $this->channelService->deleteUser($request);
+            return response()->json(['msg' => 'success'], 204);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function usersList($id)
+    {
+        $channel = $this->channelRepository->findById($id);
+        return UserResource::collection($channel->users);
     }
 
     public function delava($id)

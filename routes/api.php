@@ -26,9 +26,12 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
-            Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel avatar');
+            Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
+            Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
+            Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
-            Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group avatar');
+            Route::get('/channel/{channel}/users', 'Channels\ChannelsController@usersList')->name('users.list');
+            Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });
 

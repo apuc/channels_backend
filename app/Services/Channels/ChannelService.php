@@ -10,6 +10,7 @@ namespace App\Services\Channels;
 
 
 use App\Http\Requests\ChannelRequest;
+use App\Http\Requests\Channels\User\AddRequest;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 
@@ -45,6 +46,22 @@ class ChannelService
 
             return $channel;
         });
+    }
+
+    public function addUser(AddRequest $request)
+    {
+        $channel = $this->repository->findById($request->channel_id);
+        $channel->users()->sync($request->get('user_id'));
+
+        return $channel;
+    }
+
+    public function deleteUser(AddRequest $request)
+    {
+        $channel = $this->repository->findById($request->channel_id);
+        $channel->users()->detach($request->user_id);
+
+        return $channel;
     }
 
     /**
