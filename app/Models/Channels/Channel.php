@@ -73,6 +73,11 @@ class Channel extends Model
         );
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'channel_id', 'channel_id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
