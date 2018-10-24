@@ -25,11 +25,11 @@ class MessageResource extends JsonResource
     {
         return [
             'message_id' => $this->message_id,
-            'channel_id' => $this->channel_id,
+            'channel' => $this->channel_id,
             'to' => $this->to,
             'from' => $this->from,
             'read' => $this->read,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'text' => $this->text
         ];
     }

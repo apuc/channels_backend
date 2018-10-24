@@ -7,6 +7,7 @@ use App\Http\Requests\Channels\User\AddRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
+use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\Avatar;
 use App\Models\Channels\Channel;
@@ -165,6 +166,16 @@ class ChannelsController extends Controller
     {
         $channel = $this->channelRepository->findById($id);
         return UserResource::collection($channel->users);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function messagesList($id)
+    {
+        $channel = $this->channelRepository->findById($id);
+        return MessageResource::collection($channel->messages);
     }
 
     public function delava($id)

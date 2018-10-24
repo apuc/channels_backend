@@ -2,6 +2,7 @@
 
 namespace App\Models\Channels;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -39,6 +40,30 @@ class Message extends Model
     public function isRead()
     {
         return $this->read;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class, 'channel_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function toUser()
+    {
+        return $this->belongsTo(User::class, 'to');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class, 'from');
     }
 
 }
