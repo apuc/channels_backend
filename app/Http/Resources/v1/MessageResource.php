@@ -25,9 +25,9 @@ class MessageResource extends JsonResource
     {
         return [
             'message_id' => $this->message_id,
-            'channel' => ($this->channel_id) ? new ChannelResource($this->channel) : null,
-            'to' => ($this->to) ? new UserResource($this->toUser) : null,
-            'from' => ($this->from) ? new UserResource($this->fromUser) : null,
+            'channel' => $this->channel_id,
+            'to' => $this->to,
+            'from' => $this->from,
             'read' => $this->read,
             'created_at' => $this->created_at,
             'text' => $this->text
