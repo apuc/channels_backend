@@ -29,7 +29,7 @@ class MessageResource extends JsonResource
             'to' => $this->to,
             'from' => $this->from,
             'read' => $this->read,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'text' => $this->text
         ];
     }
