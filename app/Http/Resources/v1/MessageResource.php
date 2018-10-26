@@ -28,7 +28,7 @@ class MessageResource extends JsonResource
             'channel' => $this->channel_id,
             'to' => $this->to,
             'from' => $this->from,
-            'read' => $this->read,
+            'read' => ($this->read) ? $this->read : 0,
             'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'text' => $this->text
         ];
