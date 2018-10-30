@@ -46,4 +46,9 @@ class Avatar extends Model
     {
         return getenv('FILES_SERVER_URL') . $this->small;
     }
+
+    public function getId()
+    {
+        return $this->avatar_id;
+    }
 }

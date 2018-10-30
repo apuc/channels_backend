@@ -27,6 +27,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'username' => $this->getName(),
             'avatar' => [
+                'avatar_id' => ($this->avatar) ? $this->avatar->getId() : null,
                 'origin' => ($this->avatar) ? $this->avatar->getOrigin() : null,
                 'average' => ($this->avatar) ? $this->avatar->getAverage() : null,
                 'small' => ($this->avatar) ? $this->avatar->getSmall() : null,
