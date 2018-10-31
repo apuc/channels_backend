@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Traits\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupsResource extends JsonResource
 {
+    use Avatar;
     /**
      * Transform the resource into an array.
      *
@@ -19,11 +21,7 @@ class GroupsResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
-            'avatar' => [
-                'origin' => ($this->avatar) ? $this->avatar->getOrigin() : null,
-                'average' => ($this->avatar) ? $this->avatar->getAverage() : null,
-                'small' => ($this->avatar) ? $this->avatar->getSmall() : null,
-            ],
+            'avatar' => $this->getAvatar($this->avatar),
             'channels' => ChannelResource::collection($this->channels)->toArray($request)
         ];
     }

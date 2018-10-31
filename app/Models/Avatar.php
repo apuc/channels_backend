@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\AvatarInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class Avatar extends Model
+class Avatar extends Model implements AvatarInterface
 {
     protected $table = 'avatars';
 
@@ -45,5 +46,10 @@ class Avatar extends Model
     public function getSmall()
     {
         return getenv('FILES_SERVER_URL') . $this->small;
+    }
+
+    public function getId()
+    {
+        return $this->avatar_id;
     }
 }
