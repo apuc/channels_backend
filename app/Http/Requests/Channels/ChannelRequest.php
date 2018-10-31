@@ -31,6 +31,8 @@ class ChannelRequest extends FormRequest
             'type' => 'required|in:' . implode(',', Channel::getTypes()),
             'private' => 'required|in:0,1',
             'avatar' => 'integer|exists:avatars,avatar_id|nullable',
+            'user_ids' => 'array',
+            'user_ids.*' => 'exists:users,user_id',
         ];
     }
 

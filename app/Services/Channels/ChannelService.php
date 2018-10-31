@@ -73,7 +73,13 @@ class ChannelService
      */
     public function update(ChannelRequest $request, Channel $channel): Channel
     {
-        return $this->repository->update($request, $channel);
+        return \DB::transaction(function () use ($request, $channel) {
+            $this->repository->update($request, $channel);
+
+            $channel->users()->sync($request->get('user_ids'));
+
+            return $channel;
+        });
     }
 
     /**
