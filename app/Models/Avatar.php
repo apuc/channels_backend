@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\AvatarInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class Avatar extends Model
+class Avatar extends Model implements AvatarInterface
 {
     protected $table = 'avatars';
 

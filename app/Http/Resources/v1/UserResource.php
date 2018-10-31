@@ -9,10 +9,12 @@
 namespace App\Http\Resources\v1;
 
 
+use App\Traits\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
+    use Avatar;
 
     /**
      * Transform the resource into an array.
@@ -26,12 +28,7 @@ class UserResource extends JsonResource
             'user_id' => $this->user_id,
             'email' => $this->email,
             'username' => $this->getName(),
-            'avatar' => [
-                'avatar_id' => ($this->avatar) ? $this->avatar->getId() : null,
-                'origin' => ($this->avatar) ? $this->avatar->getOrigin() : null,
-                'average' => ($this->avatar) ? $this->avatar->getAverage() : null,
-                'small' => ($this->avatar) ? $this->avatar->getSmall() : null,
-            ]
+            'avatar' => $this->getAvatar($this->avatar)
         ];
     }
 
