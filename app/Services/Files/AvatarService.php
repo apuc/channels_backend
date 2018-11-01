@@ -80,12 +80,14 @@ class AvatarService
      */
     public function destroy(Avatar $avatar)
     {
-        $this->deleteFile([
-            storage_path('app/public' . $avatar->origin),
-            storage_path('app/public' . $avatar->average),
-            storage_path('app/public' . $avatar->small),
-        ]);
-        $this->repository->destroy($avatar);
+        if($avatar){
+            $this->deleteFile([
+                storage_path('app/public' . $avatar->origin),
+                storage_path('app/public' . $avatar->average),
+                storage_path('app/public' . $avatar->small),
+            ]);
+            $this->repository->destroy($avatar);
+        }
     }
 
 }
