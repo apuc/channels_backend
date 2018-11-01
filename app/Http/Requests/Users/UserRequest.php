@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|max:255|min:3|email|unique:users',
+            'email' => 'required|string|max:255|min:3|email' . ($this->method() === 'POST') ? '|unique:users' : '',
             'username' => 'string|max:255|min:3',
             'password' => 'required|string|max:255|min:3',
             'password_confirmation' => 'required_with:password|same:password|min:3'
