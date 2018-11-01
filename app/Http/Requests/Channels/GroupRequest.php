@@ -39,7 +39,7 @@ class GroupRequest extends FormRequest
             'title' => 'required|string|max:255|min:3',
             'slug' => 'required|string|max:255|min:3',
             'status' => 'required|in:' . implode(',', Group::getStatuses()),
-            'user_ids' => 'array|required',
+            'user_ids' => 'array',
             'user_ids.*' => 'exists:users,user_id',
             'avatar' => 'integer|exists:avatars,avatar_id|nullable'
         ];
