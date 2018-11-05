@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api\v1\Users;
 
-use App\Http\Requests\Users\UserRequest;
+use App\Http\Requests\Users\CreateRequest;
+use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\Avatar;
@@ -50,10 +51,10 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  UserRequest $request
+     * @param  CreateRequest $request
      * @return UserResource
      */
-    public function store(UserRequest $request)
+    public function store(CreateRequest $request)
     {
         try {
             $user = $this->userService->create($request);
@@ -81,11 +82,11 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UserRequest $request
+     * @param  UpdateRequest $request
      * @param  int $id
      * @return UserResource
      */
-    public function update(UserRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         try {
             $user = $this->userRepository->findById($id);
@@ -93,7 +94,7 @@ class UsersController extends Controller
 
             return new UserResource($user);
         } catch (\Throwable $e) {
-            abort(500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
