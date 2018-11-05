@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\ChannelRequest;
 use App\Http\Requests\Channels\User\AddRequest;
+use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
@@ -57,7 +58,7 @@ class ChannelsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function avatar(Request $request)
+    public function avatar(AvatarRequest $request)
     {
         //dd($request->file('avatar')->getClientOriginalExtension());
         $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'channel');
