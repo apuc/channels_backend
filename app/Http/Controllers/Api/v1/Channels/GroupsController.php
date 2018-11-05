@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Http\Requests\Channels\Groups\AttachChannelsRequest;
 use App\Http\Requests\Files\AvatarRequest;
-use App\Http\Requests\SmartRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\GroupsResource;
 use App\Models\Avatar;
@@ -149,5 +149,24 @@ class GroupsController extends Controller
     {
         $avatar = Avatar::where('avatar_id', $id)->first();
         $this->avatarService->destroy($avatar);
+    }
+
+    /**
+     * Добавление каналов в группу
+     *
+     * @param AttachChannelsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function channels(AttachChannelsRequest $request, $id)
+    {
+        try {
+            $group = $this->groupRepository->findById($id);
+            $this->groupsService->attachChannels($group, $request->channel_ids);
+
+            return response()->json([], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

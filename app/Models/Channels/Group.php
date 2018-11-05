@@ -66,7 +66,7 @@ class Group extends Model
     {
         return $this->belongsToMany(
             Channel::class,
-            'channel_users',
+            'channels_group_users',
             'channels_group_id',
             'channel_id'
         );
