@@ -15,6 +15,7 @@ use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use App\Services\Files\AvatarService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -124,13 +125,24 @@ class ChannelsController extends Controller
     public function destroy($id)
     {
         try {
-            $channel = $this->channelRepository->findOneWithTrashed($id);
-            $this->channelService->destroy($channel);
-            $this->avatarService->destroy($channel->avatar);
+            \DB::transaction(function () use ($id) {
+                $channel = $this->channelRepository->findById($id);
+                $this->channelService->destroy($channel);
+
+                if ($channel->avatar) {
+                    $this->avatarService->destroy($channel->avatar);
+                }
+            });
 
             return response()->json(['msg' => 'success'], 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['msg' => 'Channel not found'], 404);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            if (config('app.debug')) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+
+            return response()->json(['error' => 'Server error'], 500);
         }
     }
 

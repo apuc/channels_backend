@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Channels\GroupsRepository;
 use App\Services\Channels\GroupsService;
 use App\Services\Files\AvatarService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class GroupsController extends Controller
@@ -110,13 +111,24 @@ class GroupsController extends Controller
     public function destroy($id)
     {
         try {
-            $group = $this->groupRepository->findOneWithTrashed($id);
-            $this->groupsService->destroy($group);
-            $this->avatarService->destroy($group->avatar);
+            \DB::transaction(function () use ($id){
+                $group = $this->groupRepository->findById($id);
+                $this->groupsService->destroy($group);
+
+                if ($group->avatar) {
+                    $this->avatarService->destroy($group->avatar);
+                }
+            });
 
             return response()->json(['msg' => 'success'], 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['msg' => 'Group not found'], 404);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            if (config('app.debug')) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+
+            return response()->json(['error' => 'Server error'], 500);
         }
     }
 
