@@ -28,7 +28,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
                 Route::post('group/{group_id}/channels', 'Channels\GroupsController@channels')->name('group.channels');
             });
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
-            Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
+
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
@@ -40,6 +40,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });
+        /** @todo перенести в авторизованный блок после тестирования */
+        Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
 
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
