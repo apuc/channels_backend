@@ -3,6 +3,7 @@
 namespace App\Repositories\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 
 /**
@@ -93,5 +94,32 @@ class GroupsRepository
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
             ->first();
+    }
+
+    /**
+     * Метод для сохранения каналов в группе
+     *
+     * @param Group $group
+     * @param array $channels_ids
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function attachChannels(Group $group, array $channels_ids)
+    {
+        try {
+            return \DB::transaction(function () use ($group, $channels_ids) {
+                $channelsRelation = [];
+
+                foreach ($channels_ids as $channels_id) {
+                    $channelsRelation[$channels_id] = ['user_id' => \Auth::id()];
+                }
+
+                $group->channels()->attach($channelsRelation);
+
+                return true;
+            });
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }

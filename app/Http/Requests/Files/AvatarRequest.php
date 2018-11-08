@@ -32,4 +32,11 @@ class AvatarRequest extends FormRequest
         return true;
     }
 
+    public function rules()
+    {
+        return [
+            'avatar' => 'required|image|max:10240'
+        ];
+    }
+
 }

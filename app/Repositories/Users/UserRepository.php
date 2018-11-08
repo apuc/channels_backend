@@ -9,8 +9,10 @@
 namespace App\Repositories\Users;
 
 
-use App\Http\Requests\Users\UserRequest;
+use App\Http\Requests\Users\CreateRequest;
+use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
+use Psy\Util\Str;
 
 class UserRepository
 {
@@ -26,32 +28,32 @@ class UserRepository
     }
 
     /**
-     * @param UserRequest $request
+     * @param CreateRequest $request
      * @return User
      */
-    public function create(UserRequest $request)
+    public function create(CreateRequest $request)
     {
         return $this->model::create([
             'email' => $request->email,
             'login' => $request->login,
             'username' => $request->username,
-            'password' => $request->password,
+            'password' => bcrypt($request->password),
         ]);
     }
 
     /**
-     * @param UserRequest $request
+     * @param UpdateRequest $request
      * @param User $user
      * @return User
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UpdateRequest $request, User $user)
     {
 
         $result = $user->update([
-            'email' => $request->email,
-            'login' => $request->login,
-            'username' => $request->username,
-            'password' => $request->password,
+            'email' => $request->email ?? $user->email,
+            'login' => $request->login ?? $user->login,
+            'username' => $request->username ?? $user->username,
+            'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
         if($result){

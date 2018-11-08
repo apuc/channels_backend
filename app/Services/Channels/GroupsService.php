@@ -4,6 +4,7 @@
 namespace App\Services\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
+use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 use App\Repositories\Channels\GroupsRepository;
 
@@ -65,5 +66,18 @@ class GroupsService
     public function destroy(Group $group)
     {
         return $this->repository->destroy($group);
+    }
+
+    /**
+     * Метод для добавления каналов в группу
+     *
+     * @param Group $group
+     * @param array $channel_ids
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function attachChannels(Group $group, array $channel_ids)
+    {
+        return $this->repository->attachChannels($group, $channel_ids);
     }
 }

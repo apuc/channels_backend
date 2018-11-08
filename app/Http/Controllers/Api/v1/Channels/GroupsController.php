@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\Channels\GroupRequest;
-use App\Http\Requests\SmartRequest;
+use App\Http\Requests\Channels\Groups\AttachChannelsRequest;
+use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\GroupsResource;
 use App\Models\Avatar;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Channels\GroupsRepository;
 use App\Services\Channels\GroupsService;
 use App\Services\Files\AvatarService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class GroupsController extends Controller
@@ -109,13 +111,24 @@ class GroupsController extends Controller
     public function destroy($id)
     {
         try {
-            $group = $this->groupRepository->findOneWithTrashed($id);
-            $this->groupsService->destroy($group);
-            $this->avatarService->destroy($group->avatar);
+            \DB::transaction(function () use ($id){
+                $group = $this->groupRepository->findById($id);
+                $this->groupsService->destroy($group);
+
+                if ($group->avatar) {
+                    $this->avatarService->destroy($group->avatar);
+                }
+            });
 
             return response()->json(['msg' => 'success'], 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['msg' => 'Group not found'], 404);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            if (config('app.debug')) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+
+            return response()->json(['error' => 'Server error'], 500);
         }
     }
 
@@ -123,7 +136,7 @@ class GroupsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function avatar(Request $request)
+    public function avatar(AvatarRequest $request)
     {
         //dd($request->file('avatar')->getClientOriginalExtension());
         $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'group');
@@ -136,5 +149,24 @@ class GroupsController extends Controller
     {
         $avatar = Avatar::where('avatar_id', $id)->first();
         $this->avatarService->destroy($avatar);
+    }
+
+    /**
+     * Добавление каналов в группу
+     *
+     * @param AttachChannelsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function channels(AttachChannelsRequest $request, $id)
+    {
+        try {
+            $group = $this->groupRepository->findById($id);
+            $this->groupsService->attachChannels($group, $request->channel_ids);
+
+            return response()->json([], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

@@ -3,16 +3,8 @@
 namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
-/**
- * Class UserRequest
- * @package App\Http\Requests\Api\v1\Auth
- * @property string $email
- * @property string $login
- * @property string $password
- * @property string $password_confirmation
- * @property string|null $username
- */
-class UserRequest extends FormRequest
+
+class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,8 +24,8 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|max:255|min:3|email' . ($this->method() === 'POST') ? '|unique:users' : '',
-            'username' => 'string|max:255|min:3',
+            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:255|min:3',
             'password' => 'required|string|max:255|min:3',
             'password_confirmation' => 'required_with:password|same:password|min:3'
         ];
