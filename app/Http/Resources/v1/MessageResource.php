@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Http\Resources\v1\User\ShortUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -26,8 +27,8 @@ class MessageResource extends JsonResource
         return [
             'message_id' => $this->message_id,
             'channel' => $this->channel_id,
-            'to' => $this->to,
-            'from' => $this->from,
+            'to' => new ShortUserResource($this->toUser),
+            'from' => new ShortUserResource($this->fromUser),
             'read' => ($this->read) ? $this->read : 0,
             'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'text' => $this->text

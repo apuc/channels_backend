@@ -6,13 +6,13 @@
  * Time: 17:04
  */
 
-namespace App\Http\Resources\v1;
+namespace App\Http\Resources\v1\User;
 
 
 use App\Traits\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class FullUserResource extends JsonResource
 {
     use Avatar;
 
