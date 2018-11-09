@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1\Users;
 use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\FullUserResource;
 use App\Models\Avatar;
 use App\Repositories\Users\UserRepository;
 use App\Services\Files\AvatarService;
@@ -39,27 +39,27 @@ class UsersController extends Controller
     }
 
     /**
-     * @return UserResource
+     * @return FullUserResource
      */
     public function me()
     {
         $user = \Auth::user();
 
-        return new UserResource($user);
+        return new FullUserResource($user);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  CreateRequest $request
-     * @return UserResource
+     * @return FullUserResource
      */
     public function store(CreateRequest $request)
     {
         try {
             $user = $this->userService->create($request);
 
-            return new UserResource($user);
+            return new FullUserResource($user);
         } catch (\Throwable $e) {
             abort(500);
         }
@@ -69,13 +69,13 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int $id
-     * @return UserResource
+     * @return FullUserResource
      */
     public function show($id)
     {
         $user = $this->userRepository->findById($id);
 
-        return new UserResource($user);
+        return new FullUserResource($user);
     }
 
 
@@ -84,7 +84,7 @@ class UsersController extends Controller
      *
      * @param  UpdateRequest $request
      * @param  int $id
-     * @return UserResource
+     * @return FullUserResource
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -92,7 +92,7 @@ class UsersController extends Controller
             $user = $this->userRepository->findById($id);
             $user = $this->userService->update($request, $user);
 
-            return new UserResource($user);
+            return new FullUserResource($user);
         } catch (\Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
