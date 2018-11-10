@@ -13,6 +13,10 @@ use Laravel\Passport\Passport;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('auth:service')->group(function () {
+    Route::get('v1/users/me', 'Api\v1\Users\UsersController@me')->name('get current user');
+});
 Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
@@ -29,7 +33,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             });
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
 
-            Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
+//            Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
@@ -40,6 +44,13 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });
+
+        /** Роуты для общения между сервисами*/
+        Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
+            Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
+        });
+
+
         /** @todo перенести в авторизованный блок после тестирования */
         Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
 

@@ -19,5 +19,9 @@ return [
     'enter' => 'Enter',
     'choose_your_language' => 'Choose your language',
     'dashboard' => 'Dashboard',
-    'more_info' => 'More info'
+    'more_info' => 'More info',
+    'service' => 'Service',
+    'services' => 'Services',
+    'create_service' => 'Create Service',
+    'access_token' => 'Access Token',
 ];
