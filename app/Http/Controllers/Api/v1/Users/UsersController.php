@@ -73,7 +73,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->findById($id);
+        $user = $this->userRepository->findById((int) $id);
 
         return new FullUserResource($user);
     }
@@ -89,7 +89,7 @@ class UsersController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         try {
-            $user = $this->userRepository->findById($id);
+            $user = $this->userRepository->findById((int) $id);
             $user = $this->userService->update($request, $user);
 
             return new FullUserResource($user);
@@ -107,7 +107,7 @@ class UsersController extends Controller
     public function destroy($id)
     {
         try {
-            $user = $this->userRepository->findById($id);
+            $user = $this->userRepository->findById((int) $id);
             $this->userService->destroy($user);
             $this->avatarService->destroy($user->avatar);
 

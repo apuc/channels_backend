@@ -47,12 +47,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
         /** Роуты для общения между сервисами*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
+            Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
+
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
         });
-
-
-        /** @todo перенести в авторизованный блок после тестирования */
-        Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
 
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
