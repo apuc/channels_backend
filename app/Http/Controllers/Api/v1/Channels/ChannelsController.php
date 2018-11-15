@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\ChannelRequest;
-use App\Http\Requests\Channels\User\AddRequest;
 use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
@@ -56,8 +55,8 @@ class ChannelsController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param AvatarRequest $request
+     * @return AvatarResource
      */
     public function avatar(AvatarRequest $request)
     {
@@ -147,20 +146,20 @@ class ChannelsController extends Controller
     }
 
     /**
-     * @param AddRequest $request
+     * @param Request $request
      * @return ChannelResource
      */
-    public function addUser(AddRequest $request)
+    public function addUser(Request $request)
     {
         $channel = $this->channelService->addUser($request);
         return new ChannelResource($channel);
     }
 
     /**
-     * @param AddRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function deleteUser(AddRequest $request)
+    public function deleteUser(Request $request)
     {
         try {
             $this->channelService->deleteUser($request);

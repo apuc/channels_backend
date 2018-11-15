@@ -133,7 +133,7 @@
 ### Удалить пользователя из канала
 
 Для добавления пользователя необходимо отправить
-**`DELETE`** запрос на **`/v1/channel/delete-user`**
+**`DELETE`** запрос на **`/v1/channel/delete-user?user_id={user_id}&channel_id={channel_id}`**
 
 Параметры:<br>
 **user_id*** - идентификатор пользователя.<br>

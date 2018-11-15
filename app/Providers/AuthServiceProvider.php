@@ -38,8 +38,8 @@ class AuthServiceProvider extends ServiceProvider
             return new ServiceGuard(\Auth::createUserProvider($config['provider']), $app->make('request'));
         });
 
-        Passport::tokensExpireIn(now()->addMinutes(2));
+        Passport::tokensExpireIn(now()->addDays(3));
 
-        Passport::refreshTokensExpireIn(now()->addMinutes(4));
+        Passport::refreshTokensExpireIn(now()->addDays(6));
     }
 }

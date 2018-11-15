@@ -13,6 +13,7 @@ use App\Http\Requests\ChannelRequest;
 use App\Http\Requests\Channels\User\AddRequest;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
+use Illuminate\Http\Request;
 
 class ChannelService
 {
@@ -48,15 +49,15 @@ class ChannelService
         });
     }
 
-    public function addUser(AddRequest $request)
+    public function addUser(Request $request)
     {
         $channel = $this->repository->findById($request->channel_id);
-        $channel->users()->sync($request->get('user_id'));
+        $channel->users()->attach($request->get('user_id'));
 
         return $channel;
     }
 
-    public function deleteUser(AddRequest $request)
+    public function deleteUser(Request $request)
     {
         $channel = $this->repository->findById($request->channel_id);
         $channel->users()->detach($request->user_id);

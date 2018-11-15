@@ -30,6 +30,10 @@ class RegisterService
         $this->repository = $repository;
     }
 
+    /**
+     * @param RegistrationRequest $request
+     * @return $this|\Illuminate\Database\Eloquent\Model
+     */
     public function register(RegistrationRequest $request)
     {
         $request->password = bcrypt($request->password);
