@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use App\Http\Requests\ChannelRequest;
-use App\Http\Requests\Channels\User\AddRequest;
 use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\GroupsResource;
 use App\Http\Resources\v1\MessageResource;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\FullUserResource;
 use App\Models\Avatar;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
@@ -56,8 +55,8 @@ class ChannelsController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param AvatarRequest $request
+     * @return AvatarResource
      */
     public function avatar(AvatarRequest $request)
     {
@@ -147,20 +146,20 @@ class ChannelsController extends Controller
     }
 
     /**
-     * @param AddRequest $request
+     * @param Request $request
      * @return ChannelResource
      */
-    public function addUser(AddRequest $request)
+    public function addUser(Request $request)
     {
         $channel = $this->channelService->addUser($request);
         return new ChannelResource($channel);
     }
 
     /**
-     * @param AddRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function deleteUser(AddRequest $request)
+    public function deleteUser(Request $request)
     {
         try {
             $this->channelService->deleteUser($request);
@@ -178,7 +177,7 @@ class ChannelsController extends Controller
     public function usersList($id)
     {
         $channel = $this->channelRepository->findById($id);
-        return UserResource::collection($channel->users);
+        return FullUserResource::collection($channel->users);
     }
 
     /**

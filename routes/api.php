@@ -27,13 +27,13 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
                 Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
                 Route::post('group/{group_id}/channels', 'Channels\GroupsController@channels')->name('group.channels');
             });
+            Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
 
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
-            Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
             Route::get('/channel/{channel}/users', 'Channels\ChannelsController@usersList')->name('users.list');
             Route::get('/channel/{channel}/messages', 'Channels\ChannelsController@messagesList')->name('messages.list');
