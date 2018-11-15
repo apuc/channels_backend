@@ -104,4 +104,16 @@ class User extends Authenticatable
         return $this->hasOne(Avatar::class, 'avatar_id', 'avatar_id');
     }
 
+    /**
+     * @param array $credentials
+     * @return User|null
+     */
+    public function fetchUserByCredentials(array $credentials)
+    {
+        if (!isset($credentials['id'])) {
+            return null;
+        }
+
+        return self::findOrFail($credentials['id']);
+    }
 }

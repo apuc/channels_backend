@@ -58,3 +58,22 @@ Breadcrumbs::register('channel.edit', function(BreadcrumbsGenerator $crumbs, $ch
 });
 
 /** =============================================================================== */
+
+/** ================================= Services ==================================== */
+
+Breadcrumbs::register('service.index', function(BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('dashboard');
+    $crumbs->push(trans('general.services'), route('service.index'));
+});
+
+Breadcrumbs::register('service.show', function(BreadcrumbsGenerator $crumbs, $serviceId) {
+    $crumbs->parent('service.index');
+    $crumbs->push(trans('general.service') . ': ' . $serviceId, route('service.show', $serviceId));
+});
+
+Breadcrumbs::register('service.create', function(BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('service.index');
+    $crumbs->push(trans('general.create_service'), route('service.create'));
+});
+
+/** =============================================================================== */

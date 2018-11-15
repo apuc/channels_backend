@@ -13,6 +13,10 @@ use Laravel\Passport\Passport;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('auth:service')->group(function () {
+    Route::get('v1/users/me', 'Api\v1\Users\UsersController@me')->name('get current user');
+});
 Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
@@ -40,8 +44,13 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });
-        /** @todo перенести в авторизованный блок после тестирования */
-        Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
+
+        /** Роуты для общения между сервисами*/
+        Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
+            Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
+
+            Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
+        });
 
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');

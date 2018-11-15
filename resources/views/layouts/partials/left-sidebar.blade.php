@@ -37,6 +37,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('service.index') }}" class="nav-link {{ Request::is('service', 'service/*', 'service/create') ? 'active' : '' }}">
+                        <i class="nav-icon fa fa-th"></i>
+                        <p>
+                            @lang('general.services')
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
