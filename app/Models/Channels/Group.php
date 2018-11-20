@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @mixin \Eloquent
  * @property int $channels_group_id
+ * @property int $owner_id
  * @property string $title
  * @property string $slug
  * @property string $status
@@ -31,7 +32,7 @@ class Group extends Model
     public const STATUS_DISABLE = 'disable';
 
     protected $fillable = [
-        'title', 'slug', 'status', 'avatar_id'
+        'title', 'slug', 'status', 'avatar_id', 'owner_id'
     ];
 
     protected $dates = [
@@ -78,5 +79,13 @@ class Group extends Model
     public function avatar()
     {
         return $this->hasOne(Avatar::class, 'avatar_id', 'avatar_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'user_id', 'owner_id');
     }
 }

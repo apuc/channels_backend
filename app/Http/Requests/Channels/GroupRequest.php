@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * @property string $slug
  * @property string $status
  * @property integer $avatar_id
+ * @property integer $owner_id
  */
 class GroupRequest extends FormRequest
 {
@@ -37,6 +38,7 @@ class GroupRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255|min:3',
+            'owner_id' => 'required|integer|exists:users,user_id',
             'slug' => 'required|string|max:255|min:3',
             'status' => 'required|in:' . implode(',', Group::getStatuses()),
             'user_ids' => 'array',
