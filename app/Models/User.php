@@ -61,16 +61,11 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function groups()
     {
-        return $this->belongsToMany(
-            Group::class,
-            'channels_group_users',
-            'user_id',
-            'channels_group_id'
-        );
+        return $this->hasOne(Group::class, 'owner_id', 'user_id');
     }
 
     /**
