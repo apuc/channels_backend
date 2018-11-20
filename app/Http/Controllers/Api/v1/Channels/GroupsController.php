@@ -156,7 +156,7 @@ class GroupsController extends Controller
      *
      * @param AttachChannelsRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return GroupsResource
      */
     public function channels(AttachChannelsRequest $request, $id)
     {
@@ -164,7 +164,7 @@ class GroupsController extends Controller
             $group = $this->groupRepository->findById($id);
             $this->groupsService->attachChannels($group, $request->channel_ids);
 
-            return response()->json([], 200);
+            return new GroupsResource($group);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
