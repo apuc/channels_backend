@@ -37,6 +37,7 @@ class ChannelRepository
             'title' => $request->title,
             'slug' => $request->slug,
             'status' => $request->status,
+            'owner_id' => $request->owner_id,
             'type' => $request->type,
             'private' => $request->private,
             'avatar_id' => $request->avatar
@@ -56,6 +57,7 @@ class ChannelRepository
             'title' => $request->title,
             'slug' => $request->slug,
             'status' => $request->status,
+            'owner_id' => $request->owner_id,
             'type' => $request->type,
             'private' => $request->private,
             'avatar_id' => $request->avatar

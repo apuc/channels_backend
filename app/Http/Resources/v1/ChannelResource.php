@@ -28,6 +28,7 @@ class ChannelResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
+            'owner_id' => $this->owner_id,
             'private' => $this->private,
             'type' => $this->type,
             'user_count' => $this->getUserCount(),

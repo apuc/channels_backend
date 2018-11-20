@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $slug
  * @property string $status
  * @property boolean $private
+ * @property integer $owner_id
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -34,7 +35,7 @@ class Channel extends Model
     public const TYPE_DIALOG = 'dialog';
 
     protected $fillable = [
-        'title', 'slug', 'status', 'type', 'private', 'avatar_id'
+        'title', 'slug', 'status', 'type', 'private', 'avatar_id', 'owner_id'
     ];
 
     protected $dates = [
@@ -92,6 +93,14 @@ class Channel extends Model
     public function getUserCount()
     {
         return $this->users()->count();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'user_id', 'owner_id');
     }
 
 }

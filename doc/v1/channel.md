@@ -15,6 +15,7 @@
             "title": "Mr.",
             "slug": "mr",
             "status": "active",
+            "owner_id": 2,
             "private": 0,
             "type": "chat",
             "user_count": 2,
@@ -29,6 +30,7 @@
             "title": "Не работает доменное имя",
             "slug": "eee",
             "status": "active",
+            "owner_id": 2,
             "private": 0,
             "type": "wall",
             "user_count": 2,
@@ -51,6 +53,7 @@
 **title*** - название канала.<br>
 **slug*** - url канала.<br>
 **status*** - принимает 2-а значения 'active' и 'disable'.<br>
+**owner_id*** - идентификатор создателя канала.<br>
 **user_ids*** - массив пользователей канала.<br>
 **type*** - тип канала, принимает такие значения: 
 'chat', 'wall' и 'dialog'<br>
@@ -67,6 +70,7 @@
         "title": "Ms.",
         "slug": "ms",
         "status": "disable",
+        "owner_id": 2,
         "private": 1,
         "type": "chat",
         "user_count": 2,
@@ -88,6 +92,7 @@
 **title*** - название канала.<br>
 **slug*** - url канала.<br>
 **status*** - принимает 2-а значения 'active' и 'disable'.<br>
+**owner_id*** - идентификатор создателя канала.<br>
 **user_ids*** - массив пользователей канала.<br>
 **type*** - тип канала, принимает такие значения: 
 'chat', 'wall' и 'dialog'<br>
@@ -109,6 +114,7 @@
         "title": "Ms.",
         "slug": "ms",
         "status": "disable",
+        "owner_id": 2,
         "private": 1,
         "type": "chat",
         "user_count": 2,
