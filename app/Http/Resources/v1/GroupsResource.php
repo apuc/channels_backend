@@ -21,6 +21,7 @@ class GroupsResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
+            'owner_id' => $this->owner_id,
             'avatar' => $this->getAvatar($this->avatar),
             'channels' => ChannelResource::collection($this->channels)->toArray($request)
         ];

@@ -57,7 +57,7 @@ class GroupsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  GroupRequest $request
-     * @return \Illuminate\Http\Response
+     * @return GroupsResource
      */
     public function store(GroupRequest $request)
     {
@@ -133,8 +133,8 @@ class GroupsController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param AvatarRequest $request
+     * @return AvatarResource
      */
     public function avatar(AvatarRequest $request)
     {

@@ -15,6 +15,7 @@
         "title": "Mrs.",
         "slug": "mrs",
         "status": "disable",
+        "owner_id": "8",
         "avatar":{
             "origin": null,
             "average": null,
@@ -28,6 +29,7 @@
         "title": "Ms.",
         "slug": "ms",
         "status": "active",
+        "owner_id": "8",
         "avatar":{
             "origin": "http://files.newchannels.loc/img/group/8/84/8440e9a9f4923d8e73413204198c7cbc.png",
             "average": "http://files.newchannels.loc/img/group/8/84/8440e9a9f4923d8e73413204198c7cbc_400.png",
@@ -73,7 +75,8 @@
 **title*** - название группы.<br>
 **slug*** - url группы.<br>
 **status*** - принимает 2-а значения 'active' и 'disable'.<br>
-**user_ids*** - массив пользователей группы.<br>
+**owner_id*** - идентификатор создателя группы.<br>
+**user_ids** - массив пользователей группы.<br>
 **avatar** - автарка группы, 
 принимает идентификатор заранее загруженной аватарки.
 
@@ -86,6 +89,7 @@
         "title": "test add",
         "slug": "test_add",
         "status": "active",
+        "owner_id": "8",
         "avatar":{
             "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
             "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",
@@ -106,6 +110,7 @@
 **title*** - название группы.<br>
 **slug*** - url группы.<br>
 **status*** - принимает 2-а значения 'active' и 'disable'.<br>
+**owner_id*** - идентификатор создателя группы.<br>
 **user_ids*** - массив пользователей группы.<br>
 **avatar** - автарка группы, 
 принимает идентификатор заранее загруженной аватарки.
@@ -124,6 +129,7 @@
         "title": "test add",
         "slug": "test_add",
         "status": "active",
+        "owner_id": "8",
         "avatar":{
             "origin": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436.png",
             "average": "http://files.newchannels.loc/img/group/9/99/994d2dc4c7c589937fbdcdda0db25436_400.png",

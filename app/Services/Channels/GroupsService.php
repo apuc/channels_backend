@@ -38,9 +38,7 @@ class GroupsService
     {
         return \DB::transaction(function () use ($request) {
             $group = $this->repository->create($request);
-
-            $group->users()->sync($request->get('user_ids'));
-
+            //$group->users()->sync($request->get('user_ids'));
             return $group;
         });
     }

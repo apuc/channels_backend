@@ -34,6 +34,7 @@ class GroupsRepository
             'title' => $request->title,
             'slug' => $request->slug,
             'status' => $request->status,
+            'owner_id' => $request->owner_id,
             'avatar_id' => $request->avatar
         ]);
     }
