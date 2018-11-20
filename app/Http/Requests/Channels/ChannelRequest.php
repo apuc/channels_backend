@@ -27,6 +27,7 @@ class ChannelRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|min:3',
             'slug' => 'required|string|max:255|min:3',
+            'owner_id' => 'required|integer|exists:users,user_id',
             'status' => 'required|in:' . implode(',', Channel::getStatuses()),
             'type' => 'required|in:' . implode(',', Channel::getTypes()),
             'private' => 'required|in:0,1',
