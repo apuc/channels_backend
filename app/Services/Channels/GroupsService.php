@@ -78,4 +78,16 @@ class GroupsService
     {
         return $this->repository->attachChannels($group, $channel_ids);
     }
+
+    /**
+     * Метод удаления канала из группы
+     *
+     * @param Group $group
+     * @param $channel_id
+     * @return bool
+     */
+    public function detachChannel(Group $group, $channel_id)
+    {
+        return $this->repository->detachChannel($group, $channel_id);
+    }
 }

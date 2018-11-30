@@ -30,6 +30,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::group([], function () {
                 Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
                 Route::post('group/{group_id}/channels', 'Channels\GroupsController@channels')->name('group.channels');
+                Route::delete('group/{group_id}/delete-channel', 'Channels\GroupsController@deleteChannel')->name('group.delete-channel');
             });
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);

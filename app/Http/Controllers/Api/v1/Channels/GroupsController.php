@@ -111,7 +111,7 @@ class GroupsController extends Controller
     public function destroy($id)
     {
         try {
-            \DB::transaction(function () use ($id){
+            \DB::transaction(function () use ($id) {
                 $group = $this->groupRepository->findById($id);
                 $this->groupsService->destroy($group);
 
@@ -165,6 +165,22 @@ class GroupsController extends Controller
             $this->groupsService->attachChannels($group, $request->channel_ids);
 
             return new GroupsResource($group);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Удаление канала из группы
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteChannel(Request $request, $id)
+    {
+        try {
+            $group = $this->groupRepository->findById($id);
+            $this->groupsService->detachChannel($group, $request->channel_id);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }

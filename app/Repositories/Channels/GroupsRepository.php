@@ -81,7 +81,7 @@ class GroupsRepository
      * @param int $id
      * @return Group|null
      */
-    public function findById(int $id) :?Group
+    public function findById(int $id):?Group
     {
         return $this->model::findOrFail($id);
     }
@@ -90,7 +90,7 @@ class GroupsRepository
      * @param $id
      * @return Group|null
      */
-    public function findOneWithTrashed($id) :?Group
+    public function findOneWithTrashed($id):?Group
     {
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
@@ -120,6 +120,25 @@ class GroupsRepository
                 return true;
             });
         } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Метод удаления канала из группы
+     *
+     * @param Group $group
+     * @param $channel_id
+     * @return bool
+     * @throws \Throwable
+     */
+    public function detachChannel(Group $group, $channel_id)
+    {
+        try{
+            $group->channels()->detach($channel_id);
+
+            return true;
+        } catch (\Throwable $e){
             throw $e;
         }
     }
