@@ -10,6 +10,7 @@ namespace App\Services\Users;
 
 
 use App\Http\Requests\Users\CreateRequest;
+use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use App\Repositories\Users\UserRepository;
@@ -38,7 +39,7 @@ class UserService
      * @param CreateRequest $request
      * @return User
      */
-    public function create(CreateRequest $request) :User
+    public function create(CreateRequest $request): User
     {
         return $this->repository->create($request);
     }
@@ -53,6 +54,16 @@ class UserService
     public function update(UpdateRequest $request, User $user): User
     {
         return $this->repository->update($request, $user);
+    }
+
+    /**
+     * @param ProfileRequest $request
+     * @param User $user
+     * @return User
+     */
+    public function updateProfile(ProfileRequest $request, User $user): User
+    {
+        return $this->repository->updateProfile($request, $user);
     }
 
     /**

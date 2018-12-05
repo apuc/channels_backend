@@ -10,6 +10,7 @@ namespace App\Repositories\Users;
 
 
 use App\Http\Requests\Users\CreateRequest;
+use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use Psy\Util\Str;
@@ -56,12 +57,31 @@ class UserRepository
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
-        if($result){
+        if ($result) {
             return $user;
         }
 
         throw new \DomainException('Error updating channel');
 
+    }
+
+    /**
+     * @param ProfileRequest $request
+     * @param User $user
+     * @return User
+     */
+    public function updateProfile(ProfileRequest $request, User $user)
+    {
+        $result = $user->update([
+            'username' => $request->username ?? $user->username,
+            'avatar_id' => $request->avatar_id ?? $user->avatar_id
+        ]);
+
+        if ($result) {
+            return $user;
+        }
+
+        throw new \DomainException('Error updating channel');
     }
 
     /**
@@ -83,7 +103,7 @@ class UserRepository
      * @param int $id
      * @return User|null
      */
-    public function findById(int $id) :?User
+    public function findById(int $id):?User
     {
         return $this->model::findOrFail($id);
     }
