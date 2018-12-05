@@ -80,6 +80,32 @@
 }
 ```
 
+### Редактирование профиля
+
+Для того, чтобы редактировать пользователя, 
+необходимо отправить **`PUT`** запрос на **`/v1/user/profile/{user_id}`**
+
+Параметры:<br>
+**username** - имя, которое будет отображаться на сайте.<br>
+**avatar_id** - идентификатор аватара.
+
+Примерный ответ сервера:
+
+```
+{
+    "data":{
+        "user_id": 1,
+        "email": "ruben39@example.com",
+        "username": "Mrs. Camylle Collier DVM",
+        "avatar":{
+            "origin": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b.jpg",
+            "average": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_400.jpg",
+            "small": "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_150.jpg"
+        }
+    }
+}
+```
+
 ### Удаление пользователя
 
 Для того, чтобы просмотреть пользователя, 

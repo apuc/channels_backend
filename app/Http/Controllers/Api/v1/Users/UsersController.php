@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Users;
 
 use App\Http\Requests\Users\CreateRequest;
+use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\User\FullUserResource;
@@ -73,7 +74,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->findById((int) $id);
+        $user = $this->userRepository->findById((int)$id);
 
         return new FullUserResource($user);
     }
@@ -89,8 +90,25 @@ class UsersController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         try {
-            $user = $this->userRepository->findById((int) $id);
+            $user = $this->userRepository->findById((int)$id);
             $user = $this->userService->update($request, $user);
+
+            return new FullUserResource($user);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param ProfileRequest $request
+     * @param $id
+     * @return FullUserResource|\Illuminate\Http\JsonResponse
+     */
+    public function profile(ProfileRequest $request, $id)
+    {
+        try {
+            $user = $this->userRepository->findById((int)$id);
+            $user = $this->userService->updateProfile($request, $user);
 
             return new FullUserResource($user);
         } catch (\Throwable $e) {
@@ -107,7 +125,7 @@ class UsersController extends Controller
     public function destroy($id)
     {
         try {
-            $user = $this->userRepository->findById((int) $id);
+            $user = $this->userRepository->findById((int)$id);
             $this->userService->destroy($user);
             $this->avatarService->destroy($user->avatar);
 

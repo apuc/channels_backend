@@ -36,6 +36,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
 
             Route::post('/user/avatar', 'Users\UsersController@avatar')->name('user.avatar');
+            Route::put('/user/profile/{id}', 'Users\UsersController@profile')->name('user.profile');
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
