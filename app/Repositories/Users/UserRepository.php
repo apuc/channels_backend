@@ -107,4 +107,10 @@ class UserRepository
     {
         return $this->model::findOrFail($id);
     }
+
+    public function findRequestsSendersToContact($user_id)
+    {
+        return $this->model->userContacts()->user()->get();
+        //return $this->model::where(['user_contact.contact_id' => $user_id, 'user_contact.status' => User\UserContact::REQUEST_SENT])->with(['userContacts'])->get();
+    }
 }
