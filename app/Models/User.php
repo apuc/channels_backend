@@ -132,11 +132,11 @@ class User extends Authenticatable
         return $this->newQuery()->select('contacts.*')
             ->leftJoin('user_contact', function ($leftJoin) {
                 $leftJoin->on('users.user_id', '=', 'user_contact.user_id')
-                    ->orWhere('users.user_id', '=', 'user_contact.contact_id');
+                    ->on('users.user_id', '=', 'user_contact.contact_id', 'or', true);
             })
             ->leftJoin(DB::raw('users contacts'), function ($leftJoin) {
                 $leftJoin->on('user_contact.user_id', '=', 'contacts.user_id')
-                    ->orWhere('user_contact.contact_id', '=', 'contacts.user_id');
+                    ->on('user_contact.contact_id', '=', 'contacts.user_id', 'or', true);
             })
             ->where(function ($query) {
                 return $query->where(['user_contact.user_id' => $this->user_id])
