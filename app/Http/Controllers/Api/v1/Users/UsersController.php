@@ -46,8 +46,6 @@ class UsersController extends Controller
     {
         $user = \Auth::user();
 
-        dd($user->contacts());
-
         return new FullUserResource($user);
     }
 
