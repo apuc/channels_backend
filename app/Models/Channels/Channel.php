@@ -22,13 +22,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Channel extends Model
 {
-    use SoftDeletes, SlugbleModel;
+    use SoftDeletes;
 
     protected $table = 'channel';
 
     public $primaryKey = 'channel_id';
-
-    public $slugFieldName = 'slug';
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';

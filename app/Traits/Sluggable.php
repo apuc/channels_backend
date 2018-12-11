@@ -9,7 +9,7 @@
 namespace App\Traits;
 
 
-trait Slugble
+trait Sluggable
 {
 
     public function findOrFail($data)

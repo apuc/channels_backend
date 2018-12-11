@@ -9,12 +9,12 @@
 namespace App\Traits;
 
 
-trait SlugbleModel
+trait SluggableModel
 {
 
     public function getSlugFieldName()
     {
-        return $this->slugFieldName;
+        return 'slug';
     }
 
 }
