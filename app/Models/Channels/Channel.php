@@ -4,6 +4,7 @@ namespace App\Models\Channels;
 
 use App\Models\Avatar;
 use App\Models\User;
+use App\Traits\SlugbleModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,11 +22,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Channel extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, SlugbleModel;
 
     protected $table = 'channel';
 
     public $primaryKey = 'channel_id';
+
+    public $slugFieldName = 'slug';
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';

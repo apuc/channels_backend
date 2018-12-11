@@ -92,9 +92,14 @@ class ChannelsController extends Controller
      */
     public function show($id)
     {
-        $channel = $this->channelRepository->findOneWithTrashed($id);
+        try {
+            $channel = $this->channelRepository->findOrFail($id);
 
-        return new ChannelResource($channel);
+            return new ChannelResource($channel);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
     }
 
     /**
