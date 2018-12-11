@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 use App\Models\User\UserContact;
-use App\Traits\SlugbleModel;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
