@@ -11,11 +11,11 @@ namespace App\Repositories\Channels;
 
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
-use App\Traits\Slugble;
+use App\Traits\Sluggable;
 
 class ChannelRepository
 {
-    use Slugble;
+    use Sluggable;
 
     protected $model;
 
