@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api\v1\Users;
 
+use App\Http\Requests\Users\ContactRequest;
 use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\ProfileRequest;
+use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Models\Avatar;
+use App\Models\User\UserContact;
+use App\Repositories\Users\UserContactRepository;
 use App\Repositories\Users\UserRepository;
 use App\Services\Files\AvatarService;
 use App\Services\Users\UserService;
@@ -31,12 +35,34 @@ class UsersController extends Controller
      */
     protected $avatarService;
 
+    /**
+     * @var UserContactRepository
+     */
+    protected $userContactRepository;
 
-    public function __construct(UserRepository $userRepository, UserService $userService, AvatarService $avatarService)
+
+    public function __construct(UserRepository $userRepository, UserService $userService, AvatarService $avatarService, UserContactRepository $userContactRepository)
     {
         $this->userRepository = $userRepository;
         $this->userService = $userService;
         $this->avatarService = $avatarService;
+        $this->userContactRepository = $userContactRepository;
+    }
+
+    /**
+     * @param SearchRequest $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index(SearchRequest $request)
+    {
+        try {
+            $users = $this->userService->search($request);
+
+            return FullUserResource::collection($users);
+        } catch (\Throwable $e) {
+            abort(500);
+        }
+
     }
 
     /**
@@ -146,6 +172,55 @@ class UsersController extends Controller
         $avatar = $this->avatarService->save($avatarRequest);
 
         return new AvatarResource($avatar);
+    }
+
+    /**
+     * @param ContactRequest $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function addContact(ContactRequest $request)
+    {
+        try {
+            $this->userContactRepository->create($request);
+
+            return response()->json(['msg' => 'success'], 200);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+
+    }
+
+    /**
+     * @param ContactRequest $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function confirmContact(ContactRequest $request)
+    {
+        try {
+            $userContact = $this->userContactRepository->findByPrimary($request->user_id, $request->contact_id);
+            $this->userContactRepository->confirm(UserContact::REQUEST_ACCEPTED, $userContact);
+
+            return response()->json(['msg' => 'success'], 200);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
+
+    }
+
+    /**
+     * @param ContactRequest $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function rejectContact(ContactRequest $request)
+    {
+        try {
+            $userContact = $this->userContactRepository->findByPrimary($request->user_id, $request->contact_id);
+            $this->userContactRepository->confirm(UserContact::REQUEST_REJECTED, $userContact);
+
+            return response()->json(['msg' => 'success'], 204);
+        } catch (\Throwable $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
     }
 
     public function delava($id)
