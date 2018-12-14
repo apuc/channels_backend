@@ -4,6 +4,8 @@ namespace App\Models\Channels;
 
 use App\Models\Avatar;
 use App\Models\User;
+use App\Traits\SlugbleModel;
+use App\Traits\SluggableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Channel extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, SluggableModel;
 
     protected $table = 'channel';
 

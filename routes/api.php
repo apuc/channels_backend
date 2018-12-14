@@ -25,6 +25,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 //            return $request->user();
 //        });
 
+        Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
+
         Route::middleware('auth:api')->group(function () {
 
             Route::group([], function () {
@@ -33,12 +35,16 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
                 Route::delete('group/{group_id}/delete-channel', 'Channels\GroupsController@deleteChannel')->name('group.delete-channel');
             });
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
-            Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create']);
+            Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
 
             Route::post('/user/avatar', 'Users\UsersController@avatar')->name('user.avatar');
             Route::put('/user/profile/{id}', 'Users\UsersController@profile')->name('user.profile');
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
-            Route::resource('user', 'Users\UsersController')->except(['edit', 'create', 'index']);
+            Route::post('/user/add-contact', 'Users\UsersController@addContact')->name('user.add-contact');
+            Route::put('/user/confirm-contact', 'Users\UsersController@confirmContact')->name('user.confirm-contact');
+            Route::delete('/user/reject-contact', 'Users\UsersController@rejectContact')->name('user.reject-contact');
+            Route::resource('user', 'Users\UsersController')->except(['edit', 'create']);
+
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');

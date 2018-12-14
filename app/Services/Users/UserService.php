@@ -11,6 +11,7 @@ namespace App\Services\Users;
 
 use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\ProfileRequest;
+use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use App\Repositories\Users\UserRepository;
@@ -75,6 +76,15 @@ class UserService
     public function destroy(User $user)
     {
         return $this->repository->destroy($user);
+    }
+
+    /**
+     * @param SearchRequest $request
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function search(SearchRequest $request)
+    {
+        return $this->repository->search($request);
     }
 
 }

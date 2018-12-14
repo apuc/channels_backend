@@ -10,7 +10,9 @@ namespace App\Http\Requests\Users;
 
 
 use App\Models\User\UserContact;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ContactRequest extends FormRequest
 {
@@ -32,8 +34,14 @@ class ContactRequest extends FormRequest
      */
     public function rules()
     {
+        //dd($this->user_id);
         return [
-            'user_id' => 'required|integer|exists:users,user_id',
+            'user_id' => [
+                'required',
+                'integer',
+                'exists:users,user_id',
+                'unique_with:user_contact,contact_id,' . $this->contact_id
+            ],
             'contact_id' => 'required|integer|exists:users,user_id',
             //'status' => 'in:' . implode(',', UserContact::getStatuses()),
         ];
@@ -46,6 +54,7 @@ class ContactRequest extends FormRequest
     {
         return [
             '*.required' => 'Это поле обязательно',
+            'user_id.unique_with' => 'Запрос уже отправлен',
         ];
     }
 

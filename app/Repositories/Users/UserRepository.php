@@ -11,8 +11,10 @@ namespace App\Repositories\Users;
 
 use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\ProfileRequest;
+use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Psy\Util\Str;
 
 class UserRepository
@@ -112,5 +114,27 @@ class UserRepository
     {
         return $this->model->userContacts()->user()->get();
         //return $this->model::where(['user_contact.contact_id' => $user_id, 'user_contact.status' => User\UserContact::REQUEST_SENT])->with(['userContacts'])->get();
+    }
+
+    /**
+     * @param SearchRequest $request
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function search(SearchRequest $request)
+    {
+        $query = $this->findByEmailOrUsername($this->model, $request);
+
+        return $query->paginate(20);
+    }
+
+    /**
+     * @param User $user
+     * @param SearchRequest $request
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function findByEmailOrUsername(User $user, SearchRequest $request)
+    {
+        return $user->where('email', 'like', "%$request->search_request%")
+            ->orWhere('username', 'like', "%$request->search_request%");
     }
 }
