@@ -40,6 +40,7 @@ class ContactRequest extends FormRequest
                 'required',
                 'integer',
                 'exists:users,user_id',
+                'unique_with:user_contact,contact_id,' . $this->contact_id
             ],
             'contact_id' => 'required|integer|exists:users,user_id',
             //'status' => 'in:' . implode(',', UserContact::getStatuses()),
@@ -53,6 +54,7 @@ class ContactRequest extends FormRequest
     {
         return [
             '*.required' => 'Это поле обязательно',
+            'user_id.unique_with' => 'Запрос уже отправлен',
         ];
     }
 
