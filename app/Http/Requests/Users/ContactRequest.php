@@ -34,17 +34,21 @@ class ContactRequest extends FormRequest
      */
     public function rules()
     {
-        //dd($this->user_id);
-        return [
+
+        $rules = [
             'user_id' => [
                 'required',
                 'integer',
                 'exists:users,user_id',
-                'unique_with:user_contact,contact_id,' . $this->contact_id
             ],
             'contact_id' => 'required|integer|exists:users,user_id',
-            //'status' => 'in:' . implode(',', UserContact::getStatuses()),
         ];
+
+        if ($this->method() === 'POST'){
+            $rules['user_id'][] = 'unique_with:user_contact,contact_id,' . $this->contact_id;
+        }
+
+        return $rules;
     }
 
     /**
