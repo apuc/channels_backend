@@ -202,3 +202,77 @@
 **user_id*** - идентификатор пользователя, который отправляет запрос.<br>
 **contact_id*** - идентификатор пользователя, которому отправляют запрос.
 
+### Запрос на получение контактов пользователя
+
+Для того, чтобы контакты пользователя, 
+необходимо отправить **`GET`** запрос на **`/v1/user/contacts`**
+
+Примерный ответ сервера:
+
+```
+{
+  "data": [
+    {
+      "user_id": 3,
+      "email": "kaleb49@example.com",
+      "username": "Prof. Seth Denesik Jr.",
+      "avatar": null
+    },
+    {
+      "user_id": 9,
+      "email": "liliana13@example.com",
+      "username": "Dr. Jesse Jacobi I",
+      "avatar": null
+    },
+    {
+      "user_id": 17,
+      "email": "ccrooks@example.org",
+      "username": "Mrs. Vicenta Berge",
+      "avatar": null
+    },
+    {
+      "user_id": 19,
+      "email": "feichmann@example.net",
+      "username": "Miss Tina Rempel Sr.",
+      "avatar": null
+    },
+    {
+      "user_id": 20,
+      "email": "amelia04@example.com",
+      "username": "Aniyah Mante",
+      "avatar": null
+    }
+  ]
+}
+```
+
+### Запрос на получение заявок на добавления в контакты
+
+Для того, получить завки на добавления в контакты, 
+необходимо отправить **`GET`** запрос на **`/v1/user/senders`**
+
+Примерный ответ сервера:
+
+```
+{
+  "data": [
+    {
+      "user_id": 1,
+      "email": "ruben39@example.com",
+      "username": "Mrs. Camylle Collier DVM",
+      "avatar": {
+        "avatar_id": 5,
+        "origin": "http:\/\/files.newchannels.loc\/img\/channel\/0\/04\/04882234d9761dc7072283ba61e2c29b.jpg",
+        "average": "http:\/\/files.newchannels.loc\/img\/channel\/0\/04\/04882234d9761dc7072283ba61e2c29b_400.jpg",
+        "small": "http:\/\/files.newchannels.loc\/img\/channel\/0\/04\/04882234d9761dc7072283ba61e2c29b_150.jpg"
+      }
+    },
+    {
+      "user_id": 15,
+      "email": "lauren.cummings@example.org",
+      "username": "Reed Murazik",
+      "avatar": null
+    }
+  ]
+}
+```

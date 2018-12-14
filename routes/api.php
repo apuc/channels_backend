@@ -43,6 +43,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/user/add-contact', 'Users\UsersController@addContact')->name('user.add-contact');
             Route::put('/user/confirm-contact', 'Users\UsersController@confirmContact')->name('user.confirm-contact');
             Route::delete('/user/reject-contact', 'Users\UsersController@rejectContact')->name('user.reject-contact');
+            Route::get('/user/contacts', 'Users\UsersController@contacts')->name('user.contacts');
+            Route::get('/user/senders', 'Users\UsersController@senders')->name('user.senders');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create']);
 
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
