@@ -223,6 +223,26 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function contacts()
+    {
+        $user = \Auth::user()->contacts();
+
+        return FullUserResource::collection($user);
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function senders()
+    {
+        $user = \Auth::user()->senders;
+
+        return FullUserResource::collection($user);
+    }
+
     public function delava($id)
     {
         $avatar = Avatar::where('avatar_id', $id)->first();

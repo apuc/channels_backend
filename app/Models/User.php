@@ -145,7 +145,7 @@ class User extends Authenticatable
             ->where('contacts.user_id', '<>', $this->user_id)
             ->where(['status' => UserContact::REQUEST_ACCEPTED])
             ->orderBy('contacts.user_id')
-            ->groupBy('contacts.user_id')->get()->pluck('user_id');
+            ->groupBy('contacts.user_id')->get();
     }
 
     /**
