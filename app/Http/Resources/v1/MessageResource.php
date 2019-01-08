@@ -25,7 +25,7 @@ class MessageResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'message_id' => $this->message_id,
+            'id' => $this->message_id,
             'channel' => $this->channel_id,
             'to' => new ShortUserResource($this->toUser),
             'from' => new ShortUserResource($this->fromUser),

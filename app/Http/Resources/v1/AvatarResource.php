@@ -23,7 +23,7 @@ class AvatarResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'avatar_id' => $this->avatar_id,
+            'id' => $this->avatar_id,
             'origin' => $this->getOrigin(),
             'average' => $this->getAverage(),
             'small' => $this->getSmall(),

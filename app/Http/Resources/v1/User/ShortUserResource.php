@@ -22,7 +22,7 @@ class ShortUserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'user_id' => $this->user_id,
+            'id' => $this->user_id,
             'username' => $this->getName(),
             'avatar' => ($this->avatar) ? $this->avatar->getSmall() : null,
         ];
