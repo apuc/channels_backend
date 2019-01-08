@@ -3,6 +3,8 @@
 namespace App\Models\Channels;
 
 use App\Models\Avatar;
+use App\Models\Contracts\ChannelEntityInterface;
+use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,9 +22,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-class Group extends Model
+class Group extends Model implements ChannelEntityInterface
 {
-    use SoftDeletes;
+    use SoftDeletes, ChanelEntityTrait;
 
     protected $table = 'channels_group';
 
@@ -87,5 +89,31 @@ class Group extends Model
     public function owner()
     {
         return $this->hasOne(User::class, 'user_id', 'owner_id');
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->channels_group_id;
+    }
+
+    /**
+     * Тип сущности
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return 'group';
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->channels()->count();
     }
 }

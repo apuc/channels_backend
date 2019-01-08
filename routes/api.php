@@ -52,6 +52,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
             Route::get('/channel/{channel}/users', 'Channels\ChannelsController@usersList')->name('users.list');
             Route::get('/channel/{channel}/messages', 'Channels\ChannelsController@messagesList')->name('messages.list');
+            Route::get('/channel/service/left-side-bar', 'Channels\ServiceController@leftSideBar')->name('channels.service.leftSideBar');
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
         });

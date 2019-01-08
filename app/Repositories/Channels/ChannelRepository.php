@@ -12,6 +12,7 @@ namespace App\Repositories\Channels;
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Traits\Sluggable;
+use Illuminate\Database\Eloquent\Builder;
 
 class ChannelRepository
 {
@@ -106,5 +107,28 @@ class ChannelRepository
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
             ->first();
+    }
+
+    /**
+     * @param int $userId
+     * @return null|\Illuminate\Database\Eloquent\Collection
+     */
+    public function findByUserWithoutGroups(int $userId)
+    {
+        return $this->model->newQuery()
+            ->select(['channel.*'])
+            ->leftJoin('channels_group_users', 'channels_group_users.channel_id', '=', 'channel.channel_id')
+            ->where(function (Builder $query) use ($userId) {
+                $query->where('channels_group_users.user_id', $userId);
+                $query->whereNull('channels_group_users.channels_group_id');
+            })
+            ->orWhere(function (Builder $query) use ($userId) {
+                $query->where('channel.owner_id', $userId);
+                $query->where(function (Builder $query) use ($userId) {
+                    $query->where('channels_group_users.user_id', '<>', $userId);
+                    $query->orWhereNull('channels_group_users.user_id');
+                });
+            })
+            ->get();
     }
 }

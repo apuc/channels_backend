@@ -159,3 +159,64 @@
 
 Для того, чтобы удалить канал, необходимо отправить 
 **`DELETE`** запрос на **`/v1/channel/{channel_id}`**
+
+### Получение списка каналов в группах и каналов без групп для левого меню
+
+Для получения списка каналов в группах и каналов без групп необходимо отправить
+**`GET`** запрос на **`/v1/channel/service/left-side-bar`**
+
+Пример ответ:<br>
+
+```
+{
+    "data": [
+        {
+            "id": 2,
+            "title": "Prof.",
+            "slug": "prof",
+            "owner_id": 0,
+            "type": "group",
+            "count": 2,
+            "avatar": null,
+            "channels": [
+                {
+                    "id": 2,
+                    "title": "Miss",
+                    "slug": "miss",
+                    "owner_id": 0,
+                    "type": "channel",
+                    "count": 0,
+                    "avatar": null
+                },
+                {
+                    "id": 3,
+                    "title": "Mr.",
+                    "slug": "mr",
+                    "owner_id": 0,
+                    "type": "channel",
+                    "count": 0,
+                    "avatar": null
+                }
+            ]
+        },
+        {
+            "id": 81,
+            "title": "Mrs.",
+            "slug": "mrs",
+            "owner_id": 1,
+            "type": "channel",
+            "count": 0,
+            "avatar": null
+        },
+        {
+            "id": 80,
+            "title": "Dr.",
+            "slug": "dr",
+            "owner_id": 1,
+            "type": "channel",
+            "count": 0,
+            "avatar": null
+        }
+    ]
+}
+```

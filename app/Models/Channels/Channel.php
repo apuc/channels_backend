@@ -3,8 +3,9 @@
 namespace App\Models\Channels;
 
 use App\Models\Avatar;
+use App\Models\Contracts\ChannelEntityInterface;
+use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
-use App\Traits\SlugbleModel;
 use App\Traits\SluggableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,9 +22,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-class Channel extends Model
+class Channel extends Model implements ChannelEntityInterface
 {
-    use SoftDeletes, SluggableModel;
+    use SoftDeletes, SluggableModel, ChanelEntityTrait;
 
     protected $table = 'channel';
 
@@ -103,6 +104,32 @@ class Channel extends Model
     public function owner()
     {
         return $this->hasOne(User::class, 'user_id', 'owner_id');
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->channel_id;
+    }
+
+    /**
+     * Тип сущности
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return 'channel';
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->getUserCount();
     }
 
 }
