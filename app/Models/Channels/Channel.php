@@ -71,7 +71,7 @@ class Channel extends Model implements ChannelEntityInterface
     {
         return $this->belongsToMany(
             User::class,
-            'channel_users',
+            'channels_group_users',
             'channel_id',
             'user_id'
         );

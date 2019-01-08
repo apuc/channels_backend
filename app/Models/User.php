@@ -78,7 +78,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             Channel::class,
-            'channel_users',
+            'channels_group_users',
             'user_id',
             'channel_id'
         );
