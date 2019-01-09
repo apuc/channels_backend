@@ -31,7 +31,7 @@ class ChannelResource extends JsonResource
             'owner_id' => $this->owner_id,
             'private' => $this->private,
             'type' => $this->type,
-            'user_count' => $this->getUserCount(),
+            'count' => $this->getUserCount(),
             'avatar' => $this->getAvatar($this->avatar)
         ];
     }
