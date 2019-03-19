@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Model;
 class Attachment extends Model
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $table = 'attachment';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     public $primaryKey = 'attachment_id';
 
@@ -28,14 +28,14 @@ class Attachment extends Model
     public const TYPE_IMAGE = 'image';
 
     /**
-     * @var array
+     * {@inheritdoc}
      */
     protected $fillable = [
         'type', 'message_id', 'status', 'options',
     ];
 
     /**
-     * @var array
+     * {@inheritdoc}
      */
     protected $dates = [
         'created_at', 'updated_at'
