@@ -27,7 +27,6 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
         Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
 
-
         Route::middleware('auth:api')->group(function () {
 
             Route::group([], function () {

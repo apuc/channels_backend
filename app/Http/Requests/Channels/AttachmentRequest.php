@@ -5,6 +5,16 @@ namespace App\Http\Requests\Channels;
 use App\Models\Channels\Attachment;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class AttachmentRequest.
+ *
+ * @package App\Http\Requests\Channels
+ *
+ * @property string $options
+ * @property string $status
+ * @property string $type
+ * @property integer $message_id
+ */
 class AttachmentRequest extends FormRequest
 {
     /**
@@ -32,6 +42,11 @@ class AttachmentRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get the error messages for validation rules
+     *
+     * @return array
+     */
     public function messages()
     {
         return [

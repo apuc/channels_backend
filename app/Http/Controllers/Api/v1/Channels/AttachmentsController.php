@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1\Channels;
 
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\AttachmentRepository;
@@ -10,7 +9,13 @@ use App\Models\Channels\Attachment;
 use App\Services\Channels\AttachmentService;
 use App\Http\Requests\Channels\AttachmentRequest;
 use App\Http\Resources\v1\AttachmentResource;
+use\Illuminate\Http\Response;
 
+/**
+ * Class AttachmentsController.
+ *
+ * @package App\Http\Controllers\Api\v1\Channels
+ */
 class AttachmentsController extends Controller
 {
     /**
@@ -23,6 +28,12 @@ class AttachmentsController extends Controller
      */
     protected $attachmentRepository;
 
+    /**
+     * AttachmentsController constructor.
+     *
+     * @param AttachmentService $attachmentService
+     * @param AttachmentRepository $attachmentRepository
+     */
     public function __construct(AttachmentService $attachmentService, AttachmentRepository $attachmentRepository)
     {
         $this->attachmentService = $attachmentService;
@@ -41,11 +52,11 @@ class AttachmentsController extends Controller
         return AttachmentResource::collection($attachments);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  AttachmentRequest $request
+     *
      * @return AttachmentResource
      */
     public function store(AttachmentRequest $request)
@@ -55,7 +66,7 @@ class AttachmentsController extends Controller
 
             return new AttachmentResource($attachment);
         } catch (\Throwable $e) {
-            abort(500);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,21 +74,22 @@ class AttachmentsController extends Controller
      * Display the specified resource.
      *
      * @param  $id
+     *
      * @return AttachmentResource
      */
     public function show($id)
     {
-        $group = $this->attachmentRepository->findById($id);
+        $attachment = $this->attachmentRepository->findById($id);
 
-        return new AttachmentResource($group);
+        return new AttachmentResource($attachment);
     }
-
 
     /**
      * Update the specified resource in storage.
      *
      * @param  AttachmentRequest $request
      * @param  int $id
+     *
      * @return AttachmentResource
      */
     public function update(AttachmentRequest $request, $id)
@@ -88,7 +100,7 @@ class AttachmentsController extends Controller
 
             return new AttachmentResource($attachment);
         } catch (\Throwable $e) {
-            abort(500);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,10 +114,10 @@ class AttachmentsController extends Controller
         try {
             $attachment = $this->attachmentRepository->findById($id);
             $this->attachmentService->destroy($attachment);
-            return response()->json(['msg' => 'success'], 204);
+
+            return response()->json(['msg' => 'success'], Response::HTTP_NO_CONTENT);
         }catch (\Throwable $e) {
-            return response()->json(['error' => 'Server error'], 500);
+            return response()->json(['error' => 'Server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }

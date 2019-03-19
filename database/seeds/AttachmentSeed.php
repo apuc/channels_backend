@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+/**
+ * Class AttachmentSeed
+ */
 class AttachmentSeed extends Seeder
 {
     /**

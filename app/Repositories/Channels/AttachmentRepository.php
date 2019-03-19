@@ -1,20 +1,25 @@
 <?php
 
-
 namespace App\Repositories\Channels;
-
 
 use App\Http\Requests\Channels\AttachmentRequest;
 use App\Models\Channels\Attachment;
 
-
+/**
+ * Class AttachmentRepository.
+ *
+ * @package App\Repositories\Channels
+ */
 class AttachmentRepository
 {
-
+    /**
+     * @var Attachment
+     */
     protected $model;
 
     /**
      * AttachmentRepository constructor.
+     *
      * @param Attachment $attachment
      */
     public function __construct(Attachment $attachment)
@@ -22,8 +27,11 @@ class AttachmentRepository
         $this->model = $attachment;
     }
 
-    /**Method for create attachment
+    /**
+     * Method for create attachment
+     *
      * @param AttachmentRequest $request
+     *
      * @return mixed
      */
     public function create(AttachmentRequest $request)
@@ -36,9 +44,12 @@ class AttachmentRepository
         ]);
     }
 
-    /**Method for update Attachment
+    /**
+     * Method for update Attachment
+     *
      * @param AttachmentRequest $request
      * @param Attachment $attachment
+     *
      * @return Attachment
      */
     public function update(AttachmentRequest $request, Attachment $attachment)
@@ -57,9 +68,13 @@ class AttachmentRepository
         throw new \DomainException('Error updating attachment');
     }
 
-    /**Method for destroy attachment
+    /**
+     * Method for destroy attachment
+     *
      * @param Attachment $attachment
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(Attachment $attachment)
@@ -73,6 +88,7 @@ class AttachmentRepository
 
     /**
      * @param int $id
+     *
      * @return Attachment|null
      */
     public function findById(int $id) :?Attachment
