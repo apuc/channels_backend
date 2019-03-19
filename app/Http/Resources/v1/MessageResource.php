@@ -3,6 +3,8 @@
 namespace App\Http\Resources\v1;
 
 use App\Http\Resources\v1\User\ShortUserResource;
+use App\Http\Resources\v1\AttachmentResource;
+use App\Models\Channels\Attachment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -29,6 +31,7 @@ class MessageResource extends JsonResource
             'channel' => $this->channel_id,
             'to' => new ShortUserResource($this->toUser),
             'from' => new ShortUserResource($this->fromUser),
+            'attachments' => AttachmentResource::collection($this->attachments)->toArray($request),
             'read' => ($this->read) ? $this->read : 0,
             'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'text' => $this->text

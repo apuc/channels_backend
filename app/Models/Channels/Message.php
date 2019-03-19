@@ -66,4 +66,12 @@ class Message extends Model
         return $this->belongsTo(User::class, 'from');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class,'message_id');
+    }
+
 }

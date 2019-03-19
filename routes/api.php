@@ -36,6 +36,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             });
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
+            Route::resource('attachment', 'Channels\AttachmentsController');
 
             Route::post('/user/avatar', 'Users\UsersController@avatar')->name('user.avatar');
             Route::put('/user/profile/{id}', 'Users\UsersController@profile')->name('user.profile');
