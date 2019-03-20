@@ -24,8 +24,7 @@ class AttachmentFileRequest extends FormRequest
     public function rules()
     {
         return [
-            'attachment' => 'required|max:10240'
+            'attachment' => 'required|max:10240',
         ];
     }
-
 }
