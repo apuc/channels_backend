@@ -5,7 +5,7 @@ namespace App\Services\Channels;
 use App\Http\Requests\Channels\AttachmentRequest;
 use App\Models\Channels\Attachment;
 use App\Repositories\Channels\AttachmentRepository;
-use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 /**
  * Class AttachmentService.
@@ -66,5 +66,22 @@ class AttachmentService
     public function destroy(Attachment $attachment)
     {
         return $this->repository->destroy($attachment);
+    }
+
+    /**
+     * Method for upload attachment file.
+     *
+     * @param UploadedFile $file
+     *
+     * @return string
+     */
+    public function upload(UploadedFile $file)
+    {
+        $hash = md5($file->getClientOriginalName() . time());
+        $path = '/attachments/'. $hash[0] . '/' . $hash[0] . $hash[1] . '/';
+        $filename = $hash.'.'.$file->getClientOriginalExtension();
+        $file->storeAs('/public'.$path,$filename);
+
+        return $path.$filename;
     }
 }
