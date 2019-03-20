@@ -8,6 +8,7 @@ use App\Repositories\Channels\AttachmentRepository;
 use App\Models\Channels\Attachment;
 use App\Services\Channels\AttachmentService;
 use App\Http\Requests\Channels\AttachmentRequest;
+use App\Http\Requests\Files\AttachmentFileRequest;
 use App\Http\Resources\v1\AttachmentResource;
 use\Illuminate\Http\Response;
 
@@ -118,6 +119,24 @@ class AttachmentsController extends Controller
             return response()->json(['msg' => 'success'], Response::HTTP_NO_CONTENT);
         }catch (\Throwable $e) {
             return response()->json(['error' => 'Server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Upload attachment file.
+     *
+     * @param AttachmentFileRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse|string
+     */
+    public function upload(AttachmentFileRequest $request)
+    {
+        try{
+           $file = $this->attachmentService->upload($request->file('attachment'));
+
+           return response()->json(['file' => $file], Response::HTTP_OK);
+        }catch (\Throwable $e){
+            return $e->getMessage();
         }
     }
 }
