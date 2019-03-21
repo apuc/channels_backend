@@ -22,7 +22,7 @@ trait Avatar
     {
         if ($avatar) {
             return [
-                'avatar_id' => $avatar->getId(),
+                'id' => $avatar->getId(),
                 'origin' => $avatar->getOrigin(),
                 'average' => $avatar->getAverage(),
                 'small' => $avatar->getSmall(),
