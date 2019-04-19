@@ -165,6 +165,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
 
         'App\Services\Validation\UniquePairValidationServiceProvider',
+        'Bschmitt\Amqp\AmqpServiceProvider',
 
     ],
 
@@ -216,7 +217,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
-
+        'Amqp' => Bschmitt\Amqp\Facades\Amqp::class,
 
     ],
 

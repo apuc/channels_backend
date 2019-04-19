@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 22.10.18
- * Time: 17:39
- */
 
 namespace App\Services\Channels;
-
 
 use App\Http\Requests\Channels\MessageRequest;
 use App\Models\Channels\Message;
@@ -21,7 +14,7 @@ class MessageService
     protected $repository;
 
     /**
-     * Construct for Group service
+     * Construct for Message service
      *
      * @param MessageRepository $repository
      */
@@ -31,7 +24,7 @@ class MessageService
     }
 
     /**
-     * Method for create group
+     * Method for create message
      *
      * @param MessageRequest $request
      * @return Message
@@ -42,7 +35,7 @@ class MessageService
     }
 
     /**
-     * Method for update group
+     * Method for update message
      *
      * @param MessageRequest $request
      * @param Message $message
@@ -54,7 +47,7 @@ class MessageService
     }
 
     /**
-     * Method for destroy group
+     * Method for destroy message
      *
      * @param Message $message
      * @return bool
