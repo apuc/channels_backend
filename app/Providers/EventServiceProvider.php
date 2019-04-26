@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\Notifications\NotificationCreated;
+use App\Listeners\Notifications\NotificationCreated\SendNotificationToRabbit;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 
@@ -20,8 +21,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        'App\Events\Notifications\NotificationCreated' => [
-            'App\Listeners\Notifications\NotificationCreated\SendNotificationToRabbit',
+        NotificationCreated::class => [
+            SendNotificationToRabbit::class,
         ],
     ];
 

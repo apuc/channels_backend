@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
+    public const STATUS_READ = 1;
+    public const STATUS_NOT_READ = 0;
+
+    public const RABBIT_QUEUE_NAME = 'notifications_queue';
+
     /**
      * {@inheritdoc}
      */

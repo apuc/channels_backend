@@ -3,6 +3,7 @@
 namespace App\Listeners\Notifications\NotificationCreated;
 
 use App\Events\Notifications\NotificationCreated;
+use App\Models\Channels\Notification;
 use Bschmitt\Amqp\Facades\Amqp;
 use Illuminate\Support\Facades\Log;
 
@@ -27,7 +28,7 @@ class SendNotificationToRabbit
      */
     public function handle(NotificationCreated $event)
     {
-        Amqp::publish('notifications_queue', $event->notification , ['queue' => 'notifications_queue']);
-        Log::info('Notification sent to rabbit!',['notification'=>unserialize($event->notification)]);
+        Amqp::publish(Notification::RABBIT_QUEUE_NAME, $event->notification , ['queue' => 'notifications_queue']);
+        Log::info('Notification sent to rabbit',['notification'=>unserialize($event->notification)]);
     }
 }

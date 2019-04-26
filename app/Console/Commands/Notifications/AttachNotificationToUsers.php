@@ -46,7 +46,7 @@ class AttachNotificationToUsers extends Command
      */
     public function handle()
     {
-        Amqp::consume('notifications_queue', function ($message, $resolver) {
+        Amqp::consume(Notification::RABBIT_QUEUE_NAME, function ($message, $resolver) {
 
             $notification = unserialize($message->body);
 

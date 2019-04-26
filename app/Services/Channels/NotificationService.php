@@ -54,7 +54,7 @@ class NotificationService
     {
         $notification->users()->attach(
             $notification->channel->users->pluck('user_id'),
-            ['status'=>0]
+            ['status'=>Notification::STATUS_NOT_READ]
         );
 
         Log::info('Users are attached to notification '.$notification->id,['notification'=>$notification]);
