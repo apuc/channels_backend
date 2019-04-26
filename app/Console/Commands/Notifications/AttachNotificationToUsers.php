@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands\Notifications;
 
+use App\Models\Channels\Notification;
+use App\Services\Channels\NotificationService;
 use Illuminate\Console\Command;
 use Bschmitt\Amqp\Facades\Amqp;
-use Illuminate\Support\Facades\Log;
 
 class AttachNotificationToUsers extends Command
 {
@@ -13,22 +14,28 @@ class AttachNotificationToUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'notifications:attachusers';
+    protected $signature = 'notifications:attach-users';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'The command attaches users to the notification.';
+
+    /**
+     * @var NotificationService
+     */
+    private $notificationService;
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param NotificationService $service
      */
-    public function __construct()
+    public function __construct(NotificationService $service)
     {
+        $this->notificationService = $service;
         parent::__construct();
     }
 
@@ -43,14 +50,11 @@ class AttachNotificationToUsers extends Command
 
             $notification = unserialize($message->body);
 
-            $notification->users()->attach(
-                $notification->channel->users->pluck('user_id'),
-                ['status'=>0]
-            );
+            if($notification instanceof Notification) {
+                $this->notificationService->attachUsers($notification);
+            }
 
-            Log::info('Users are attached to notification '.$notification->id,['notification'=>$notification]);
             $resolver->acknowledge($message);
-
         });
     }
 }

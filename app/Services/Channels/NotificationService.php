@@ -6,7 +6,7 @@ use App\Events\Notifications\NotificationCreated;
 use App\Models\Channels\Notification;
 use App\Repositories\Channels\NotificationRepository;
 use Illuminate\Support\Facades\Event;
-
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NotificationService.
@@ -43,5 +43,20 @@ class NotificationService
         $notification = $this->repository->create($message_id,$channel_id);
         Event::fire(new NotificationCreated($notification));
         return $notification;
+    }
+
+    /**
+     * Method for attach users to notification
+     *
+     * @param Notification $notification
+     */
+    public function attachUsers(Notification $notification)
+    {
+        $notification->users()->attach(
+            $notification->channel->users->pluck('user_id'),
+            ['status'=>0]
+        );
+
+        Log::info('Users are attached to notification '.$notification->id,['notification'=>$notification]);
     }
 }
