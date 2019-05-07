@@ -21,7 +21,7 @@ class NotificationCreated
      */
     public function __construct(Notification $notification)
     {
-        $this->notification = serialize($notification);
+        $this->notification = $notification;
     }
 
     /**

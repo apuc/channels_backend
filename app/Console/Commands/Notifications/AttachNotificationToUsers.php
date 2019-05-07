@@ -6,6 +6,7 @@ use App\Models\Channels\Notification;
 use App\Services\Channels\NotificationService;
 use Illuminate\Console\Command;
 use Bschmitt\Amqp\Facades\Amqp;
+use Illuminate\Support\Facades\Log;
 
 class AttachNotificationToUsers extends Command
 {
@@ -52,6 +53,8 @@ class AttachNotificationToUsers extends Command
 
             if($notification instanceof Notification) {
                 $this->notificationService->attachUsers($notification);
+            }else{
+                Log::info('Not a notification instance came from the queue',['message'=>$message->body]);
             }
 
             $resolver->acknowledge($message);
