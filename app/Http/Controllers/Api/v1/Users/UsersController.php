@@ -78,7 +78,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreateRequest $request
+     * @param CreateRequest $request
      * @return FullUserResource
      */
     public function store(CreateRequest $request)
@@ -95,7 +95,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return FullUserResource
      */
     public function show($id)
@@ -109,8 +109,8 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateRequest $request
-     * @param  int $id
+     * @param UpdateRequest $request
+     * @param int $id
      * @return FullUserResource
      */
     public function update(UpdateRequest $request, $id)
@@ -145,7 +145,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
