@@ -28,7 +28,7 @@ class UserRepository
         return $this->model::create([
             'email' => $request->email,
             'login' => $request->login,
-            'username' => $request->username,
+            'username' => $request->login,
             'password' => $request->password,
         ]);
     }
