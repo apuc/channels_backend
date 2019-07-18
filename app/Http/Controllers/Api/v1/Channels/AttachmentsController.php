@@ -132,9 +132,9 @@ class AttachmentsController extends Controller
     public function upload(AttachmentFileRequest $request)
     {
         try{
-           $file = $this->attachmentService->upload($request->file('attachment'));
+           $fileInfo = $this->attachmentService->upload($request->file('attachment'));
 
-           return response()->json(['file' => $file], Response::HTTP_OK);
+           return response()->json($fileInfo, Response::HTTP_OK);
         }catch (\Throwable $e){
             return $e->getMessage();
         }

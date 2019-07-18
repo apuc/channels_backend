@@ -1,17 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 22.10.18
- * Time: 17:39
- */
-
 namespace App\Services\Channels;
 
-
 use App\Http\Requests\Channels\MessageRequest;
+use App\Http\Requests\Channels\AttachmentRequest;
+use App\Models\Channels\Attachment;
 use App\Models\Channels\Message;
 use App\Repositories\Channels\MessageRepository;
+use App\Repositories\Channels\AttachmentRepository;
 
 class MessageService
 {
@@ -21,12 +16,19 @@ class MessageService
     protected $repository;
 
     /**
-     * Construct for Group service
+     * @var AttachmentRepository
+     */
+    protected $attachmentRepository;
+
+    /**
+     * MessageService constructor.
      *
      * @param MessageRepository $repository
+     * @param AttachmentRepository $attachmentRepository
      */
-    public function __construct(MessageRepository $repository)
+    public function __construct(MessageRepository $repository,AttachmentRepository $attachmentRepository)
     {
+        $this->attachmentRepository = $attachmentRepository;
         $this->repository = $repository;
     }
 
@@ -38,7 +40,24 @@ class MessageService
      */
     public function create(MessageRequest $request): Message
     {
-        return $this->repository->create($request);
+        $message = $this->repository->create($request);
+
+        if($request->attachments){
+
+           foreach ($request->attachments as $attachment){
+
+               $data = new AttachmentRequest([
+                   'type'   => $attachment['type'],
+                   'options'  => json_encode($attachment['options']),
+                   'message_id'  => $message->message_id,
+                   'status'  => Attachment::STATUS_ACTIVE,
+               ]);
+
+               $this->attachmentRepository->create($data);
+           }
+        }
+
+        return $message;
     }
 
     /**

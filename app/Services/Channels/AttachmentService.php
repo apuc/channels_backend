@@ -82,6 +82,9 @@ class AttachmentService
         $filename = $hash.'.'.$file->getClientOriginalExtension();
         $file->storeAs('/public'.$path,$filename);
 
-        return $path.$filename;
+        return [
+            'type'=> $file->getClientMimeType(),
+            'url'=> $path.$filename,
+        ];
     }
 }
