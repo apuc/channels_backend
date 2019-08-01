@@ -3,7 +3,9 @@
 namespace App\Services\Channels;
 
 
+use App\Dto\Link;
 use DiDom\Document;
+use Illuminate\Database\Eloquent\Collection;
 
 class LinkService
 {
@@ -63,27 +65,27 @@ class LinkService
      * Парсинг ссылок в тексте
      *
      * @param string $text
-     * @return array
+     * @return array|Collection
      * @throws \Exception
      */
     public function parse(string $text){
 
         $matches = self::validate($text);
 
-        $parsed_arr = [];
+        $links = new Collection();
 
         foreach ($matches[0] as $url) {
-            $parsed_arr[] = self::grabMeta($url);
+            $links[] = self::grabMeta($url);
         }
 
-        return $parsed_arr;
+        return $links;
     }
 
     /**
      * Извлечь мета данные из html документа
      *
      * @param string $url
-     * @return array
+     * @return Link
      * @throws \Exception
      */
     public function grabMeta(string $url){
@@ -110,7 +112,7 @@ class LinkService
             }
         }
 
-        return compact('url', 'title', 'description', 'icon', 'base');
+        return Link::fromArray(compact('url', 'title', 'description', 'icon', 'base'));
     }
 
     /**

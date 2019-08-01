@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Channels\LinkRequest;
 use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\LinkResource;
+use App\Models\Channels\Message;
 use App\Services\Channels\LinkService;
 use DiDom\Document;
 use Illuminate\Http\Request;
@@ -32,9 +33,8 @@ class LinkController extends Controller
     public function singleLink(LinkRequest $request)
     {
         try{
-            $response = $this->linkService->grabMeta($request->get('link'));
-
-            return response()->json($response);
+            $link = $this->linkService->grabMeta($request->get('link'));
+            return new LinkResource($link);
         } catch (\Throwable $e){
             return response()->json();
         }
@@ -44,14 +44,14 @@ class LinkController extends Controller
      * Обработка текста с урлами
      *
      * @param LinkRequest $request
-     * @return LinkResource
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function textLinks(LinkRequest $request)
     {
         try{
-            $response = $this->linkService->parse($request->get('link'));
+            $links = $this->linkService->parse($request->get('link'));
 
-            return response()->json($response);
+            return LinkResource::collection($links);
         } catch (\Throwable $e){
             return response()->json();
         }

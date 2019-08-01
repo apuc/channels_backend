@@ -9,17 +9,17 @@ class LinkResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param \App\Http\Requests\Channels\LinkRequest $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'url'           => $request->url,
-            'title'         => $request->title,
-            'description'   => $request->description,
-            'icon'          => $request->icon,
-            'base'          => $request->base
+            'url'           => $this->getUrl(),
+            'title'         => $this->getTitle(),
+            'description'   => $this->getDescription(),
+            'icon'          => $this->getIcon(),
+            'base'          => $this->getBase()
         ];
     }
 }
