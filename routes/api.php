@@ -59,7 +59,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
 
-            Route::get('/link', 'Channels\LinkController@index');
+            Route::get('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
+            Route::get('/text-links', 'Channels\LinkController@textLinks')->name('text-links');
         });
 
         /** Роуты для общения между сервисами*/

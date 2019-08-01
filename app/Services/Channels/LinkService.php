@@ -49,6 +49,17 @@ class LinkService
     }
 
     /**
+     * Валидация на правильную ссылку
+     * @param string $url
+     * @throws \Exception
+     */
+    public static function validateSingle(string $url){
+        if(!filter_var($url, FILTER_VALIDATE_URL)){
+            throw new \Exception('invalid url');
+        }
+    }
+
+    /**
      * Парсинг ссылок в тексте
      *
      * @param string $text
@@ -69,12 +80,15 @@ class LinkService
     }
 
     /**
-     * Извлечь мета данные по ссылке
+     * Извлечь мета данные из html документа
      *
      * @param string $url
      * @return array
+     * @throws \Exception
      */
-    private function grabMeta(string $url){
+    public function grabMeta(string $url){
+
+        self::validateSingle($url);
 
         $dom = new Document($this->html($url));
 

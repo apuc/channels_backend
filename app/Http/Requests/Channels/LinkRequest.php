@@ -24,7 +24,7 @@ class LinkRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required|regex:/^.*(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.*$/'
+            'link' => 'required|regex:/^.*(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.*$/'
         ];
     }
 

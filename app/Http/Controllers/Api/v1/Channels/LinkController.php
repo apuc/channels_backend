@@ -24,17 +24,36 @@ class LinkController extends Controller
     }
 
     /**
+     * Обработка простого урла
+     *
      * @param LinkRequest $request
      * @return LinkResource
      */
-    public function index(LinkRequest $request)
+    public function singleLink(LinkRequest $request)
     {
         try{
-            $response = $this->linkService->parse($request->get('text'));
+            $response = $this->linkService->grabMeta($request->get('link'));
 
-            return response()->json(['status' => 'ok', 'meta' => $response], 201);
+            return response()->json($response);
         } catch (\Throwable $e){
-            return response()->json(['status' => 'error'], 500);
+            return response()->json();
+        }
+    }
+
+    /**
+     * Обработка текста с урлами
+     *
+     * @param LinkRequest $request
+     * @return LinkResource
+     */
+    public function textLinks(LinkRequest $request)
+    {
+        try{
+            $response = $this->linkService->parse($request->get('link'));
+
+            return response()->json($response);
+        } catch (\Throwable $e){
+            return response()->json();
         }
     }
 
