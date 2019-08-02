@@ -36,7 +36,7 @@ class LinkController extends Controller
             $link = $this->linkService->grabMeta($request->get('link'));
             return new LinkResource($link);
         } catch (\Throwable $e){
-            return response()->json();
+            return response()->json(['data' => null]);
         }
     }
 
@@ -46,14 +46,13 @@ class LinkController extends Controller
      * @param LinkRequest $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function textLinks(LinkRequest $request)
+    public function textLink(LinkRequest $request)
     {
         try{
             $links = $this->linkService->parse($request->get('link'));
-
             return LinkResource::collection($links);
         } catch (\Throwable $e){
-            return response()->json();
+            return response()->json(['data' => []]);
         }
     }
 

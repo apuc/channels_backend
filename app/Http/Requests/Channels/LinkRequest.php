@@ -23,8 +23,13 @@ class LinkRequest extends FormRequest
      */
     public function rules()
     {
+	    if(\Request::route()->getName() == 'v1.single-link'){
+		    $link_rule = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+	    } else{
+		    $link_rule = 'required|regex:/^.*(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.*$/';
+		}	
         return [
-            'link' => 'required|regex:/^.*(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.*$/'
+            'link' => $link_rule
         ];
     }
 

@@ -60,7 +60,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
 
             Route::get('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
-            Route::get('/text-links', 'Channels\LinkController@textLinks')->name('text-links');
+            Route::get('/text-link', 'Channels\LinkController@textLink')->name('text-link');
         });
 
         /** Роуты для общения между сервисами*/

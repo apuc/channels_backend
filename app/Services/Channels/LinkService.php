@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class LinkService
 {
-    private const URL_REGEX = '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#';
+    private const URL_REGEX = '/\b(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|\/))/i';
 
     private const USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36';
 
@@ -27,6 +27,7 @@ class LinkService
         curl_setopt($this->ch, CURLOPT_HEADER, 0);
         curl_setopt($this->ch, CURLOPT_USERAGENT, self::USER_AGENT);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($this->ch, CURLOPT_TIMEOUT, self::CURL_TIMEOUT);
         curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, self::CONNECT_TIMEOUT);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
@@ -90,6 +91,10 @@ class LinkService
      */
     public function grabMeta(string $url){
 
+        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+            $url = "http://" . $url;
+        }
+
         self::validateSingle($url);
 
         $dom = new Document($this->html($url));
@@ -97,14 +102,14 @@ class LinkService
         $base = parse_url($url, PHP_URL_HOST);
 
         $description_el = $dom->first('meta[name=description]');
-        $description = $description_el? $description_el->attr('content') : null;
+        $description = $description_el? $description_el->attr('content') : '';
 
-        $title_el = $dom->find('title')[0];
-        $title = $title_el? $title_el->text() : null;
+        $title_el = $dom->first('title');
+        $title = $title_el? $title_el->text() : '';
 
         $icon_selectors = ['meta[property="og:image"]', 'img', 'link[rel="apple-touch-icon"]', 'link[rel="icon"][type="image/png"]', 'link[rel$="icon"][type="image/png"]'];
         $icon_attr      = ['content', 'src', 'href', 'href', 'href'];
-        $icon = null;
+        $icon = '';
         foreach ($icon_selectors as $i => $selector){
             if($dom->has($selector)){
                 $icon = $dom->first($selector)->attr($icon_attr[$i]);
