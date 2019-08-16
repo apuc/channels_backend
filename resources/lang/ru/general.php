@@ -25,4 +25,8 @@ return [
     'services' => 'Сервисы',
     'create_service' => 'Создать сервис',
     'access_token' => 'Токен доступа',
+    'integration_types' => 'Типы интеграций',
+    'create_type_integration' => 'Создать тип интеграции',
+    'fields' => 'Поля',
+    'options' => 'Опции'
 ];

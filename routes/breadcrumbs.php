@@ -77,3 +77,25 @@ Breadcrumbs::register('service.create', function(BreadcrumbsGenerator $crumbs) {
 });
 
 /** =============================================================================== */
+
+/** ================================= Integrations ================================ */
+
+Breadcrumbs::register('integration-types.index', function(BreadcrumbsGenerator $crumbs){
+    $crumbs->parent('dashboard');
+    $crumbs->push(trans('general.integration_types'), route('integration-types.index'));
+});
+
+Breadcrumbs::register('integration-types.create', function(BreadcrumbsGenerator $crumbs){
+    $crumbs->parent('integration-types.index');
+    $crumbs->push(trans('general.create_type_integration'), route('integration-types.create'));
+});
+
+Breadcrumbs::register('integration-types.show', function (BreadcrumbsGenerator $crumbs ,$integrationType){
+    $crumbs->parent('integration-types.index');
+    $crumbs->push(trans('general.integration_types') . ': ' . $integrationType->id, route('integration-types.show', $integrationType));
+});
+
+Breadcrumbs::register('integration-types.edit', function (BreadcrumbsGenerator $crumbs, $id){
+    $crumbs->parent('integration-types.index');
+    $crumbs->push(trans('general.edit') . ': ' . $id, route('integration-types.edit', $id));
+});

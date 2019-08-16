@@ -21,6 +21,8 @@ Route::group(['middleware' => 'auth'], function (){
     Route::resource('channel', 'Admin\Channels\ChannelController');
 
     Route::resource('service', 'Admin\ServiceAuthController');
+
+    Route::resource('integration-types', 'Admin\Channels\IntegrationTypesController');
 });
 // Route for changing language...
 Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
