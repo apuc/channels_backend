@@ -60,7 +60,6 @@ class ChannelsController extends Controller
      */
     public function avatar(AvatarRequest $request)
     {
-        //dd($request->file('avatar')->getClientOriginalExtension());
         $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'channel');
         $avatar = $this->avatarService->save($avatarRequest);
 
