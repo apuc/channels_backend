@@ -9,6 +9,7 @@ use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\User\FullUserResource;
+use App\Http\Resources\v1\User\ContactUserResource;
 use App\Models\Avatar;
 use App\Models\User;
 use App\Models\User\UserContact;
@@ -261,12 +262,7 @@ class UsersController extends Controller
      */
     public function senders()
     {
-        $user = Auth::user();
-
-        return new JsonResponse([
-            'myRequests'=>FullUserResource::collection($user->friendshipRequests),
-            'toMeRequests'=>FullUserResource::collection($user->senders),
-        ]);
+        return new ContactUserResource(Auth::user());
     }
 
     /**
