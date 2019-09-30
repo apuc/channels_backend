@@ -57,12 +57,6 @@ class User extends Authenticatable
 
     public $primaryKey = 'user_id';
 
-
-    public function getDate()
-    {
-        $date = Carbon::now();
-    }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -111,13 +105,24 @@ class User extends Authenticatable
     }
 
     /**
-     * Получение заявок
+     * Заявки в друзья которые кто-то отправил пользователю
      *
      * @return $this
      */
     public function senders()
     {
         return $this->belongsToMany(User::class, 'user_contact', 'contact_id', 'user_id')
+            ->where(['user_contact.status' => UserContact::REQUEST_SENT]);
+    }
+
+    /**
+     * Заявки в друзья которые отправил пользователь
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function friendshipRequests()
+    {
+        return $this->belongsToMany(User::class, 'user_contact', 'user_id', 'contact_id')
             ->where(['user_contact.status' => UserContact::REQUEST_SENT]);
     }
 
