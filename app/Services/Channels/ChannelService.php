@@ -23,8 +23,7 @@ class ChannelService
     protected $repository;
 
     /**
-     * Construct for Group service
-     *
+     * ChannelService constructor.
      * @param ChannelRepository $repository
      */
     public function __construct(ChannelRepository $repository)
@@ -33,10 +32,10 @@ class ChannelService
     }
 
     /**
-     * Method for create group
-     *
+     * Создание канала
      * @param ChannelRequest $request
      * @return Channel
+     * @throws \Throwable
      */
     public function create(ChannelRequest $request): Channel
     {
@@ -49,6 +48,11 @@ class ChannelService
         });
     }
 
+    /**
+     * Добавить юзера в канал
+     * @param Request $request
+     * @return Channel|null
+     */
     public function addUser(Request $request)
     {
         $channel = $this->repository->findById($request->channel_id);
@@ -57,6 +61,11 @@ class ChannelService
         return $channel;
     }
 
+    /**
+     * Удалить юзера из канала
+     * @param Request $request
+     * @return Channel|null
+     */
     public function deleteUser(Request $request)
     {
         $channel = $this->repository->findById($request->channel_id);
@@ -66,11 +75,11 @@ class ChannelService
     }
 
     /**
-     * Method for update group
-     *
+     * Редактирование канала
      * @param ChannelRequest $request
      * @param Channel $channel
      * @return Channel
+     * @throws \Throwable
      */
     public function update(ChannelRequest $request, Channel $channel): Channel
     {

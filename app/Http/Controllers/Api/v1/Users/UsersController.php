@@ -10,6 +10,7 @@ use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Models\Avatar;
+use App\Models\User;
 use App\Models\User\UserContact;
 use App\Repositories\Users\UserContactRepository;
 use App\Repositories\Users\UserRepository;
@@ -17,6 +18,7 @@ use App\Services\Files\AvatarService;
 use App\Services\Users\UserService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -107,10 +109,11 @@ class UsersController extends Controller
 
 
     /**
-     * Update the specified resource in storage.
+     * Редактировать юзера
      *
      * @param UpdateRequest $request
      * @param int $id
+     *
      * @return FullUserResource
      */
     public function update(UpdateRequest $request, $id)
@@ -126,8 +129,11 @@ class UsersController extends Controller
     }
 
     /**
+     * Редактировать профиль
+     *
      * @param ProfileRequest $request
      * @param $id
+     *
      * @return FullUserResource|\Illuminate\Http\JsonResponse
      */
     public function profile(ProfileRequest $request, $id)
@@ -143,9 +149,10 @@ class UsersController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить юзера
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -162,12 +169,14 @@ class UsersController extends Controller
     }
 
     /**
+     * Устоновить аватарку
+     *
      * @param Request $request
+     *
      * @return AvatarResource
      */
     public function avatar(Request $request)
     {
-        //dd($request->file('avatar')->getClientOriginalExtension());
         $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'user');
         $avatar = $this->avatarService->save($avatarRequest);
 
@@ -175,7 +184,10 @@ class UsersController extends Controller
     }
 
     /**
+     * Добавить в контакты
+     *
      * @param ContactRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function addContact(ContactRequest $request)
@@ -191,7 +203,10 @@ class UsersController extends Controller
     }
 
     /**
+     * Принять запрос на добавление в контакты
+     *
      * @param ContactRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function confirmContact(ContactRequest $request)
@@ -208,7 +223,10 @@ class UsersController extends Controller
     }
 
     /**
+     * Отклонить запрос на добавление в контакты
+     *
      * @param ContactRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function rejectContact(ContactRequest $request)
@@ -224,6 +242,8 @@ class UsersController extends Controller
     }
 
     /**
+     * Контакты пользователя
+     *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function contacts()
@@ -234,15 +254,26 @@ class UsersController extends Controller
     }
 
     /**
+     * Получение всех запросов в друзья(которые отправили пользователю и которые отправил пользователь)
+     *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function senders()
     {
-        $user = \Auth::user()->senders;
+        $user = Auth::user();
+        $senders = $user->senders;
+        $requests = $user->friendshipRequests;
 
-        return FullUserResource::collection($user);
+        $users = $senders->merge($requests);
+
+        return FullUserResource::collection($users->unique('user_id'));
     }
 
+    /**
+     * Удалить аватар
+     *
+     * @param $id
+     */
     public function delava($id)
     {
         $avatar = Avatar::where('avatar_id', $id)->first();

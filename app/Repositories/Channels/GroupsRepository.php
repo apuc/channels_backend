@@ -5,7 +5,9 @@ namespace App\Repositories\Channels;
 use App\Http\Requests\Channels\GroupRequest;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class for Group repository
@@ -110,13 +112,11 @@ class GroupsRepository
     {
         try {
             return \DB::transaction(function () use ($group, $channels_ids) {
-                $channelsRelation = [];
+                $user = Auth::user();
 
-                foreach ($channels_ids as $channels_id) {
-                    $channelsRelation[$channels_id] = ['user_id' => \Auth::id()];
+                foreach ($channels_ids as $channel_id) {
+                    $user->channels()->updateExistingPivot($channel_id,['channels_group_id'=>$group->channels_group_id]);
                 }
-
-                $group->channels()->attach($channelsRelation);
 
                 return true;
             });
