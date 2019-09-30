@@ -46,6 +46,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('integration-types.index') }}" class="nav-link {{ Request::is('integration-types', 'integration-types/*', 'integration-types/create') ? 'active' : '' }}">
+                        <i class="nav-icon fa fa-th"></i>
+                        <p>
+                            @lang('general.integration_types')
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

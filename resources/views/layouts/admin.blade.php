@@ -162,6 +162,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid justify-content-center">
+                @include('layouts.partials.flash-message')
                 @yield('content')
             </div><!--/. container-fluid -->
         </section>
