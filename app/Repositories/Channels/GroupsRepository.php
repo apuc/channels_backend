@@ -136,7 +136,7 @@ class GroupsRepository
     public function detachChannel(Group $group, $channel_id)
     {
         try{
-            $group->channels()->detach($channel_id);
+            Auth::user()->channels()->updateExistingPivot($channel_id,['channels_group_id'=>null]);
 
             return true;
         } catch (\Throwable $e){

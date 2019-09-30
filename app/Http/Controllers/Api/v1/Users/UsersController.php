@@ -16,6 +16,7 @@ use App\Repositories\Users\UserContactRepository;
 use App\Repositories\Users\UserRepository;
 use App\Services\Files\AvatarService;
 use App\Services\Users\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -261,12 +262,11 @@ class UsersController extends Controller
     public function senders()
     {
         $user = Auth::user();
-        $senders = $user->senders;
-        $requests = $user->friendshipRequests;
 
-        $users = $senders->merge($requests);
-
-        return FullUserResource::collection($users->unique('user_id'));
+        return new JsonResponse([
+            'myRequests'=>FullUserResource::collection($user->friendshipRequests),
+            'toMeRequests'=>FullUserResource::collection($user->senders),
+        ]);
     }
 
     /**
