@@ -6,7 +6,6 @@
   "version": "1.0.0"
  },
  "host": "channels.loc",
- "basePath": "/v1",
  "tags": [
   {
    "name": "Аутентификация",
@@ -33,7 +32,7 @@
    "description": "Операции с сообщениями"
   },
   {
-   "name": "Аттачменты к сообщениями",
+   "name": "Аттачменты",
    "description": "Операции с аттачментами к сообщениям"
   },
   {
@@ -54,7 +53,7 @@
   "application/xml"
  ],
  "paths": {
-  "/registration": {
+  "/v1/registration": {
    "post": {
     "summary": "Регистрация пользователя",
     "description": "Для того, чтобы зарегистрировать нового пользователя, необходимо отправить POST запрос на /v1/registration",
@@ -96,10 +95,10 @@
     }
    }
   },
-  "/oauth/token": {
+  "/v1/oauth/token": {
    "post": {
     "summary": "Получение/обновление token",
-    "description": "Запрос на авторизацию отправляются на /v1/oauth/token методом POST",
+    "description": "Запрос на авторизацию отправляются на <b>/v1/oauth/token</b> методом <b>POST</b>",
     "tags": [
      "Аутентификация"
     ],
@@ -165,7 +164,7 @@
     }
    }
   },
-  "/user": {
+  "/v1/user": {
    "post": {
     "summary": "Добавление пользователя",
     "description": "Для того, чтобы добавить нового пользователя, необходимо отправить <b>POST</b> запрос на <b>/v1/user</b>",
@@ -174,7 +173,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "requestBody": {
@@ -215,7 +214,7 @@
     }
    }
   },
-  "/user/{user_id}": {
+  "/v1/user/{user_id}": {
    "get": {
     "summary": "Просмотр пользователя",
     "description": "Для того, чтобы просмотреть пользователя, необходимо отправить <br>GET</b> запрос на <b>/v1/user/{user_id}</b>",
@@ -224,7 +223,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "parameters": [
@@ -259,7 +258,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "requestBody": {
@@ -307,7 +306,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "parameters": [
@@ -328,7 +327,7 @@
     }
    }
   },
-  "/user/search_request={request}&page={page}": {
+  "/v1/user/search_request={request}&page={page}": {
    "get": {
     "summary": "Поиск пользователей",
     "description": "Для того, чтобы искать пользователей, необходимо отправить <b>GET</b> запрос на <b>/v1/user/search_request={request}&page={page}</b>.</br>Поиск происходит по email и username",
@@ -337,7 +336,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "parameters": [
@@ -366,7 +365,7 @@
     }
    }
   },
-  "/user/profile/{user_id}": {
+  "/v1/user/profile/{user_id}": {
    "put": {
     "summary": "Редактирование профиля",
     "description": "Для того, чтобы редактировать пользователя, необходимо отправить <b>PUT</b> запрос на <b>/v1/user/profile/{user_id}</b>",
@@ -375,7 +374,7 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "parameters": [
@@ -453,7 +452,7 @@
     }
    }
   },
-  "/group": {
+  "/v1/group": {
    "get": {
     "summary": "Получение групп пользователя",
     "description": "Для получения групп пользователя необходимо отправить <b>GET</b> запрос на <b>/v1/group</b>",
@@ -462,95 +461,1117 @@
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
      }
     ],
     "responses": {
      "200": {
       "description": "OK",
-      "schema": {
-       "$ref": "#/components/schemas/Group"
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Group"
+        }
+       }
       }
+     },
+     "401": {
+      "description": "Unauthorized"
      }
     }
    },
    "post": {
     "summary": "Добавление группы",
-    "description": "Для того, чтобы добавить группу, необходимо отправить POST запрос на /v1/group",
+    "description": "Для того, чтобы добавить группу, необходимо отправить <b>POST</b> запрос на <b>/v1/group</b>",
     "tags": [
      "Группы"
     ],
     "security": [
      {
-      "Bearer": []
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupForm"
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupForm"
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupForm"
+       }
+      },
+      "text/plain": {
+       "schema": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Group"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/group/{group_id}": {
+   "get": {
+    "summary": "Получение группы по group_id группы",
+    "description": "Для того, чтобы получить группу, необходимо отправить <b>GET</b> запрос на <b>/v1/group/{group_id}</b>",
+    "tags": [
+     "Группы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
      }
     ],
     "parameters": [
      {
-      "name": "title",
-      "in": "formData",
-      "description": "Название группы",
-      "required": true,
+      "name": "group_id",
+      "in": "path",
       "schema": {
-       "type": "string"
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор группы"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Group"
+        }
+       }
       }
      },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   },
+   "put": {
+    "summary": "Редактирование группы",
+    "description": "Для того, чтобы редактировать группу, необходимо отправить <b>PUT</b> запрос на <b>/v1/group/{group_id}</b>",
+    "tags": [
+     "Группы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор группы"
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/Group"
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "$ref": "#/components/schemas/Group"
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "$ref": "#/components/schemas/Group"
+       }
+      },
+      "text/plain": {
+       "schema": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удаление группы",
+    "description": "Для того, чтобы удалить группу, необходимо отправить <b>DELETE</b> запрос на <b>/v1/group/{group_id}</b>",
+    "tags": [
+     "Группы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор группы"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/group/{group_id}/channels": {
+   "post": {
+    "summary": "Добавление каналов",
+    "description": "Для того, чтобы добавить каналы необходимо отправить <b>POST</b> запрос на <b>/v1/group/{group_id}/channels</b>",
+    "tags": [
+     "Группы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор группы"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/group/{group_id}/delete-channel": {
+   "delete": {
+    "summary": "Удаление канала",
+    "description": "Для того, чтобы удалить канал необходимо отправить <b>DELETE</b> запрос на <b>/v1/group/{group_id}/delete-channel?channel_id={channel_id}</b>",
+    "tags": [
+     "Группы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор группы"
+     },
+     {
+      "name": "channel_id",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор канала для удаления из группы"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel": {
+   "get": {
+    "summary": "Получение каналов пользователя",
+    "description": "Для получения каналов пользователя необходимо отправить <b>GET</b> запрос на <b>/v1/channel</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Channel"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   },
+   "post": {
+    "summary": "Добавление канала",
+    "description": "Для того, чтобы добавить канал, необходимо отправить <b>POST</b> запрос на <b>/v1/channel</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "text/plain": {
+       "schema": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/{slug}": {
+   "get": {
+    "summary": "Получение канала по slug",
+    "description": "Для того, чтобы получить канал, необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{slug}</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
      {
       "name": "slug",
-      "in": "formData",
-      "description": "URL группы",
-      "required": true,
+      "in": "path",
       "schema": {
        "type": "string"
+      },
+      "description": "URL канала"
+     }
+    ],
+    "response": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Channel"
+        }
+       }
       }
      },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/{channel_id}": {
+   "get": {
+    "summary": "Получение канала по channel_id",
+    "description": "Для того, чтобы получить канал, необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
      {
-      "name": "status",
-      "in": "formData",
-      "description": "Статус группы (активная / не активная)",
-      "required": true,
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "channel_id",
+      "in": "path",
       "schema": {
-       "type": "string",
-       "enum": [
-        "active",
-        "disable"
-       ],
-       "default": "active"
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор канала"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Channel"
+        }
+       }
       }
      },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   },
+   "put": {
+    "summary": "Редактирование канала",
+    "description": "Для того, чтобы редактировать канал, необходимо отправить <b>PUT</b> запрос на <b>/v1/channel/{channel_id}</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
      {
-      "name": "owner_id",
-      "in": "formData",
-      "description": "Идентификатор создателя группы",
-      "required": true,
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "channel_id",
+      "in": "path",
       "schema": {
-       "type": "integer"
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор канала"
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "$ref": "#/components/schemas/ChannelForm"
+       }
+      },
+      "text/plain": {
+       "schema": {
+        "type": "string"
+       }
       }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
      },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   },
+   "delete": {
+    "sumamry": "Удаление канала",
+    "description": "Для того, чтобы удалить канал, необходимо отправить <b>DELETE</b> запрос на <b>/v1/channel/{channel_id}</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
      {
-      "name": "user_ids",
-      "in": "formData",
-      "description": "Массив пользователей группы",
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "path",
+      "name": "channel_id",
       "schema": {
-       "type": "array",
-       "items": {
-        "type": "integer"
-       },
-       "minItems": 1
+       "type": "string"
+      },
+      "description": "Идентификатор канала",
+      "required": true
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/add-user": {
+   "post": {
+    "sumamry": "Добавление пользователя в канал",
+    "description": "Для добавления пользователя необходимо отправить <b>POST</b> запрос на <b>/v1/channel/add-user</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "user_id",
+         "channel_id"
+        ],
+        "properties": {
+         "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Идентификатор пользователя"
+         },
+         "channel_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "идентификатор пользователя"
+         }
+        }
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "user_id",
+         "channel_id"
+        ],
+        "properties": {
+         "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Идентификатор пользователя"
+         },
+         "channel_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "идентификатор пользователя"
+         }
+        }
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "user_id",
+         "channel_id"
+        ],
+        "properties": {
+         "user_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Идентификатор пользователя"
+         },
+         "channel_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "идентификатор пользователя"
+         }
+        }
+       }
       }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/delete-user": {
+   "delete": {
+    "sumamry": "Удаление пользователя из канала",
+    "description": "Для удаления пользователя необходимо отправить <b>DELETE</b> запрос на <b>/v1/channel/delete-user?user_id={user_id}&channel_id={channel_id}</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "query",
+      "name": "user_id",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор пользователя",
+      "required": true
      },
      {
-      "name": "avatar"
+      "in": "query",
+      "name": "channel_id",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор канала",
+      "required": true
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/{channel_id}/users": {
+   "get": {
+    "sumamry": "Получение пользователей канала",
+    "description": "Для получения пользователей необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}/users</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "path",
+      "name": "channel_id",
+      "schema": {
+       "type": "string"
+      },
+      "description": "Идентификатор канала",
+      "required": true
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/User"
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/{channel_id}/messages": {
+   "get": {
+    "sumamry": "Получение сообщений канала",
+    "description": "Для получения сообщений необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}/messages</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "path",
+      "name": "channel_id",
+      "schema": {
+       "type": "string"
+      },
+      "description": "Идентификатор канала",
+      "required": true
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/Message"
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/service/left-side-bar": {
+   "get": {
+    "summary": "Получение списка каналов в группах и каналов без групп для левого меню",
+    "description": "Для получения списка каналов в группах и каналов без групп необходимо отправить <b>GET</b> запрос на <b>/v1/channel/service/left-side-bar</b>",
+    "tags": [
+     "Каналы"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "allOf": [
+          {
+           "$ref": "#/components/schemas/Group"
+          },
+          {
+           "$ref": "#/components/schemas/Channel"
+          }
+         ]
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/group/avatar": {
+   "post": {
+    "summary": "Добавление аватарки в группу",
+    "description": "Для того чтобы добавить аватарку необходимо отправить <b>POST</b> запрос на <b>/group/avatar</b>",
+    "tags": [
+     "Аватарки"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "avatar": {
+          "type": "string",
+          "format": "binary",
+          "description": "Файл аватарки"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": null,
+      "appication/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "avatar_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Идентификатор аватарки",
+          "example": 11
+         },
+         "origin": {
+          "type": "string",
+          "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722.jpg",
+          "description": "Ссылка на аватарку"
+         },
+         "average": {
+          "type": "string",
+          "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_400.jpg",
+          "description": "Ссылка на аватарку среднего размера"
+         },
+         "small": {
+          "type": "string",
+          "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_150.jpg",
+          "description": "Ссылка на аватарку уменьшенного размера"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "active"
+          ],
+          "example": "active"
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/channel/avatar": {
+   "post": {
+    "summary": "Добавление аватарки в канал",
+    "description": "Для того чтобы добавить аватарку необходимо отправить <b>POST</b> запрос на <b>/channel/avatar</b>",
+    "tags": [
+     "Аватарки"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "avatar": {
+          "type": "string",
+          "format": "binary",
+          "description": "Файл аватарки"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "appication/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "avatar_id": {
+           "type": "integer",
+           "format": "int64",
+           "description": "Идентификатор аватарки",
+           "example": 11
+          },
+          "origin": {
+           "type": "string",
+           "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722.jpg",
+           "description": "Ссылка на аватарку"
+          },
+          "average": {
+           "type": "string",
+           "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_400.jpg",
+           "description": "Ссылка на аватарку среднего размера"
+          },
+          "small": {
+           "type": "string",
+           "example": "http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_150.jpg",
+           "description": "Ссылка на аватарку уменьшенного размера"
+          },
+          "status": {
+           "type": "string",
+           "enum": [
+            "active"
+           ],
+           "example": "active"
+          }
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/message": {
+   "post": {
+    "summary": "Добавление сообщения",
+    "description": "Для создания сообщения необходимо отправить <b>POST</b> запрос на <b>/v1/message</b>",
+    "tags": [
+     "Сообщения"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MessageForm"
+       }
+      },
+      "application/xml": {
+       "schema": {
+        "$ref": "#/components/schemas/MessageForm"
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "$ref": "#/components/schemas/MessageForm"
+       }
+      },
+      "text/plain": {
+       "schema": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/message/{message_id}": {
+   "get": {
+    "summary": "Получение сообщения",
+    "description": "Для получения сообщения необходимо отправить <b>GET</b> запрос на <b>/v1/message/{message_id}</b>",
+    "tags": [
+     "Сообщения"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "path",
+      "name": "message_id",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор сообщения"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удаление сообщения",
+    "description": "Для удаления сообщения необходимо отправить <b>DELETE</b> запрос на <b>/v1/message/{message_id}</b>",
+    "tags": [
+     "Сообщения"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "in": "path",
+      "name": "message_id",
+      "schema": {
+       "type": "integer",
+       "format": "int64"
+      },
+      "description": "Идентификатор сообщения"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/attachment/upload": {
+   "post": {
+    "summary": "Загрузка файла аттачмента",
+    "description": "Для того, чтобы загрузить файл аттачмента, необходимо отправить <b>POST</b> запрос на <b>/v1/attachment/upload</b>",
+    "tags": [
+     "Аттачменты"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "attachment": {
+          "type": "string",
+          "format": "binary",
+          "description": "Файл"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "file": {
+           "type": "string",
+           "example": "/attachments/6/64/64aeea4eb0bea61c85a42522e1e892ae.png"
+          }
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized"
+     }
+    }
+   }
+  },
+  "/v1/attachment": {
+   "post": {
+    "summary": "Добавление аттачмента",
+    "description": "Для того, чтобы добавить аттачмент к сообщению, необходимо отправить <b>POST</b> запрос на <b>/v1/attachment</b>",
+    "tags": [
+     "Аттачменты"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
      }
     ]
    }
   },
-  "/single-link": {
+  "/v1/single-link": {
    "get": {
     "summary": "Мета данные простой (одной) ссылки",
     "description": "Получить мета данные (название сайта, описание, иконка) по ссылке",
     "tags": [
      "Ссылки"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
     ],
     "parameters": [
      {
@@ -574,20 +1595,20 @@
        }
       }
      }
-    },
-    "security": [
-     {
-      "Bearer": []
-     }
-    ]
+    }
    }
   },
-  "/text-link": {
+  "/v1/text-link": {
    "get": {
     "summary": "Мета данные всех ссылок в сообщении",
     "description": "Получить мета данные (название сайта, описание, иконка) по всем ссылкам в сообщении",
     "tags": [
      "Ссылки"
+    ],
+    "security": [
+     {
+      "bearerAuth": []
+     }
     ],
     "parameters": [
      {
@@ -611,12 +1632,7 @@
        }
       }
      }
-    },
-    "security": [
-     {
-      "Bearer": []
-     }
-    ]
+    }
    }
   }
  },
@@ -720,6 +1736,45 @@
    "xml": {
     "name": "LoginForm"
    },
+   "UserForm": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string",
+      "description": "Отображаемое имя на сайте",
+      "example": "Jessica Smith"
+     },
+     "password": {
+      "type": "string",
+      "description": "Пароль пользователя",
+      "example": "1234qwer"
+     },
+     "password_confirmation": {
+      "type": "string",
+      "description": "Подтверждение пароля пользователя",
+      "example": "1234qwer"
+     },
+     "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email, указанный при регистрации",
+      "example": "jessica@gmail.com"
+     },
+     "avatar": {
+      "nullable": true,
+      "$ref": "#/components/schemas/Avatar"
+     }
+    },
+    "required": [
+     "username",
+     "password",
+     "password_confirmation",
+     "email"
+    ],
+    "xml": {
+     "name": "UserForm"
+    }
+   },
    "User": {
     "type": "object",
     "properties": {
@@ -731,20 +1786,21 @@
      "password": {
       "type": "string",
       "description": "Пароль пользователя",
-      "password": "1234qwer"
+      "example": "1234qwer"
      },
      "password_confirmation": {
       "type": "string",
       "description": "Подтверждение пароля пользователя",
-      "password_confirmation": "1234qwer"
+      "example": "1234qwer"
      },
      "email": {
       "type": "string",
       "format": "email",
       "description": "Email, указанный при регистрации",
-      "email": "jessica@gmail.com"
+      "example": "jessica@gmail.com"
      },
      "avatar": {
+      "nullable": true,
       "$ref": "#/components/schemas/Avatar"
      }
     },
@@ -758,13 +1814,156 @@
      "name": "User"
     }
    },
+   "MessageForm": {
+    "type": "object",
+    "properties": {
+     "channel_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор канала"
+     },
+     "from": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор отправителя сообщения"
+     },
+     "to": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор получателя сообщения",
+      "nullable": true
+     },
+     "text": {
+      "type": "string",
+      "description": "Текст сообщения"
+     },
+     "read": {
+      "type": "integer",
+      "enum": [
+       0,
+       1
+      ],
+      "default": 0,
+      "description": "Статус сообщения: 1 - прочитано, 0 - не прочитано"
+     }
+    },
+    "example": {
+     "channel": 108,
+     "to": "null",
+     "from": 1,
+     "read": 0,
+     "created_at": "26-10-2018 14:44:45",
+     "text": "Займи тысячу"
+    },
+    "xml": {
+     "name": "MessageForm"
+    }
+   },
+   "Message": {
+    "type": "object",
+    "properties": {
+     "message_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор сообщения",
+      "example": 1001
+     },
+     "channel_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор канала",
+      "example": 108
+     },
+     "from": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор отправителя сообщения",
+      "example": 1
+     },
+     "to": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор получателя сообщения",
+      "nullable": true,
+      "example": null
+     },
+     "text": {
+      "type": "string",
+      "description": "Текст сообщения",
+      "example": "Займи тысячу"
+     },
+     "read": {
+      "type": "integer",
+      "enum": [
+       0,
+       1
+      ],
+      "default": 0,
+      "description": "Статус сообщения: 1 - прочитано, 0 - не прочитано"
+     },
+     "created_at": {
+      "type": "string",
+      "description": "Дата создания",
+      "example": "26-10-2018 14:44:45"
+     }
+    },
+    "xml": {
+     "name": "Message"
+    }
+   },
+   "Attachment": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор аттачмента"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "active",
+       "disable"
+      ],
+      "default": "active",
+      "description": "Статус аттачмента"
+     },
+     "type": {
+      "type": "string",
+      "enum": [
+       "image",
+       "file"
+      ],
+      "description": "Тип аттачмента (image или file)"
+     },
+     "message_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор сообщения к которому прикрепляется attachment"
+     },
+     "options": {
+      "type": "object",
+      "properties": null
+     }
+    },
+    "example": {
+     "id": 23,
+     "status": "active",
+     "message_id": 7,
+     "type": "file",
+     "options": null
+    },
+    "xml": {
+     "name": "Avatar"
+    }
+   },
    "Avatar": {
     "type": "object",
     "properties": {
      "avatar_id": {
       "type": "integer",
       "format": "int64",
-      "description": "Avatar ID"
+      "description": "Идентификатор аватарки"
      },
      "origin": {
       "type": "string",
@@ -795,17 +1994,19 @@
      "name": "Avatar"
     }
    },
-   "Group": {
+   "GroupForm": {
     "type": "object",
     "properties": {
      "title": {
       "type": "string",
-      "description": "Название группы"
+      "description": "Название группы",
+      "example": "Test"
      },
      "slug": {
       "type": "integer",
       "format": "int64",
-      "description": "URL группы"
+      "description": "URL группы",
+      "example": "Test url"
      },
      "status": {
       "type": "string",
@@ -824,7 +2025,65 @@
      "avatar": {
       "type": "integer",
       "format": "int64",
-      "allowEmpty": true
+      "description": "Аватарка группы, принимает идентификатор заранее загруженной аватарки",
+      "nullable": true
+     },
+     "user_ids": {
+      "type": "array",
+      "items": {
+       "type": "integer"
+      }
+     }
+    },
+    "required": [
+     "title",
+     "slug",
+     "status",
+     "owner_id"
+    ],
+    "xml": {
+     "name": "GroupForm"
+    }
+   },
+   "Group": {
+    "type": "object",
+    "properties": {
+     "title": {
+      "type": "string",
+      "description": "Название группы",
+      "example": "Test title"
+     },
+     "slug": {
+      "type": "integer",
+      "format": "int64",
+      "description": "URL группы",
+      "example": "Test slug"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "active",
+       "disable"
+      ],
+      "default": "active",
+      "description": "Статус группы (active / disable)",
+      "example": "active"
+     },
+     "owner_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор создателя группы"
+     },
+     "avatar": {
+      "$ref": "#/components/schemas/Avatar",
+      "nullable": true
+     },
+     "channels": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Channel",
+       "allowEmpty": true
+      }
      }
     },
     "required": [
@@ -837,20 +2096,17 @@
      "name": "Group"
     }
    },
-   "Channel": {
+   "ChannelForm": {
     "type": "object",
     "properties": {
-     "channel_id": {
-      "type": "integer",
-      "format": "int64",
-      "example": 6
-     },
      "title": {
       "type": "string",
+      "description": "Название канала",
       "example": "Mr."
      },
      "slug": {
       "type": "string",
+      "description": "Url канала",
       "example": "mr"
      },
      "status": {
@@ -860,15 +2116,23 @@
        "disable"
       ],
       "default": "active",
+      "description": "Статус канала, принимает 2 значения <b>active</b> и <b>disable</b>",
       "example": "active"
+     },
+     "owner_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор создателя канала"
      },
      "type": {
       "type": "string",
       "enum": [
        "chat",
-       "wall"
+       "wall",
+       "dialog"
       ],
       "default": "chat",
+      "description": "Тип канала, принимает такие значения: <b>chat</b>, <b>wall</b> и <b>dialog</b>",
       "example": "chat"
      },
      "private": {
@@ -878,11 +2142,82 @@
        1
       ],
       "default": 1,
+      "description": "Приватность канала, принимает 0 или 1",
+      "example": 1
+     },
+     "avatar": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Аватарка канала, принимает идентификатор заранее загруженной аватарки",
+      "nullable": true
+     },
+     "user_ids": {
+      "type": "array",
+      "items": {
+       "type": "integer",
+       "format": "int64",
+       "description": "Массив пользователей канала"
+      }
+     }
+    },
+    "xml": {
+     "name": "ChannelForm"
+    }
+   },
+   "Channel": {
+    "type": "object",
+    "properties": {
+     "channel_id": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Идентификатор канала",
+      "example": 6
+     },
+     "title": {
+      "type": "string",
+      "description": "Название канала",
+      "example": "Mr."
+     },
+     "slug": {
+      "type": "string",
+      "description": "URL канала",
+      "example": "mr"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "active",
+       "disable"
+      ],
+      "default": "active",
+      "description": "Статус канала",
+      "example": "active"
+     },
+     "type": {
+      "type": "string",
+      "enum": [
+       "chat",
+       "wall",
+       "dialog"
+      ],
+      "default": "chat",
+      "description": "Тип канала",
+      "example": "chat"
+     },
+     "private": {
+      "type": "integer",
+      "enum": [
+       0,
+       1
+      ],
+      "default": 1,
+      "description": "Приватность канала",
       "example": 1
      },
      "owner_id": {
       "type": "integer",
       "format": "int64",
+      "desrciption": "Идентификатор создателя канала",
       "example": 2
      },
      "user_count": {
@@ -891,11 +2226,9 @@
       "example": 3
      },
      "avatar": {
-      "type": "array",
-      "items": {
-       "type": "integer"
-      },
-      "minItems": 1
+      "desrciption": "Автарка канала",
+      "$ref": "#/components/schemas/Avatar",
+      "nullable": true
      }
     },
     "xml": {
