@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapHooksRoutes();
+
         //
     }
 
@@ -70,5 +72,15 @@ class RouteServiceProvider extends ServiceProvider
              ->domain(getenv('API_URL'))
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * webhooks
+     */
+    protected function mapHooksRoutes()
+    {
+        Route::domain('webhooks.mychannels.gq')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/hooks.php'));
     }
 }
