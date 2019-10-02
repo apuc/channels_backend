@@ -10,10 +10,10 @@ namespace App\Services\Channels;
 
 
 use App\Http\Requests\ChannelRequest;
-use App\Http\Requests\Channels\User\AddRequest;
 use App\Models\Channels\Channel;
 use App\Repositories\Channels\ChannelRepository;
 use Illuminate\Http\Request;
+use App\Http\Requests\Channels\AddIntegrationRequest;
 
 class ChannelService
 {
@@ -93,7 +93,7 @@ class ChannelService
     }
 
     /**
-     * Method for destroy group
+     * Удаление канала
      *
      * @param Channel $channel
      * @return bool
@@ -101,5 +101,16 @@ class ChannelService
     public function destroy(Channel $channel)
     {
         return $this->repository->destroy($channel);
+    }
+
+    /**
+     * Добавление интеграции в канал
+     * @param AddIntegrationRequest $request
+     * @param $id
+     */
+    public function addIntegration(AddIntegrationRequest $request,$id)
+    {
+        $channel = $this->repository->findById($id);
+        $channel->integrations()->attach([$id=>['data'=>json_encode($request->data)]]);
     }
 }

@@ -24,4 +24,8 @@ return [
     'services' => 'Services',
     'create_service' => 'Create Service',
     'access_token' => 'Access Token',
+    'integration_types' => 'Integration Types',
+    'create_type_integration' => 'Create integration type',
+    'fields' => 'Fields',
+    'options' => 'Options'
 ];

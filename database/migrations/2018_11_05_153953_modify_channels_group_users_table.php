@@ -17,6 +17,7 @@ class ModifyChannelsGroupUsersTable extends Migration
             $table->dropPrimary();
             $table->integer('channel_id')->nullable()->unsigned();
             $table->foreign('channel_id')->references('channel_id')->on('channel')->onDelete('CASCADE');
+            $table->dropForeign('channels_group_users_channel_id_foreign');
             $table->primary(['user_id', 'channels_group_id', 'channel_id'], 'channels_group_users_primary');
         });
     }
