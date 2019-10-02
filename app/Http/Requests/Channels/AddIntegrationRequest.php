@@ -2,9 +2,20 @@
 
 namespace App\Http\Requests\Channels;
 
+use App\Models\Channels\Attachment;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IntegrationTypeRequest extends FormRequest
+/**
+ * Class AttachmentRequest.
+ *
+ * @package App\Http\Requests\Channels
+ *
+ * @property string $options
+ * @property string $status
+ * @property string $type
+ * @property integer $message_id
+ */
+class AddIntegrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +24,7 @@ class IntegrationTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return true;
     }
 
     /**
@@ -24,18 +35,20 @@ class IntegrationTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255|min:3',
-            'slug' => 'required|string|max:255|min:3',
-            'fields' => 'required|json',
-            'options' => 'required|json',
+            'integration_id' => 'required',
+            'data' => 'required',
         ];
     }
 
+    /**
+     * Get the error messages for validation rules
+     *
+     * @return array
+     */
     public function messages()
     {
         return [
             '*.required' => 'Это поле обязательно'
         ];
     }
-
 }

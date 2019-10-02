@@ -15,12 +15,26 @@ class CreateIntegrationTypesTable extends Migration
     {
         Schema::create('integration_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
+            $table->string('title')->comment('Название интеграции');
             $table->string('slug');
-            $table->json('fields')->nullable();
-            $table->json('options')->nullable();
+            $table->integer('user_can_create')->comment('Может ли пользователь сам создавать интеграции этого типа');
+            $table->json('fields')->nullable()->comment('Поля для создания интеграции');
+            $table->json('options')->nullable()->comment('Поля для добавления интеграции в канал');
+        });
 
-            $table->timestamps();
+        Schema::create('integrations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->comment('пользователь создавший интеграцию');
+            $table->integer('type_id')->comment('тип интеграции');
+            $table->string('name')->nullable()->comment('Название интеграции(имя группы или что-то такое)');
+            $table->json('fields')->comment('значения для fields из integration_type');
+        });
+
+        Schema::create('integrations_channels', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('channel_id');
+            $table->integer('integration_id');
+            $table->json('data')->comment('значения для options из integration_type');
         });
     }
 
@@ -32,5 +46,7 @@ class CreateIntegrationTypesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('integration_types');
+        Schema::dropIfExists('integrations');
+        Schema::dropIfExists('integrations_channels');
     }
 }

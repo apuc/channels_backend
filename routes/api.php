@@ -21,10 +21,6 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
 
-//        Route::middleware('auth:api')->get('/user', function (Request $request) {
-//            return $request->user();
-//        });
-
         Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
 
         Route::middleware('auth:api')->group(function () {
@@ -34,6 +30,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
                 Route::post('group/{group_id}/channels', 'Channels\GroupsController@channels')->name('group.channels');
                 Route::delete('group/{group_id}/delete-channel', 'Channels\GroupsController@deleteChannel')->name('group.delete-channel');
             });
+
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
 
@@ -58,6 +55,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channel/service/left-side-bar', 'Channels\ServiceController@leftSideBar')->name('channels.service.leftSideBar');
             Route::post('/group/avatar', 'Channels\GroupsController@avatar')->name('group.avatar');
             Route::get('/group/delava/{avatar}', 'Channels\GroupsController@delava')->name('delava');
+
+            Route::resource('integrations', 'Integrations\IntegrationsController')->only(['index', 'store']);
+            Route::post('/channels/{channel}/integrations', 'Channels\ChannelsController@addIntegration')->name('channels.addIntegration');
+
         });
 
         /** Роуты для общения между сервисами*/

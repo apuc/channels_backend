@@ -17,6 +17,7 @@ use App\Services\Files\AvatarService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Channels\AddIntegrationRequest;
 
 class ChannelsController extends Controller
 {
@@ -171,7 +172,6 @@ class ChannelsController extends Controller
         } catch (\Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
-
     }
 
     /**
@@ -194,9 +194,29 @@ class ChannelsController extends Controller
         return MessageResource::collection($channel->messages);
     }
 
+    /**
+     * @param $id
+     */
     public function delava($id)
     {
         $avatar = Avatar::where('avatar_id', $id)->first();
         $this->avatarService->destroy($avatar);
+    }
+
+    /**
+     * Добавление интеграции в канал
+     * @param AddIntegrationRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function addIntegration(AddIntegrationRequest $request,$id)
+    {
+        try {
+            $this->channelService->addIntegration($request,$id);
+
+            return response()->json(['msg' => 'success'], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

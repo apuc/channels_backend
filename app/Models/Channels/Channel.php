@@ -62,11 +62,18 @@ class Channel extends Model implements ChannelEntityInterface
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function isPrivate()
     {
         return $this->private;
     }
 
+    /**
+     * Пользователи канала
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(
@@ -77,6 +84,10 @@ class Channel extends Model implements ChannelEntityInterface
         );
     }
 
+    /**
+     * Сообщения канала
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function messages()
     {
         return $this->hasMany(Message::class, 'channel_id', 'channel_id');
@@ -88,6 +99,19 @@ class Channel extends Model implements ChannelEntityInterface
     public function avatar()
     {
         return $this->belongsTo(Avatar::class, 'avatar_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function integrations()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'integrations_channels',
+            'channel_id',
+            'integration_id'
+        );
     }
 
     /**
