@@ -111,6 +111,6 @@ class ChannelService
     public function addIntegration(AddIntegrationRequest $request,$id)
     {
         $channel = $this->repository->findById($id);
-        $channel->integrations()->attach([$id=>['data'=>json_encode($request->data)]]);
+        $channel->integrations()->attach([$request->integration_id =>['data'=>json_encode($request->data)]]);
     }
 }
