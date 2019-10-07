@@ -14,4 +14,13 @@ class IntegrationType extends Model
         'fields'=>'array',
         'options'=>'array',
     ];
+
+    /**
+     * Интеграции этого типа
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function integrations()
+    {
+        return $this->hasMany(Integration::class,'type_id','id');
+    }
 }
