@@ -3,6 +3,7 @@ namespace App\Repositories\Integrations;
 
 use App\Http\Requests\Integrations\CreateRequest;
 use App\Models\Integrations\Integration;
+use Illuminate\Support\Facades\Auth;
 
 class IntegrationRepository
 {
