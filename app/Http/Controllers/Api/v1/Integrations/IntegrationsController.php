@@ -36,7 +36,7 @@ class IntegrationsController extends Controller
     public function index()
     {
         try {
-            return IntegrationTypeResource::collection(IntegrationType::all());
+            return IntegrationTypeResource::collection(IntegrationType::with('integrations')->all());
         } catch (\Throwable $e) {
             abort(500);
         }

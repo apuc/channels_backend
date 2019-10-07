@@ -36,7 +36,6 @@ class AddIntegrationRequest extends FormRequest
     {
         return [
             'integration_id' => 'required',
-            'data' => 'required',
         ];
     }
 
