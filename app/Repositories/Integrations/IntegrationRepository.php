@@ -29,7 +29,7 @@ class IntegrationRepository
     public function create(CreateRequest $request)
     {
         return $this->model::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->user_id,
             'type_id' => $request->type_id,
             'name' => $request->name,
             'fields' => $request->fields,
