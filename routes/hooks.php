@@ -2,10 +2,7 @@
 
 use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return 'hoooks';
+Route::namespace('Hooks')->group(function(){
+    Route::post('/vk/{id}','VkController@acceptHook');
 });
 
-Route::get('/test', function () {
-    return 'bebebe';
-});

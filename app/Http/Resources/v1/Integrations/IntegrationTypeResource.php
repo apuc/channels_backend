@@ -16,6 +16,7 @@ class IntegrationTypeResource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'url'=>$this->url,
             'title'=>$this->title,
             'user_can_create'=>$this->user_can_create,
             'fields'=>$this->fields,
