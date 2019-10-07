@@ -19,8 +19,8 @@ class VKController extends Controller
                ->header('Content-Type', 'text/plain');
        }else{
            Log::info($request->all());
-           return response($integration->fields['confirm'], 200)
-               ->header('ok', 'text/plain');
+           return response('ok', 200)
+               ->header('Content-Type', 'text/plain');
        }
    }
 }
