@@ -4,6 +4,7 @@ namespace App\Models\Channels;
 
 use App\Models\Avatar;
 use App\Models\Contracts\ChannelEntityInterface;
+use App\Models\Integrations\Integration;
 use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
 use App\Traits\SluggableModel;
@@ -107,7 +108,7 @@ class Channel extends Model implements ChannelEntityInterface
     public function integrations()
     {
         return $this->belongsToMany(
-            User::class,
+            Integration::class,
             'integrations_channels',
             'channel_id',
             'integration_id'
