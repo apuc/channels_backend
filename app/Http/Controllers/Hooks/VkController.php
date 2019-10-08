@@ -47,17 +47,17 @@ class VKController extends Controller
            //ПАРСИМ АТАЧМЕНТЫ ОТ ВК
            $attachments = [];
 
-           foreach ($request->object->attachments as $attachment){
+           foreach ($request->object['attachments'] as $attachment){
 
                //пока пропускаем все кроме фоток
-               if($attachment->type != 'photo'){
+               if($attachment['type'] != 'photo'){
                    continue;
                }
 
                $attachments[] = [
                    'type'   => Attachment::TYPE_IMAGE,
                    'options'  => json_encode([
-                       'url'=>$attachment->sizes[0]->url
+                       'url'=>$attachment['photo']['photo_130']
                    ]),
                    'status'  => Attachment::STATUS_ACTIVE,
                ];
@@ -74,7 +74,7 @@ class VKController extends Controller
                $data = new MessageRequest([
                    'channel_id'=>$channel->channel_id,
                    'from'=>1,
-                   'text'=>$request->object->text,
+                   'text'=>$request->object['text'],
                    'attachments'=>$attachments
                ]);
 
