@@ -55,10 +55,10 @@ class VKController extends Controller
                }
 
                $attachments[] = [
-                   'type'   => Attachment::TYPE_IMAGE,
-                   'options'  => json_encode([
+                   'type'   => 'image/jpeg',
+                   'options'  => [
                        'url'=>$attachment['photo']['photo_130']
-                   ]),
+                   ],
                    'status'  => Attachment::STATUS_ACTIVE,
                ];
            }
