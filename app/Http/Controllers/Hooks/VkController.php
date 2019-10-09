@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Hooks;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v1\MessageResource;
 use App\Models\Channels\Attachment;
+use App\Models\Channels\Message;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use App\Models\Integrations\Integration;
+use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Log;
 use App\Services\Channels\MessageService;
 use App\Http\Requests\Channels\MessageRequest;
@@ -35,42 +38,21 @@ class VKController extends Controller
      */
    public function acceptHook(Request $request,$id)
    {
-       $integration = Integration::findOrFail($id);
+       $integration = Integration::with('channels')->findOrFail($id);
 
        Log::info(json_encode($request->all()));
 
        if($request->type && $request->type == 'confirmation'){
-           return response($integration->fields['confirm'], 200)
-               ->header('Content-Type', 'text/plain');
+           return $integration->fields['confirm'];
        }else{
 
            //ПАРСИМ АТАЧМЕНТЫ ОТ ВК
-           $attachments = [];
-
-           foreach ($request->object['attachments'] as $attachment){
-
-               //пока пропускаем все кроме фоток
-               if($attachment['type'] != 'photo'){
-                   continue;
-               }
-
-               $attachments[] = [
-                   'type'   => 'image/jpeg',
-                   'options'  => [
-                       'url'=>$attachment['photo']['photo_130']
-                   ],
-                   'status'  => Attachment::STATUS_ACTIVE,
-               ];
-           }
-
-           if(empty($attachments)){
-               return response('ok', 200)
-                   ->header('Content-Type', 'text/plain');
+           if(!$attachments = $this->parseAttachments($request->object['attachments'] )){
+               return "ok";
            }
 
            //ДОБАВЛЕНИЕ СООБЩЕНИЙ В КАНАЛЫ
            foreach ($integration->channels as $channel){
-
                $data = new MessageRequest([
                    'channel_id'=>$channel->channel_id,
                    'from'=>1,
@@ -78,12 +60,61 @@ class VKController extends Controller
                    'attachments'=>$attachments
                ]);
 
-               $this->messageService->create($data);
+               $message = $this->messageService->create($data);
 
            }
 
-           return response('ok', 200)
-               ->header('Content-Type', 'text/plain');
+           $this->sendToNode($message,$integration->channels->pluck('channel_id')->toArray());
+
+           return "ok";
        }
+   }
+
+    /**
+     * @param $attachments
+     * @return array
+     */
+   private function parseAttachments(array $attachments) : array
+   {
+       $res = [];
+
+       foreach ($attachments as $attachment){
+
+           //пока пропускаем все кроме фоток
+           if($attachment['type'] != 'photo'){
+               continue;
+           }
+
+           $res[] = [
+               'type'   => 'image/jpeg',
+               'options'  => [
+                   'url'=>$attachment['photo']['photo_130']
+               ],
+               'status'  => Attachment::STATUS_ACTIVE,
+           ];
+       }
+
+       return $res;
+   }
+
+    /**
+     * @param Message $message
+     * @param array $channels
+     */
+   private function sendToNode(Message $message,array $channels)
+   {
+       Resource::withoutWrapping();
+
+       $data = json_encode([
+           'channels_ids'=>$channels,
+           'message'=> (new MessageResource($message))->toResponse(app('request'))->getData()
+       ]);
+
+       $ch = curl_init('http://localhost:3000/integration2');
+       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+       $result = curl_exec($ch);
    }
 }
