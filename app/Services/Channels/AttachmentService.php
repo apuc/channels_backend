@@ -84,7 +84,7 @@ class AttachmentService
 
         return [
             'type'=> $file->getClientMimeType(),
-            'url'=> $path.$filename,
+            'url'=> 'https://files.mychannels.gq'.$path.$filename,
         ];
     }
 }
