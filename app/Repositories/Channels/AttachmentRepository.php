@@ -36,12 +36,16 @@ class AttachmentRepository
      */
     public function create(AttachmentRequest $request)
     {
-        return $this->model::create([
-            'type' => $request->type,
+        $attachment =  new Attachment([
             'options' => $request->options,
             'status' => $request->status,
             'message_id' => $request->message_id,
         ]);
+
+        $attachment->setType();
+        $attachment->save();
+
+        return $attachment;
     }
 
     /**

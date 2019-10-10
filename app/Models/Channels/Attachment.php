@@ -2,7 +2,10 @@
 
 namespace App\Models\Channels;
 
+use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class Attachment.
@@ -24,8 +27,15 @@ class Attachment extends Model
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
-    public const TYPE_FILE = 'file';
+    public const TYPE_DOCUMENT = 'document';
     public const TYPE_IMAGE = 'image';
+    public const TYPE_ARCHIVE = 'archive';
+
+    private $mimeTypes = [
+        self::TYPE_DOCUMENT=>['vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        self::TYPE_IMAGE=>['png','gif','jpg','jpeg'],
+        self::TYPE_ARCHIVE=>['zip','x-7z','x-xz'],
+    ];
 
     /**
      * {@inheritdoc}
@@ -42,6 +52,13 @@ class Attachment extends Model
     ];
 
     /**
+     * @var array
+     */
+    public $casts = [
+      'options'=>'array'
+    ];
+
+    /**
      * @return array
      */
     public static function getStatuses(): array
@@ -53,14 +70,37 @@ class Attachment extends Model
     }
 
     /**
-     * @return array
+     * Определяет тип аттачмента по mime type файла
+     * @return string
      */
-    public static function getTypes(): array
+    public function getTypeByMime(): string
     {
-        return [
-            'file' => self::TYPE_FILE,
-            'image' => self::TYPE_IMAGE,
-        ];
+        if(!isset($this->options['mimeType'])){
+            throw new HttpException(500,'Get type error: No mime type in attachment options!');
+        }
+
+        $attachmentType = null;
+
+        foreach ($this->mimeTypes as $type=>$mimes){
+            if(in_array(explode('/',$this->options['mimeType'])[1],$mimes)){
+                $attachmentType = $type;
+            }
+        }
+
+        return $attachmentType ?: self::TYPE_DOCUMENT;
+    }
+
+    /**
+     * Устогавливает тип
+     * @param string|null $type
+     */
+    public function setType(string $type = null)
+    {
+        if($type){
+            $this->type = $type;
+        }else{
+            $this->type = $this->getTypeByMime();
+        }
     }
 
     /**

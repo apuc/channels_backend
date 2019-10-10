@@ -86,7 +86,7 @@ class VKController extends Controller
            }
 
            $res[] = [
-               'type'   => 'image/jpeg',
+               'type'   => Attachment::TYPE_IMAGE,
                'options'  => [
                    'url'=>$attachment['photo']['photo_130']
                ],
@@ -110,7 +110,9 @@ class VKController extends Controller
            'message'=> (new MessageResource($message))->toResponse(app('request'))->getData()
        ]);
 
-       $ch = curl_init('http://localhost:3000/integration2');
+       $rout = config('integrations.node_integration_url');
+
+       $ch = curl_init("http://localhost:3000/{$rout}");
        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
