@@ -47,8 +47,7 @@ class MessageService
            foreach ($request->attachments as $attachment){
 
                $data = new AttachmentRequest([
-                   'type'   => $attachment['type'],
-                   'options'  => json_encode($attachment['options']),
+                   'options'  => $attachment['options'],
                    'message_id'  => $message->message_id,
                    'status'  => Attachment::STATUS_ACTIVE,
                ]);

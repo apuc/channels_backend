@@ -82,7 +82,12 @@ class AttachmentService
         $filename = $hash.'.'.$file->getClientOriginalExtension();
         $file->storeAs('/public'.$path,$filename);
 
+        $attachment = new Attachment([
+            'options'=>['mimeType'=>$file->getClientMimeType()]
+        ]);
+
         return [
+            'type'=>$attachment->getTypeByMime(),
             'mimeType'=> $file->getClientMimeType(),
             'url'=> 'https://files.mychannels.gq'.$path.$filename,
         ];
