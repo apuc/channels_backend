@@ -83,8 +83,8 @@ class AttachmentService
         $file->storeAs('/public'.$path,$filename);
 
         return [
-            'type'=> $file->getClientMimeType(),
-            'url'=> $path.$filename,
+            'mimeType'=> $file->getClientMimeType(),
+            'url'=> 'https://files.mychannels.gq'.$path.$filename,
         ];
     }
 }

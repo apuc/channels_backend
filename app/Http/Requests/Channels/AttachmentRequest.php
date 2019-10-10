@@ -35,10 +35,9 @@ class AttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'options' => 'required|json',
+            'options' => 'required',
             'message_id' => 'required|integer|exists:message,message_id',
             'status' => 'required|in:' . implode(',', Attachment::getStatuses()),
-            'type' => 'required|in:' . implode(',', Attachment::getTypes()),
         ];
     }
 

@@ -25,7 +25,7 @@ class AttachmentResource extends JsonResource
             'status' => $this->status,
             'message_id' => $this->message_id,
             'type' => $this->type,
-            'options' => json_decode($this->options),
+            'options' => $this->options,
         ];
     }
 }
