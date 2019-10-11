@@ -88,7 +88,8 @@ class VKController extends Controller
            $res[] = [
                'type'   => Attachment::TYPE_IMAGE,
                'options'  => [
-                   'url'=>$attachment['photo']['photo_130']
+                   'url'=>$attachment['photo']['photo_604'],
+                   'mimeType'=>'image/jpeg',
                ],
                'status'  => Attachment::STATUS_ACTIVE,
            ];
