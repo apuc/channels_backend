@@ -231,7 +231,7 @@ class ChannelsController extends Controller
     public function inviteByEmail(InviteRequest $request,$channel)
     {
         try {
-            $user = $this->channelService->addUserByEmail($request->email,$channel);
+            $user = $this->channelService->addUserByEmail($request->email,intval($channel));
 
             return new FullUserResource($user);
         } catch (\Throwable $e) {
