@@ -68,10 +68,9 @@ class UserService
     }
 
     /**
-     * Method for destroy user
-     *
      * @param User $user
      * @return bool
+     * @throws \Exception
      */
     public function destroy(User $user)
     {
@@ -84,7 +83,7 @@ class UserService
      */
     public function search(SearchRequest $request)
     {
-        return $this->repository->search($request);
+        return $this->repository->findByEmailOrUsername($request->search_request);
     }
 
 }

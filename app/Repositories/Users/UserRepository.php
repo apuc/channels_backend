@@ -9,6 +9,7 @@
 namespace App\Repositories\Users;
 
 
+use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
 use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\SearchRequest;
@@ -31,15 +32,16 @@ class UserRepository
     }
 
     /**
-     * @param CreateRequest $request
-     * @return User
+     * C
+     * @param RegistrationRequest $request
+     * @return User|\Illuminate\Database\Eloquent\Model
      */
-    public function create(CreateRequest $request)
+    public function create(RegistrationRequest $request)
     {
         return $this->model::create([
             'email' => $request->email,
-            'login' => $request->login,
-            'username' => $request->username,
+            'login' => $request->email,
+            'username' => ($request->username) ?: $request->login,
             'password' => bcrypt($request->password),
         ]);
     }
@@ -87,10 +89,9 @@ class UserRepository
     }
 
     /**
-     * Method for destroy group
-     *
      * @param User $user
      * @return bool
+     * @throws \Exception
      */
     public function destroy(User $user)
     {
@@ -98,7 +99,7 @@ class UserRepository
             return true;
         }
 
-        throw new \DomainException('Error deleting group');
+        throw new \DomainException('Error deleting user');
     }
 
     /**
@@ -110,31 +111,13 @@ class UserRepository
         return $this->model::findOrFail($id);
     }
 
-    public function findRequestsSendersToContact($user_id)
-    {
-        return $this->model->userContacts()->user()->get();
-        //return $this->model::where(['user_contact.contact_id' => $user_id, 'user_contact.status' => User\UserContact::REQUEST_SENT])->with(['userContacts'])->get();
-    }
-
     /**
-     * @param SearchRequest $request
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @param string $search_request
+     * @return User|\Illuminate\Database\Eloquent\Builder
      */
-    public function search(SearchRequest $request)
+    public function findByEmailOrUsername(string $search_request)
     {
-        $query = $this->findByEmailOrUsername($this->model, $request);
-
-        return $query->paginate(20);
-    }
-
-    /**
-     * @param User $user
-     * @param SearchRequest $request
-     * @return \Illuminate\Database\Eloquent\Builder|static
-     */
-    public function findByEmailOrUsername(User $user, SearchRequest $request)
-    {
-        return $user->where('email', 'like', "%$request->search_request%")
-            ->orWhere('username', 'like', "%$request->search_request%");
+        return $this->model->where('email', 'like', "%$search_request%")
+            ->orWhere('username', 'like', "%$search_request%")->first();
     }
 }
