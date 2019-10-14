@@ -10,7 +10,7 @@ namespace App\Services\Auth;
 
 
 use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
-use App\Repositories\UserRepository;
+use App\Repositories\Users\UserRepository;
 
 class RegisterService
 {
@@ -36,9 +36,7 @@ class RegisterService
      */
     public function register(RegistrationRequest $request)
     {
-        $request->password = bcrypt($request->password);
-        $request->login = $request->email;
-        return $this->repository->register($request);
+        return $this->repository->create($request);
     }
 
 }

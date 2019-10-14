@@ -9,11 +9,15 @@
 namespace App\Services\Channels;
 
 
+use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
+use App\Notifications\InviteToChannelNotification;
 use App\Repositories\Channels\ChannelRepository;
+use App\Repositories\Users\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\Channels\AddIntegrationRequest;
+use Faker\Factory;
 
 class ChannelService
 {
@@ -23,12 +27,19 @@ class ChannelService
     protected $repository;
 
     /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * ChannelService constructor.
      * @param ChannelRepository $repository
+     * @param UserRepository $user
      */
-    public function __construct(ChannelRepository $repository)
+    public function __construct(ChannelRepository $repository,UserRepository $user)
     {
         $this->repository = $repository;
+        $this->userRepository = $user;
     }
 
     /**
@@ -56,7 +67,10 @@ class ChannelService
     public function addUser(Request $request)
     {
         $channel = $this->repository->findById($request->channel_id);
-        $channel->users()->attach($request->get('user_id'));
+
+        if($channel->users()->where('users.user_id',$request->get('user_id'))->exists()){
+            $channel->users()->attach($request->get('user_id'));
+        }
 
         return $channel;
     }
@@ -112,5 +126,37 @@ class ChannelService
     {
         $channel = $this->repository->findById($id);
         $channel->integrations()->attach([$request->integration_id =>['data'=>json_encode($request->data)]]);
+    }
+
+    /**
+     * Приглашение в канал по email
+     * @param string $email
+     * @param int $channel_id
+     * @return \App\Models\User|\Illuminate\Database\Eloquent\Builder
+     */
+    public function addUserByEmail(string $email,int $channel_id){
+
+        $user = $this->userRepository->findByEmailOrUsername($email);
+
+        if($user){
+            $this->addUser(new Request([
+                'channel_id'=>$channel_id,
+                'user_id'=>$user->user_id,
+            ]));
+
+        }else{
+            $password = Factory::create()->password;
+
+            $user = $this->userRepository->create(new RegistrationRequest([
+                  'email'=>$email,
+                  'login'=>$email,
+                  'username'=>$email,
+                  'password'=>$password,
+            ]));
+
+            $user->notify(new InviteToChannelNotification($this->repository->findById($channel_id),$password));
+        }
+
+        return $user;
     }
 }
