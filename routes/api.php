@@ -23,7 +23,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
         Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
 
-//        Route::middleware('auth:api')->group(function () {
+        Route::middleware('auth:api')->group(function () {
 
             Route::group([], function () {
                 Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
@@ -61,7 +61,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
             Route::post('/channels/{channel}/invite', 'Channels\ChannelsController@inviteByEmail')->name('channels.invite');
 
-//        });
+        });
 
         /** Роуты для общения между сервисами*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
