@@ -99,3 +99,12 @@ Breadcrumbs::register('integration-types.edit', function (BreadcrumbsGenerator $
     $crumbs->parent('integration-types.index');
     $crumbs->push(trans('general.edit') . ': ' . $id, route('integration-types.edit', $id));
 });
+
+/** =============================================================================== */
+
+/** ================================= Logs ================================ */
+
+Breadcrumbs::register('logs', function(BreadcrumbsGenerator $crumbs){
+    $crumbs->parent('dashboard');
+    $crumbs->push(trans('general.logs'), route('logs'));
+});

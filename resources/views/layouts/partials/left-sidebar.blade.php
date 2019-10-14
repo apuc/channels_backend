@@ -55,6 +55,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('logs') }}" class="nav-link {{ Request::is('logs', 'logs/*', 'logs/create') ? 'active' : '' }}">
+                        <i class="nav-icon fa fa-th"></i>
+                        <p>
+                            @lang('general.logs')
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -28,5 +28,6 @@ return [
     'integration_types' => 'Типы интеграций',
     'create_type_integration' => 'Создать тип интеграции',
     'fields' => 'Поля',
-    'options' => 'Опции'
+    'options' => 'Опции',
+    'logs' => 'Логи',
 ];
