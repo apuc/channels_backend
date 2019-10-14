@@ -68,7 +68,7 @@ class ChannelService
     {
         $channel = $this->repository->findById($request->channel_id);
 
-        if($channel->users()->where('users.user_id',$request->get('user_id'))->exists()){
+        if(!$channel->users()->where('users.user_id',$request->get('user_id'))->exists()){
             $channel->users()->attach($request->get('user_id'));
         }
 
