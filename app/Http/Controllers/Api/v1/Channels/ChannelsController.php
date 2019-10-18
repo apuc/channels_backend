@@ -58,6 +58,17 @@ class ChannelsController extends Controller
     }
 
     /**
+     * Каналы для главной
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function popular()
+    {
+        $channels = $this->channelRepository->findPopular();
+
+        return ChannelResource::collection($channels);
+    }
+
+    /**
      * @param AvatarRequest $request
      * @return AvatarResource
      */
