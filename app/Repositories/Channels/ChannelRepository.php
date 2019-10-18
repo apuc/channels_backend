@@ -13,6 +13,7 @@ use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ChannelRepository
 {
@@ -130,5 +131,23 @@ class ChannelRepository
                 });
             })
             ->get();
+    }
+
+    /**
+     * 20 каналов для главной отсортированых по дате последнего сообщения
+     * @return Channel[]|Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
+     */
+    public function findPopular()
+    {
+        $channels =  DB::table("channel")
+            ->select(
+                "channel.*",
+                DB::raw("(select created_at from message
+               where message.channel_id = channel.channel_id
+               order by message_id desc limit 1) as m_date")
+            )->orderBy('m_date','desc')
+            ->get();
+
+        return $this->model::hydrate($channels->toArray());
     }
 }
