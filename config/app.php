@@ -166,6 +166,7 @@ return [
 
         'App\Services\Validation\UniquePairValidationServiceProvider',
 
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*

@@ -23,6 +23,8 @@ Route::group(['middleware' => 'auth'], function (){
     Route::resource('service', 'Admin\ServiceAuthController');
 
     Route::resource('integration-types', 'Admin\Channels\IntegrationTypesController');
+
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
 });
 // Route for changing language...
 Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
