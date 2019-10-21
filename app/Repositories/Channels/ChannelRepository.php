@@ -145,7 +145,7 @@ class ChannelRepository
                 DB::raw("(select created_at from message
                where message.channel_id = channel.channel_id
                order by message_id desc limit 1) as m_date")
-            )->orderBy('m_date','desc')
+            )->orderBy('m_date','desc')->take(20)
             ->get();
 
         return $this->model::hydrate($channels->toArray());
