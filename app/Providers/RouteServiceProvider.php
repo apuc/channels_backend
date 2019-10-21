@@ -77,7 +77,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapHooksRoutes()
     {
-        Route::domain('webhooks.mychannels.local')
+        Route::domain('webhooks.mychannels.gq')
             ->namespace($this->namespace)
             ->group(base_path('routes/hooks.php'));
     }
