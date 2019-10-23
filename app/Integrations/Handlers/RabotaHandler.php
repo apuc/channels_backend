@@ -27,13 +27,15 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     public function acceptHook(Request $request)
     {
-        if($request->employer_id){
+        //вакансия
+        if($request->company_id){
             $attachments = [];
             $text = $this->getVacancyText($request);
             $this->sendToChannels($text,$attachments);
         }
 
-        if($request->company_id){
+        //резюме
+        if($request->employer_id){
             $attachments = $this->parseAttachments($request);
             $text = $this->getResumeText($request);
             $this->sendToChannels($text,$attachments);
