@@ -6,6 +6,7 @@ use App\Models\Channels\Attachment;
 use Illuminate\Http\Request;
 use App\Integrations\IntegrationContract;
 use App\Integrations\IntegrationBase;
+use Illuminate\Support\Facades\Log;
 
 class RabotaHandler extends IntegrationBase implements IntegrationContract
 {
@@ -27,6 +28,8 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     public function acceptHook(Request $request)
     {
+        Log::info($request->all());
+
         //вакансия
         if($request->company_id){
             $attachments = [];
