@@ -205,7 +205,12 @@ class ChannelsController extends Controller
     public function messagesList($id)
     {
         $channel = $this->channelRepository->findById($id);
-        return MessageResource::collection($channel->messages()->paginate(Message::MESSAGES_PER_PAGE));
+
+        $messages = $channel->messages()
+            ->orderBy('message_id','desc')
+            ->paginate(Message::MESSAGES_PER_PAGE);
+
+        return MessageResource::collection($messages);
     }
 
     /**
