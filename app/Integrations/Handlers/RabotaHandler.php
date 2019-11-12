@@ -28,8 +28,6 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     public function acceptHook(Request $request)
     {
-        Log::info($request->all());
-
         //вакансия
         if($request->company_id){
             $attachments = [];
