@@ -210,7 +210,7 @@ class ChannelsController extends Controller
             ->orderBy('message_id','desc')
             ->paginate(Message::MESSAGES_PER_PAGE);
 
-        return MessageResource::collection($messages);
+        return MessageResource::collection($messages->reverse());
     }
 
     /**
