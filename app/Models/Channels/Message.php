@@ -18,25 +18,42 @@ class Message extends Model
 {
     use SoftDeletes;
 
+    /**
+     * @inheritdoc
+     */
     protected $table = 'message';
 
+    /**
+     * @inheritdoc
+     */
     public $primaryKey = 'message_id';
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
-    public const TYPE_CHAT = 'chat';
-    public const TYPE_WALL = 'wall';
-    public const TYPE_DIALOG = 'dialog';
+    /**
+     * Сообщений на странице
+     */
+    public const MESSAGES_PER_PAGE = 20;
 
+    /**
+     * @inheritdoc
+     */
     protected $fillable = [
         'from', 'to', 'text', 'read', 'channel_id'
     ];
 
+    /**
+     * @inheritdoc
+     */
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at'
     ];
 
+    /**
+     * Прочитано или нет
+     * @return int
+     */
     public function isRead()
     {
         return $this->read;

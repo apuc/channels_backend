@@ -13,6 +13,7 @@ use App\Http\Resources\v1\User\FullUserResource;
 use App\Http\Resources\v1\User\FullUserResource as UserResource;
 use App\Models\Avatar;
 use App\Models\Channels\Channel;
+use App\Models\Channels\Message;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use App\Services\Files\AvatarService;
@@ -204,7 +205,7 @@ class ChannelsController extends Controller
     public function messagesList($id)
     {
         $channel = $this->channelRepository->findById($id);
-        return MessageResource::collection($channel->messages);
+        return MessageResource::collection($channel->messages()->paginate(Message::MESSAGES_PER_PAGE));
     }
 
     /**
