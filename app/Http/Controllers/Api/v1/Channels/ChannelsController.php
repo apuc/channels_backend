@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Channels\AddIntegrationRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ChannelsController extends Controller
 {
@@ -210,7 +211,7 @@ class ChannelsController extends Controller
             ->orderBy('message_id','desc')
             ->paginate(Message::MESSAGES_PER_PAGE);
 
-        return MessageResource::collection($messages->reverse());
+        return MessageResource::collection($messages);
     }
 
     /**
