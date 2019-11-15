@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'email' => 'string|email|max:255|unique:users,email,' . \Auth::id() . ',user_id',
             'username' => 'string|max:255|min:3',
-            'password' => 'string|max:255|min:3',
+            'password' => 'string|max:255|min:3|nullable',
             'password_confirmation' => 'required_with:password|same:password|min:3'
         ];
     }
