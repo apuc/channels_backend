@@ -111,7 +111,7 @@ class UsersController extends Controller
 
 
     /**
-     * Редактировать юзера
+     * Редактировать юзера (пароль и емайл)
      *
      * @param UpdateRequest $request
      * @param int $id
@@ -131,7 +131,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Редактировать профиль
+     * Редактировать профиль (аватар и имя)
      *
      * @param ProfileRequest $request
      * @param $id

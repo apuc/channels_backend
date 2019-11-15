@@ -65,7 +65,7 @@ class UserRepository
             return $user;
         }
 
-        throw new \DomainException('Error updating channel');
+        throw new \DomainException('Error updating user!');
 
     }
 
@@ -85,7 +85,7 @@ class UserRepository
             return $user;
         }
 
-        throw new \DomainException('Error updating channel');
+        throw new \DomainException('Error updating profile!');
     }
 
     /**
