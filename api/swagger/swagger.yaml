@@ -1,646 +1,1553 @@
 openapi : 3.0.0
 info:
-  title: Channels API
-  description: "Для работы с API всегда нужно в заголовках отправлять параметры авторизации: <b>Authorization: Bearer eyJ0eXAiOiJKV1QiLC...</b> Кроме запросов регистрации и получения Token"
-  version: 1.0.0
-host: api.channels.test
-basePath: "/v1"
+    title: 'Channels API'
+    description: "Для работы с API всегда нужно в заголовках отправлять параметры авторизации: <b>Authorization: Bearer eyJ0eXAiOiJKV1QiLC...</b> Кроме запросов регистрации и получения Token"
+    version: 1.0.0
+host: 'channels.loc'
 tags:
-- name: Аутентификация
-  description: Регистрация и авторизация пользователей
-- name: Группы
-  description: Операции с группами
-- name: Каналы
-  description: Операции с каналами
-- name: Аватарки
-  description: Операции с аватарками
-- name: Пользователи
-  description: Операции с пользователями
-- name: Сообщения
-  description: Операции с сообщениями
-- name: Аттачменты к сообщениями
-  description: Операции с аттачментами к сообщениям
-- name: Ссылки
-  description: Парсинг ссылок на мета теги
+    - name: 'Аутентификация'
+      description: 'Регистрация и авторизация пользователей'
+    - name: 'Группы'
+      description: 'Операции с группами'
+    - name: 'Каналы'
+      description: 'Операции с каналами'
+    - name: 'Аватарки'
+      description: 'Операции с аватарками'
+    - name: 'Пользователи'
+      description: 'Операции с пользователями'
+    - name: 'Сообщения'
+      description: 'Операции с сообщениями'
+    - name: 'Аттачменты'
+      description: 'Операции с аттачментами к сообщениям'
+    - name: 'Ссылки'
+      description: 'Парсинг ссылок на мета теги'
 schemes:
-- http
-- https
+    - http
+    - https
 
 consumes:
-- application/json
-- application/xml
+    - application/json
+    - application/xml
 produces:
-- application/json
-- application/xml
+    - application/json
+    - application/xml
 paths:
-  #======================
-  # ===== РЕГИСТРАЦИЯ
-  #======================
-  "/registration":
-    post:
-      summary: Регистрация пользователя
-      description: Для того, чтобы зарегистрировать нового пользователя, необходимо
-        отправить POST запрос на /v1/registration
-      tags:
-        - Аутентификация
-      requestBody:
-        description: Форма регистрации
-        content:
-          application/json:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          application/xml:
-            schema:
-              $ref:  "#/components/schemas/RegistrationForm"
-          application/x-www-form-urlencoded:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          text/plain:
-            schema:
-              type: string
-      responses:
-        '201':
-          description: Пользователь добавлен
-        '500':
-          description: Ошибка добавления пользователя
-  #======================
-  # ===== АВТОРИЗАЦИЯ
-  #======================
-  "/oauth/token":
-    post:
-      summary: "Получение/обновление token"
-      description: "Запрос на авторизацию отправляются на /v1/oauth/token методом POST"
-      tags:
-      - Аутентификация
-      requestBody:
-        description: "Форма получения / обновление токена."
-        content:
-          application/json:
-            schema:
-             $ref:  "#/components/schemas/LoginForm"
-          application/xml:
-            schema:
-              $ref:  "#/components/schemas/LoginForm"
-          application/x-www-form-urlencoded:
-            schema:
-             $ref:  "#/components/schemas/LoginForm"
-          text/plain:
-            schema:
-              type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token_type:
-                    type: string
-                  expires_in:
-                    type: string
-                  access_token:
-                    type: string
-                  refresh_token:
-                    type: string
-                example:
-                  token_type: "Bearer"
-                  expires_in: 86400
-                  access_token: "eyJ0eXAiOiJKV1Q..."
-                  refresh_token: "def5020009c17a37..."
-        '401':
-          description: Unauthorized
-  #======================
-  # ===== ПОЛЬЗОВАТЕЛИ
-  #======================
-  "/user":
-    post:
-      summary: "Добавление пользователя"
-      description: "Для того, чтобы добавить нового пользователя, необходимо отправить <b>POST</b> запрос на <b>/v1/user</b>"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          application/xml:
-            schema:
-              $ref:  "#/components/schemas/RegistrationForm"
-          application/x-www-form-urlencoded:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          text/plain:
-            schema:
-              type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                  $ref : "#/components/schemas/User"
-  "/user/{user_id}":
-    get:
-      summary: "Просмотр пользователя"
-      description: "Для того, чтобы просмотреть пользователя, необходимо отправить <br>GET</b> запрос на <b>/v1/user/{user_id}</b>"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      parameters:
-        - name: user_id
-          in: path
-          description: "User ID"
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref : "#/components/schemas/User"
-    put:
-      summary: "Редактирование пользователя"
-      description: "Для того, чтобы редактировать пользователя, необходимо отправить <b>PUT</b> запрос на <b>/v1/user/{user_id}</b>"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          application/xml:
-            schema:
-              $ref:  "#/components/schemas/RegistrationForm"
-          application/x-www-form-urlencoded:
-            schema:
-             $ref:  "#/components/schemas/RegistrationForm"
-          text/plain:
-            schema:
-              type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                  $ref : "#/components/schemas/User"
-    delete:
-      summary: "Удаление  пользователя"
-      description: "Для того, чтобы удалить пользователя, необходимо отправить <b>DELETE</b> запрос на <b>/v1/user/{user_id}</b>"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      parameters:
-        - name: user_id
-          in: path
-          description: "User ID"
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-            description: OK
-  "/user/search_request={request}&page={page}":
-    get:
-      summary: "Поиск пользователей"
-      description: "Для того, чтобы искать пользователей, необходимо отправить <b>GET</b> запрос на <b>/v1/user/search_request={request}&page={page}</b>.</br>Поиск происходит по email и username"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      parameters:
-        - name: request
-          in : path
-          description: "Строка запроса на поиск пользователей"
-          schema:
-            type: string
-        - name: page
-          in: path
-          description: "Количество ответов"
-          schema:
-            type: integer
-            min: 1
-      responses:
-        "200":
-          description: "OK"
+    #======================
+    # ===== РЕГИСТРАЦИЯ
+    #======================
+    "/v1/registration":
+        post:
+            summary: 'Регистрация пользователя'
+            description: 'Для того, чтобы зарегистрировать нового пользователя, необходимо отправить POST запрос на /v1/registration'
+            tags:
+                - 'Аутентификация'
+            requestBody:
+                description: 'Форма регистрации'
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '201':
+                    description: 'Пользователь добавлен'
+                '500':
+                    description: 'Ошибка добавления пользователя'
+    #======================
+    # ===== АВТОРИЗАЦИЯ
+    #======================
+    "/v1/oauth/token":
+        post:
+            summary: "Получение/обновление token"
+            description: "Запрос на авторизацию отправляются на <b>/v1/oauth/token</b> методом <b>POST</b>"
+            tags:
+                - Аутентификация
+            requestBody:
+                description: "Форма получения / обновление токена."
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/LoginForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/LoginForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/LoginForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    token_type:
+                                        type: string
+                                    expires_in:
+                                        type: string
+                                    access_token:
+                                        type: string
+                                    refresh_token:
+                                        type: string
+                                example:
+                                    token_type: "Bearer"
+                                    expires_in: 86400
+                                    access_token: "eyJ0eXAiOiJKV1Q..."
+                                    refresh_token: "def5020009c17a37..."
+                '401':
+                    description: 'Unauthorized'
+    #======================
+    # === ПОЛЬЗОВАТЕЛИ ====
+    #======================
+    "/v1/user":
+        post:
+            summary: "Добавление пользователя"
+            description: "Для того, чтобы добавить нового пользователя, необходимо отправить <b>POST</b> запрос на <b>/v1/user</b>"
+            tags:
+                - 'Пользователи'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : "#/components/schemas/User"
+    "/v1/user/{user_id}":
+        get:
+            summary: "Просмотр пользователя"
+            description: "Для того, чтобы просмотреть пользователя, необходимо отправить <br>GET</b> запрос на <b>/v1/user/{user_id}</b>"
+            tags:
+                - 'Пользователи'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: user_id
+                  in: path
+                  description: "User ID"
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : "#/components/schemas/User"
+        put:
+            summary: "Редактирование пользователя"
+            description: "Для того, чтобы редактировать пользователя, необходимо отправить <b>PUT</b> запрос на <b>/v1/user/{user_id}</b>"
+            tags:
+                - Пользователи
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/RegistrationForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : "#/components/schemas/User"
+        delete:
+            summary: "Удаление  пользователя"
+            description: "Для того, чтобы удалить пользователя, необходимо отправить <b>DELETE</b> запрос на <b>/v1/user/{user_id}</b>"
+            tags:
+                - Пользователи
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: user_id
+                  in: path
+                  description: "User ID"
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                "200":
+                    description: OK
+    "/v1/user/search_request={request}&page={page}":
+        get:
+            summary: "Поиск пользователей"
+            description: "Для того, чтобы искать пользователей, необходимо отправить <b>GET</b> запрос на <b>/v1/user/search_request={request}&page={page}</b>.</br>Поиск происходит по email и username"
+            tags:
+                - Пользователи
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: request
+                  in : path
+                  description: "Строка запроса на поиск пользователей"
+                  schema:
+                      type: string
+                - name: page
+                  in: path
+                  description: "Количество ответов"
+                  schema:
+                      type: integer
+                      min: 1
+            responses:
+                "200":
+                    description: "OK"
 
-  "/user/profile/{user_id}":
-    put:
-      summary: "Редактирование профиля"
-      description: "Для того, чтобы редактировать пользователя, необходимо отправить <b>PUT</b> запрос на <b>/v1/user/profile/{user_id}</b>"
-      tags:
-        - Пользователи
-      security:
-        - Bearer: []
-      parameters:
-        - name: user_id
-          in: path
-          schema:
-            type: string
-          description: User ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                avatar_id:
-                  type: integer
-                  format: int64
-          application/xml:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                avatar_id:
-                  type: integer
-                  format: int64
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                avatar_id:
-                  type: integer
-                  format: int64
-          text/plain:
-            schema:
-              type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref : "#/components/schemas/User"
+    "/v1/user/profile/{user_id}":
+        put:
+            summary: "Редактирование профиля"
+            description: "Для того, чтобы редактировать пользователя, необходимо отправить <b>PUT</b> запрос на <b>/v1/user/profile/{user_id}</b>"
+            tags:
+                - 'Пользователи'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: user_id
+                  in: path
+                  schema:
+                      type: string
+                  description: User ID
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                avatar_id:
+                                    type: integer
+                                    format: int64
+                    application/xml:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                avatar_id:
+                                    type: integer
+                                    format: int64
+                    application/x-www-form-urlencoded:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                avatar_id:
+                                    type: integer
+                                    format: int64
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : "#/components/schemas/User"
 
 
-  #======================
-  # ===== ГРУППЫ
-  #======================
-  "/group":
-    get:
-      summary: "Получение групп пользователя"
-      description: "Для получения групп пользователя необходимо отправить <b>GET</b> запрос на <b>/v1/group</b>"
-      tags:
-        - Группы
-      security:
-        - Bearer: []
-      responses:
-        200:
-            description: OK
-            schema:
-              $ref: "#/components/schemas/Group"
-    post:
-      summary: Добавление группы
-      description: Для того, чтобы добавить группу, необходимо отправить POST запрос на /v1/group
-      tags:
-        - Группы
-      security:
-        - Bearer: []
-      parameters:
-        - name: title
-          in: formData
-          description: Название группы
-          required: true
-          schema:
-            type: string
-        - name : slug
-          in : formData
-          description: URL группы
-          required: true
-          schema:
-            type: string
-        - name : status
-          in : formData
-          description: Статус группы (активная / не активная)
-          required: true
-          schema:
-            type: string
-            enum:
-              - active
-              - disable
-            default: active
-        - name : owner_id
-          in : formData
-          description: Идентификатор создателя группы
-          required: true
-          schema:
-            type: integer
-        - name : user_ids
-          in : formData
-          description : Массив пользователей группы
-          schema:
-            type: array
-            items:
-              type: integer
-            minItems: 1
-        - name : avatar
+    #========================
+    # ====== ГРУППЫ =========
+    #========================
+    "/v1/group":
+        get:
+            summary: "Получение групп пользователя"
+            description: "Для получения групп пользователя необходимо отправить <b>GET</b> запрос на <b>/v1/group</b>"
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Group'
+                '401':
+                    description: 'Unauthorized'
 
-  #======================
-  # ===== ССЫЛКИ
-  #======================
-  "/single-link":
-    get:
-      summary: Мета данные простой (одной) ссылки
-      description: Получить мета данные (название сайта, описание, иконка) по ссылке
-      tags:
-        - Ссылки
-      parameters:
-      - in: query
-        name: link
-        required: true
-        schema:
-          type: string
-          example: https://laravel.com
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref : '#/components/schemas/Link'
-      security:
-        - Bearer: []
-  "/text-link":
-    get:
-      summary: Мета данные всех ссылок в сообщении
-      description: Получить мета данные (название сайта, описание, иконка) по всем
-        ссылкам в сообщении
-      tags:
-        - Ссылки
-      parameters:
-      - in: query
-        name: link
-        required: true
-        schema:
-          type: string
-          example: Laravel документация по ссылке https://laravel.com
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref : '#/components/schemas/Link'
-      security:
-        - Bearer: []
+        post:
+            summary: 'Добавление группы'
+            description: 'Для того, чтобы добавить группу, необходимо отправить <b>POST</b> запрос на <b>/v1/group</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/GroupForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/GroupForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/GroupForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Group'
+                '401':
+                    description: 'Unauthorized'
+
+    "/v1/group/{group_id}":
+        get:
+            summary: 'Получение группы по group_id группы'
+            description: 'Для того, чтобы получить группу, необходимо отправить <b>GET</b> запрос на <b>/v1/group/{group_id}</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: group_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор группы'
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Group'
+                '401':
+                    description: 'Unauthorized'
+        put:
+            summary: 'Редактирование группы'
+            description: 'Для того, чтобы редактировать группу, необходимо отправить <b>PUT</b> запрос на <b>/v1/group/{group_id}</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: group_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор группы'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/Group"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/Group"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/Group"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: 'OK'
+        delete:
+            summary: 'Удаление группы'
+            description: 'Для того, чтобы удалить группу, необходимо отправить <b>DELETE</b> запрос на <b>/v1/group/{group_id}</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: group_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор группы'
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/group/{group_id}/channels":
+        post:
+            summary: 'Добавление каналов'
+            description: 'Для того, чтобы добавить каналы необходимо отправить <b>POST</b> запрос на <b>/v1/group/{group_id}/channels</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: group_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор группы'
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/group/{group_id}/delete-channel":
+        delete:
+            summary: 'Удаление канала'
+            description: 'Для того, чтобы удалить канал необходимо отправить <b>DELETE</b> запрос на <b>/v1/group/{group_id}/delete-channel?channel_id={channel_id}</b>'
+            tags:
+                - 'Группы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: group_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор группы'
+                - name: channel_id
+                  in: query
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор канала для удаления из группы'
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+
+    #======================
+    # ===== КАНАЛЫ ========
+    #======================
+
+    "/v1/channel":
+        get:
+            summary: 'Получение каналов пользователя'
+            description: 'Для получения каналов пользователя необходимо отправить <b>GET</b> запрос на <b>/v1/channel</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Channel'
+                '401':
+                    description: 'Unauthorized'
+        post:
+            summary: 'Добавление канала'
+            description: 'Для того, чтобы добавить канал, необходимо отправить <b>POST</b> запрос на <b>/v1/channel</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/{slug}":
+        get:
+            summary: 'Получение канала по slug'
+            description: 'Для того, чтобы получить канал, необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{slug}</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: slug
+                  in: path
+                  schema:
+                      type: string
+                  description: 'URL канала'
+            response:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Channel'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/{channel_id}":
+        get:
+            summary: 'Получение канала по channel_id'
+            description: 'Для того, чтобы получить канал, необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: channel_id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор канала'
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Channel'
+                '401':
+                    description: 'Unauthorized'
+
+        put:
+            summary: 'Редактирование канала'
+            description: 'Для того, чтобы редактировать канал, необходимо отправить <b>PUT</b> запрос на <b>/v1/channel/{channel_id}</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: channel_id
+                  in: path
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор канала'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/ChannelForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+        delete:
+            sumamry: 'Удаление канала'
+            description: 'Для того, чтобы удалить канал, необходимо отправить <b>DELETE</b> запрос на <b>/v1/channel/{channel_id}</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: channel_id
+                  schema:
+                      type: string
+                  description: 'Идентификатор канала'
+                  required: true
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/add-user":
+        post:
+            sumamry: 'Добавление пользователя в канал'
+            description: 'Для добавления пользователя необходимо отправить <b>POST</b> запрос на <b>/v1/channel/add-user</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - user_id
+                                - channel_id
+                            properties:
+                                user_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'Идентификатор пользователя'
+                                channel_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'идентификатор пользователя'
+                    application/xml:
+                        schema:
+                            type: object
+                            required:
+                                - user_id
+                                - channel_id
+                            properties:
+                                user_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'Идентификатор пользователя'
+                                channel_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'идентификатор пользователя'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            type: object
+                            required:
+                                - user_id
+                                - channel_id
+                            properties:
+                                user_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'Идентификатор пользователя'
+                                channel_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'идентификатор пользователя'
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/delete-user":
+        delete:
+            sumamry: 'Удаление пользователя из канала'
+            description: 'Для удаления пользователя необходимо отправить <b>DELETE</b> запрос на <b>/v1/channel/delete-user?user_id={user_id}&channel_id={channel_id}</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: query
+                  name: user_id
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор пользователя'
+                  required: true
+                - in: query
+                  name: channel_id
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор канала'
+                  required: true
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/{channel_id}/users":
+        get:
+            sumamry: 'Получение пользователей канала'
+            description: 'Для получения пользователей необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}/users</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: channel_id
+                  schema:
+                      type: string
+                  description: 'Идентификатор канала'
+                  required: true
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/{channel_id}/messages":
+        get:
+            sumamry: 'Получение сообщений канала'
+            description: 'Для получения сообщений необходимо отправить <b>GET</b> запрос на <b>/v1/channel/{channel_id}/messages</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: channel_id
+                  schema:
+                      type: string
+                  description: 'Идентификатор канала'
+                  required: true
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Message'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/service/left-side-bar":
+        get:
+            summary: 'Получение списка каналов в группах и каналов без групп для левого меню'
+            description: 'Для получения списка каналов в группах и каналов без групп необходимо отправить <b>GET</b> запрос на <b>/v1/channel/service/left-side-bar</b>'
+            tags:
+                - 'Каналы'
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/Group'
+                                    - $ref: '#/components/schemas/Channel'
+                '401':
+                    description: 'Unauthorized'
+
+    #======================
+    # ==== АВАТАРКИ =======
+    #======================
+
+    "/v1/group/avatar":
+        post:
+            summary: 'Добавление аватарки в группу'
+            description: 'Для того чтобы добавить аватарку необходимо отправить <b>POST</b> запрос на <b>/group/avatar</b>'
+            tags:
+                - 'Аватарки'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                avatar:
+                                    type: string
+                                    format: binary
+                                    description: 'Файл аватарки'
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                    appication/json:
+                        schema:
+                            type: object
+                            properties:
+                                avatar_id:
+                                    type: integer
+                                    format: int64
+                                    description: 'Идентификатор аватарки'
+                                    example: 11
+                                origin:
+                                    type: string
+                                    example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722.jpg'
+                                    description: "Ссылка на аватарку"
+                                average:
+                                    type: string
+                                    example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_400.jpg'
+                                    description: "Ссылка на аватарку среднего размера"
+                                small:
+                                    type: string
+                                    example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_150.jpg'
+                                    description: 'Ссылка на аватарку уменьшенного размера'
+                                status:
+                                    type: string
+                                    enum:
+                                        - active
+                                    example: 'active'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/channel/avatar":
+        post:
+            summary: 'Добавление аватарки в канал'
+            description: 'Для того чтобы добавить аватарку необходимо отправить <b>POST</b> запрос на <b>/channel/avatar</b>'
+            tags:
+                - 'Аватарки'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                avatar:
+                                    type: string
+                                    format: binary
+                                    description: 'Файл аватарки'
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        appication/json:
+                            schema:
+                                type: object
+                                properties:
+                                    avatar_id:
+                                        type: integer
+                                        format: int64
+                                        description: 'Идентификатор аватарки'
+                                        example: 11
+                                    origin:
+                                        type: string
+                                        example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722.jpg'
+                                        description: "Ссылка на аватарку"
+                                    average:
+                                        type: string
+                                        example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_400.jpg'
+                                        description: "Ссылка на аватарку среднего размера"
+                                    small:
+                                        type: string
+                                        example: 'http://files.newchannels.loc/img/group/a/a9/a99e2dd4cf56a3c41fe296bf3f0b3722_150.jpg'
+                                        description: 'Ссылка на аватарку уменьшенного размера'
+                                    status:
+                                        type: string
+                                        enum:
+                                            - active
+                                        example: 'active'
+                '401':
+                    description: 'Unauthorized'
+
+    #======================
+    # ==== СООБЩЕНИЯ ======
+    #======================
+
+    "/v1/message":
+        post:
+            summary: 'Добавление сообщения'
+            description: 'Для создания сообщения необходимо отправить <b>POST</b> запрос на <b>/v1/message</b>'
+            tags:
+                - 'Сообщения'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref:  "#/components/schemas/MessageForm"
+                    application/xml:
+                        schema:
+                            $ref:  "#/components/schemas/MessageForm"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref:  "#/components/schemas/MessageForm"
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Message'
+                '401':
+                    description: 'Unauthorized'
+
+    "/v1/message/{message_id}":
+        get:
+            summary: 'Получение сообщения'
+            description: 'Для получения сообщения необходимо отправить <b>GET</b> запрос на <b>/v1/message/{message_id}</b>'
+            tags:
+                - 'Сообщения'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name : message_id
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор сообщения'
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Message'
+                '401':
+                    description: 'Unauthorized'
+        delete:
+            summary: 'Удаление сообщения'
+            description: 'Для удаления сообщения необходимо отправить <b>DELETE</b> запрос на <b>/v1/message/{message_id}</b>'
+            tags:
+                - 'Сообщения'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name : message_id
+                  schema:
+                      type: integer
+                      format: int64
+                  description: 'Идентификатор сообщения'
+            responses:
+                '200':
+                    description: 'OK'
+                '401':
+                    description: 'Unauthorized'
+
+    #======================
+    # ==== Аттачменты =====
+    #======================
+
+    "/v1/attachment/upload":
+        post:
+            summary: 'Загрузка файла аттачмента'
+            description: 'Для того, чтобы загрузить файл аттачмента, необходимо отправить <b>POST</b> запрос на <b>/v1/attachment/upload</b>'
+            tags:
+                - 'Аттачменты'
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                attachment:
+                                    type: string
+                                    format: binary
+                                    description: 'Файл'
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        example: '/attachments/6/64/64aeea4eb0bea61c85a42522e1e892ae.png'
+                '401':
+                    description: 'Unauthorized'
+    "/v1/attachment":
+        post:
+            summary: 'Добавление аттачмента'
+            description: 'Для того, чтобы добавить аттачмент к сообщению, необходимо отправить <b>POST</b> запрос на <b>/v1/attachment</b>'
+            tags:
+                - 'Аттачменты'
+            security:
+                - bearerAuth: []
+    #======================
+    # ===== ССЫЛКИ ========
+    #======================
+    "/v1/single-link":
+        get:
+            summary: 'Мета данные простой (одной) ссылки'
+            description: 'Получить мета данные (название сайта, описание, иконка) по ссылке'
+            tags:
+                - 'Ссылки'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: query
+                  name: link
+                  required: true
+                  schema:
+                      type: string
+                      example: 'https://laravel.com'
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Link'
+    "/v1/text-link":
+        get:
+            summary: 'Мета данные всех ссылок в сообщении'
+            description: 'Получить мета данные (название сайта, описание, иконка) по всем ссылкам в сообщении'
+            tags:
+                - 'Ссылки'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: query
+                  name: link
+                  required: true
+                  schema:
+                      type: string
+                      example: 'Laravel документация по ссылке https://laravel.com'
+            responses:
+                '200':
+                    description: 'OK'
+                    content:
+                        application/json:
+                            schema:
+                                $ref : '#/components/schemas/Link'
 #=======================
 #===== КОМПОНЕНТЫ
 #======================
 components:
-  securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  schemas:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
 
-    RegistrationForm:
-      type: object
-      properties:
-        username:
-          type: string
-          description: Отображаемое имя на сайте
-        password:
-          type: string
-          description: Пароль пользователя
-        password_confirmation:
-          type: string
-          description: Подтверждение пароля пользователя
-        email :
-          type: string
-          format: email
-          description: Email, указанный при регистрации
-      required:
-        - username
-        - password
-        - password_confirmation
-        - email
-      example:
-        username: Jessica Smith
-        password: 1234qwer
-        password_confirmation: 1234qwer
-        email: jessica@gmail.com
-      xml:
-        name: RegistrationForm
+        RegistrationForm:
+            type: object
+            properties:
+                username:
+                    type: string
+                    description: 'Отображаемое имя на сайте'
+                password:
+                    type: string
+                    description: 'Пароль пользователя'
+                password_confirmation:
+                    type: string
+                    description: 'Подтверждение пароля пользователя'
+                email :
+                    type: string
+                    format: email
+                    description: 'Email, указанный при регистрации'
+            required:
+                - username
+                - password
+                - password_confirmation
+                - email
+            example:
+                username: 'Jessica Smith'
+                password: '1234qwer'
+                password_confirmation: '1234qwer'
+                email: 'jessica@gmail.com'
+            xml:
+                name: RegistrationForm
 
-    LoginForm:
-      type: object
-      properties:
-        grant_type:
-          type: string
-          enum:
-            - password
-            - refresh_token
-          default: password
-          description: "Тип запроса токена"
-        client_id:
-          type: integer
-          description: "Идентификатор клиента (генерируется по запросу)"
-        client_secret:
-          type: string
-          description: "Ключ клиента (генерируется по запросу)"
-        username:
-          type: string
-          format: email
-          description: "Email пользователя"
-        password:
-          type: string
-          description: "Пароль пользователя"
-        refresh_token:
-          type: string
-          description: "refresh token полученый при авторизации"
-        scope:
-          type: string
-      required:
-        - grant_type
-        - client_id
-        - client_secret
-      example:
-        grant_type: "password"
-        client_id: 1
-        client_secret: "HJnYUlzOSXOxoIc15HMlxUJb1SNzaeYKn0tSMBls"
-        username: "jessica@gmail.com"
-        password: "1234qwer"
-        refresh_token: "oIc15HMlxUJb1SNzaeYKn0tSMBls..."
-    xml:
-        name: LoginForm
+        LoginForm:
+            type: object
+            properties:
+                grant_type:
+                    type: string
+                    enum:
+                        - password
+                        - refresh_token
+                    default: password
+                    description: "Тип запроса токена"
+                client_id:
+                    type: integer
+                    description: "Идентификатор клиента (генерируется по запросу)"
+                client_secret:
+                    type: string
+                    description: "Ключ клиента (генерируется по запросу)"
+                username:
+                    type: string
+                    format: email
+                    description: "Email пользователя"
+                password:
+                    type: string
+                    description: "Пароль пользователя"
+                refresh_token:
+                    type: string
+                    description: "refresh token полученый при авторизации"
+                scope:
+                    type: string
+            required:
+                - grant_type
+                - client_id
+                - client_secret
+            example:
+                grant_type: "password"
+                client_id: 1
+                client_secret: "HJnYUlzOSXOxoIc15HMlxUJb1SNzaeYKn0tSMBls"
+                username: "jessica@gmail.com"
+                password: "1234qwer"
+                refresh_token: "oIc15HMlxUJb1SNzaeYKn0tSMBls..."
+        xml:
+            name: LoginForm
 
-    User:
-      type: object
-      properties:
-        username:
-          type: string
-          description: Отображаемое имя на сайте
-          example: Jessica Smith
-        password:
-          type: string
-          description: Пароль пользователя
-          password: 1234qwer
-        password_confirmation:
-          type: string
-          description: Подтверждение пароля пользователя
-          password_confirmation: 1234qwer
-        email:
-          type: string
-          format: email
-          description: Email, указанный при регистрации
-          email: jessica@gmail.com
-        avatar:
-          $ref : "#/components/schemas/Avatar"
-      required:
-        - username
-        - password
-        - password_confirmation
-        - email
-      xml:
-        name: User
+        UserForm:
+            type: object
+            properties:
+                username:
+                    type: string
+                    description: 'Отображаемое имя на сайте'
+                    example: 'Jessica Smith'
+                password:
+                    type: string
+                    description: 'Пароль пользователя'
+                    example: '1234qwer'
+                password_confirmation:
+                    type: string
+                    description: 'Подтверждение пароля пользователя'
+                    example: '1234qwer'
+                email:
+                    type: string
+                    format: email
+                    description: 'Email, указанный при регистрации'
+                    example: 'jessica@gmail.com'
+                avatar:
+                    nullable: true
+                    $ref: "#/components/schemas/Avatar"
+            required:
+                - username
+                - password
+                - password_confirmation
+                - email
+            xml:
+                name: UserForm
 
-    Avatar:
-      type: object
-      properties:
-        avatar_id:
-          type: integer
-          format: int64
-          description: "Avatar ID"
-        origin:
-          type: string
-          description: "Ссылка на аватарку"
-        average:
-          type: string
-          description: "Ссылка на аватарку среднего размера"
-        small:
-          type: string
-          description: "Ссылка на аватарку уменьшенного размера"
-        status:
-          type: string
-          enum:
-            - active
-            - disable
-      example:
-        origin: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b.jpg"
-        average: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_400.jpg"
-        small: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_150.jpg"
-      xml:
-        name: Avatar
+        User:
+            type: object
+            properties:
+                username:
+                    type: string
+                    description: 'Отображаемое имя на сайте'
+                    example: 'Jessica Smith'
+                password:
+                    type: string
+                    description: 'Пароль пользователя'
+                    example: '1234qwer'
+                password_confirmation:
+                    type: string
+                    description: 'Подтверждение пароля пользователя'
+                    example: '1234qwer'
+                email:
+                    type: string
+                    format: email
+                    description: 'Email, указанный при регистрации'
+                    example: 'jessica@gmail.com'
+                avatar:
+                    nullable: true
+                    $ref : "#/components/schemas/Avatar"
+            required:
+                - username
+                - password
+                - password_confirmation
+                - email
+            xml:
+                name: User
 
-    Group:
-      type: object
-      properties:
-        title:
-          type: string
-          description: Название группы
-        slug:
-          type: integer
-          format: int64
-          description: URL группы
-        status:
-          type: string
-          enum:
-            - active
-            - disable
-          default: active
-          description: Статус группы (active / disable)
-        owner_id:
-          type: integer
-          format: int64
-          description: Идентификатор создателя группы
-        avatar:
-          type: integer
-          format: int64
-          allowEmpty: true
-      required:
-        - title
-        - slug
-        - status
-        - owner_id
-      xml:
-        name: Group
+        MessageForm:
+            type: object
+            properties:
+                channel_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор канала'
+                from:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор отправителя сообщения'
+                to:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор получателя сообщения'
+                    nullable: true
+                text:
+                    type: string
+                    description: 'Текст сообщения'
+                read:
+                    type: integer
+                    enum: [0, 1]
+                    default: 0
+                    description: 'Статус сообщения: 1 - прочитано, 0 - не прочитано'
+            example:
+                channel: 108
+                to: 'null'
+                from: 1
+                read: 0
+                created_at: '26-10-2018 14:44:45'
+                text: 'Займи тысячу'
+            xml:
+                name: MessageForm
 
-    Channel:
-      type: object
-      properties:
-        channel_id :
-          type: integer
-          format: int64
-          example: 6
-        title:
-          type: string
-          example: Mr.
-        slug:
-          type: string
-          example: mr
-        status:
-          type: string
-          enum:
-            - active
-            - disable
-          default: active
-          example: active
-        type:
-          type: string
-          enum:
-            - chat
-            - wall
-          default: chat
-          example: chat
-        private:
-          type: integer
-          enum: [0, 1]
-          default: 1
-          example: 1
-        owner_id:
-          type: integer
-          format: int64
-          example: 2
-        user_count:
-          type: integer
-          format: int64
-          example: 3
-        avatar:
-          type: array
-          items:
-            type: integer
-          minItems: 1
-      xml:
-        name: Channel
+        Message:
+            type: object
+            properties:
+                message_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор сообщения'
+                    example: 1001
+                channel_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор канала'
+                    example: 108
+                from:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор отправителя сообщения'
+                    example: 1
+                to:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор получателя сообщения'
+                    nullable: true
+                    example: null
+                text:
+                    type: string
+                    description: 'Текст сообщения'
+                    example: 'Займи тысячу'
+                read:
+                    type: integer
+                    enum: [0, 1]
+                    default: 0
+                    description: 'Статус сообщения: 1 - прочитано, 0 - не прочитано'
+                created_at:
+                    type: string
+                    description: 'Дата создания'
+                    example: '26-10-2018 14:44:45'
+            xml:
+                name: Message
 
-    Link:
-      type: object
-      properties:
-        url:
-          type: string
-          description: URL сайта
-          example: https://laravel.com/
-        title:
-          type: string
-          description: Заголовок сайта
-          example: Laravel - The PHP Framework For Web Artisans
-        description:
-          type: string
-          description: Описание сайта
-          example: Laravel - The PHP framework for web artisans
-        icon:
-          type: string
-          description: Лого сайта
-          example: /assets/img/laravel-logo-white.png
-        base:
-          type: string
-          description: Доменное имя сайта
-          example: laravel.com
-      xml:
-        name: Link
+        Attachment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор аттачмента'
+                status:
+                    type: string
+                    enum:
+                        - 'active'
+                        - 'disable'
+                    default: 'active'
+                    description: 'Статус аттачмента'
+                type:
+                    type: string
+                    enum:
+                        - 'image'
+                        - 'file'
+                    description: 'Тип аттачмента (image или file)'
+                message_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор сообщения к которому прикрепляется attachment'
+                options:
+                    type: object
+                    properties:
+
+            example:
+                id : 23
+                status: 'active'
+                message_id: 7
+                type: 'file'
+                options:
+            xml:
+                name: Avatar
+
+        Avatar:
+            type: object
+            properties:
+                avatar_id:
+                    type: integer
+                    format: int64
+                    description: "Идентификатор аватарки"
+                origin:
+                    type: string
+                    description: "Ссылка на аватарку"
+                average:
+                    type: string
+                    description: "Ссылка на аватарку среднего размера"
+                small:
+                    type: string
+                    description: "Ссылка на аватарку уменьшенного размера"
+                status:
+                    type: string
+                    enum:
+                        - 'active'
+                        - 'disable'
+            example:
+                origin: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b.jpg"
+                average: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_400.jpg"
+                small: "http://files.newchannels.loc/img/channel/0/04/04882234d9761dc7072283ba61e2c29b_150.jpg"
+            xml:
+                name: Avatar
+
+        GroupForm:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 'Название группы'
+                    example: 'Test'
+                slug:
+                    type: integer
+                    format: int64
+                    description: 'URL группы'
+                    example: 'Test url'
+                status:
+                    type: string
+                    enum:
+                        - 'active'
+                        - 'disable'
+                    default: 'active'
+                    description: 'Статус группы (active / disable)'
+                owner_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор создателя группы'
+                avatar:
+                    type: integer
+                    format: int64
+                    description: 'Аватарка группы, принимает идентификатор заранее загруженной аватарки'
+                    nullable: true
+                user_ids:
+                    type: array
+                    items:
+                        type: integer
+            required:
+                - title
+                - slug
+                - status
+                - owner_id
+            xml:
+                name: GroupForm
+
+        Group:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 'Название группы'
+                    example: 'Test title'
+                slug:
+                    type: integer
+                    format: int64
+                    description: 'URL группы'
+                    example: 'Test slug'
+                status:
+                    type: string
+                    enum:
+                        - 'active'
+                        - 'disable'
+                    default: 'active'
+                    description: 'Статус группы (active / disable)'
+                    example: 'active'
+                owner_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор создателя группы'
+                avatar:
+                    $ref : "#/components/schemas/Avatar"
+                    nullable: true
+                channels:
+                    type: array
+                    items:
+                        $ref : "#/components/schemas/Channel"
+                        allowEmpty: true
+            required:
+                - title
+                - slug
+                - status
+                - owner_id
+            xml:
+                name: Group
+
+        ChannelForm:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 'Название канала'
+                    example: 'Mr.'
+                slug:
+                    type: string
+                    description: 'Url канала'
+                    example: 'mr'
+                status:
+                    type: string
+                    enum:
+                        - active
+                        - disable
+                    default: active
+                    description: 'Статус канала, принимает 2 значения <b>active</b> и <b>disable</b>'
+                    example: active
+                owner_id:
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор создателя канала'
+                type:
+                    type: string
+                    enum:
+                        - chat
+                        - wall
+                        - dialog
+                    default: chat
+                    description: 'Тип канала, принимает такие значения: <b>chat</b>, <b>wall</b> и <b>dialog</b>'
+                    example: 'chat'
+                private:
+                    type: integer
+                    enum: [0, 1]
+                    default: 1
+                    description: 'Приватность канала, принимает 0 или 1'
+                    example: 1
+                avatar:
+                    type: integer
+                    format: int64
+                    description: 'Аватарка канала, принимает идентификатор заранее загруженной аватарки'
+                    nullable: true
+                user_ids:
+                    type: array
+                    items:
+                        type: integer
+                        format: int64
+                        description: 'Массив пользователей канала'
+            xml:
+                name: ChannelForm
+
+        Channel:
+            type: object
+            properties:
+                channel_id :
+                    type: integer
+                    format: int64
+                    description: 'Идентификатор канала'
+                    example: 6
+                title:
+                    type: string
+                    description: 'Название канала'
+                    example: 'Mr.'
+                slug:
+                    type: string
+                    description: 'URL канала'
+                    example: 'mr'
+                status:
+                    type: string
+                    enum:
+                        - active
+                        - disable
+                    default: active
+                    description: 'Статус канала'
+                    example: active
+                type:
+                    type: string
+                    enum:
+                        - chat
+                        - wall
+                        - dialog
+                    default: chat
+                    description: 'Тип канала'
+                    example: 'chat'
+                private:
+                    type: integer
+                    enum: [0, 1]
+                    default: 1
+                    description: 'Приватность канала'
+                    example: 1
+                owner_id:
+                    type: integer
+                    format: int64
+                    desrciption: 'Идентификатор создателя канала'
+                    example: 2
+                user_count:
+                    type: integer
+                    format: int64
+                    example: 3
+                avatar:
+                    desrciption: 'Автарка канала'
+                    $ref : "#/components/schemas/Avatar"
+                    nullable: true
+            xml:
+                name: Channel
+
+        Link:
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: 'URL сайта'
+                    example: 'https://laravel.com/'
+                title:
+                    type: string
+                    description: 'Заголовок сайта'
+                    example: 'Laravel - The PHP Framework For Web Artisans'
+                description:
+                    type: string
+                    description: 'Описание сайта'
+                    example: 'Laravel - The PHP framework for web artisans'
+                icon:
+                    type: string
+                    description: 'Лого сайта'
+                    example: '/assets/img/laravel-logo-white.png'
+                base:
+                    type: string
+                    description: 'Доменное имя сайта'
+                    example: 'laravel.com'
+            xml:
+                name: Link

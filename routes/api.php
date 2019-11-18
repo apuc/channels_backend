@@ -62,6 +62,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/channels/{channel}/invite', 'Channels\ChannelsController@inviteByEmail')->name('channels.invite');
             Route::get('/channels/popular', 'Channels\ChannelsController@popular')->name('channels.popular');
 
+
+            Route::get('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
+            Route::get('/text-link', 'Channels\LinkController@textLink')->name('text-link');
+
         });
 
 
