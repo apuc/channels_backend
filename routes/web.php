@@ -29,6 +29,10 @@ Route::group(['middleware' => 'auth'], function (){
 // Route for changing language...
 Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
 
+Route::get('/api/doc', function (){
+    return view('vendor.swagger.index');
+});
+
 Auth::routes();
 
 
