@@ -115,9 +115,15 @@ class UserRepository
      * @param string $search_request
      * @return User|\Illuminate\Database\Eloquent\Builder
      */
-    public function findByEmailOrUsername(string $search_request)
+    public function findByEmailOrUsername(string $search_request,$return_builder = false)
     {
-        return $this->model->where('email', 'like', "%$search_request%")
-            ->orWhere('username', 'like', "%$search_request%")->first();
+        $query = $this->model->where('email', 'like', "%$search_request%")
+            ->orWhere('username', 'like', "%$search_request%");
+
+        if($return_builder){
+            return $query;
+        }
+
+        return $query->first();
     }
 }
