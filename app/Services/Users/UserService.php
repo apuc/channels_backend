@@ -83,7 +83,7 @@ class UserService
      */
     public function search(SearchRequest $request)
     {
-        return $this->repository->findByEmailOrUsername($request->search_request);
+        return $this->repository->findByEmailOrUsername($request->search_request,true)->paginate(20);
     }
 
 }
