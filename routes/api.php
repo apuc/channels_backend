@@ -21,9 +21,9 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
 
-        Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
-
         Route::middleware('auth:api')->group(function () {
+
+            Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
 
             Route::group([], function () {
                 Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
