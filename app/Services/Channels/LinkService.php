@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Services\Channels;
-
 
 use App\Dto\Link;
 use DiDom\Document;
@@ -19,6 +17,9 @@ class LinkService
 
     private $ch;
 
+    /**
+     * LinkService constructor.
+     */
     public function __construct()
     {
         $this->ch = curl_init();
@@ -33,6 +34,9 @@ class LinkService
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
     }
 
+    /**
+     * Закрыть курл
+     */
     public function __destruct()
     {
         curl_close($this->ch);
@@ -41,10 +45,12 @@ class LinkService
     /**
      * Валидация на наличие ссылок в строке
      *
-     * @param $text
+     * @param string $text
+     * @return mixed
      * @throws \Exception
      */
-    public static function validate(string $text){
+    public static function validate(string $text)
+    {
         if(!preg_match_all(self::URL_REGEX, $text, $matches)){
             throw new \Exception('invalid url');
         }
@@ -53,10 +59,12 @@ class LinkService
 
     /**
      * Валидация на правильную ссылку
+     *
      * @param string $url
      * @throws \Exception
      */
-    public static function validateSingle(string $url){
+    public static function validateSingle(string $url)
+    {
         if(!filter_var($url, FILTER_VALIDATE_URL)){
             throw new \Exception('invalid url');
         }
@@ -69,8 +77,8 @@ class LinkService
      * @return array|Collection
      * @throws \Exception
      */
-    public function parse(string $text){
-
+    public function parse(string $text)
+    {
         $matches = self::validate($text);
 
         $links = new Collection();
@@ -89,8 +97,8 @@ class LinkService
      * @return Link
      * @throws \Exception
      */
-    public function grabMeta(string $url){
-
+    public function grabMeta(string $url)
+    {
         if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
             $url = "http://" . $url;
         }
@@ -110,6 +118,7 @@ class LinkService
         $icon_selectors = ['meta[property="og:image"]', 'img', 'link[rel="apple-touch-icon"]', 'link[rel="icon"][type="image/png"]', 'link[rel$="icon"][type="image/png"]'];
         $icon_attr      = ['content', 'src', 'href', 'href', 'href'];
         $icon = '';
+
         foreach ($icon_selectors as $i => $selector){
             if($dom->has($selector)){
                 $icon = $dom->first($selector)->attr($icon_attr[$i]);
@@ -126,8 +135,10 @@ class LinkService
      * @param string $url
      * @return string
      */
-    private function html(string $url) : string {
+    private function html(string $url) : string
+    {
         curl_setopt($this->ch, CURLOPT_URL, $url);
+
         return curl_exec($this->ch);
     }
 }

@@ -19,6 +19,10 @@ class LinkController extends Controller
      */
     private $linkService;
 
+    /**
+     * LinkController constructor.
+     * @param LinkService $linkService
+     */
     public function __construct(LinkService $linkService)
     {
         $this->linkService = $linkService;
@@ -55,5 +59,4 @@ class LinkController extends Controller
             return response()->json(['data' => []]);
         }
     }
-
 }

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Traits\SluggableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Channel
@@ -34,18 +35,25 @@ class Channel extends Model implements ChannelEntityInterface
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
+    public const PUBLIC_CHANNEL = 0;
+    public const PRIVATE_CHANNEL = 1;
+
     public const TYPE_CHAT = 'chat';
     public const TYPE_WALL = 'wall';
     public const TYPE_DIALOG = 'dialog';
 
     protected $fillable = [
-        'title', 'slug', 'status', 'type', 'private', 'avatar_id', 'owner_id'
+        'title', 'slug', 'status', 'type', 'private', 'avatar_id', 'owner_id', 'to_id'
     ];
 
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at'
     ];
 
+    /**
+     * Статусы
+     * @return array
+     */
     public static function getStatuses()
     {
         return [
@@ -54,6 +62,10 @@ class Channel extends Model implements ChannelEntityInterface
         ];
     }
 
+    /**
+     * Типы
+     * @return array
+     */
     public static function getTypes()
     {
         return [
@@ -61,14 +73,6 @@ class Channel extends Model implements ChannelEntityInterface
             'wall' => self::TYPE_WALL,
             'dialog' => self::TYPE_DIALOG
         ];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPrivate()
-    {
-        return $this->private;
     }
 
     /**
@@ -103,6 +107,24 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'user_id', 'owner_id');
+    }
+
+    /**
+     * Для диалогов. Получает пользователя с которым диалог
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function toUser()
+    {
+        return $this->hasOne(User::class, 'user_id', 'owner_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function integrations()
@@ -116,6 +138,22 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isPrivate()
+    {
+        return $this->private;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDialog()
+    {
+        return $this->type == self::TYPE_DIALOG;
+    }
+
+    /**
      * @return int
      */
     public function getUserCount()
@@ -123,13 +161,6 @@ class Channel extends Model implements ChannelEntityInterface
         return $this->users()->count();
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function owner()
-    {
-        return $this->hasOne(User::class, 'user_id', 'owner_id');
-    }
 
     /**
      * @return int
@@ -147,6 +178,19 @@ class Channel extends Model implements ChannelEntityInterface
     public function getType()
     {
         return 'channel';
+    }
+
+    /**
+     * Заголовок канала
+     * @return string
+     */
+    public function getTitle()
+    {
+        if($this->isDialog()){
+          return \Auth::id() == $this->owner_id ? $this->toUser->username : $this->owner->username;
+        }
+
+        return $this->title;
     }
 
     /**

@@ -7,12 +7,10 @@ use App\Http\Requests\Channels\InviteRequest;
 use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
-use App\Http\Resources\v1\GroupsResource;
 use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Http\Resources\v1\User\FullUserResource as UserResource;
 use App\Models\Avatar;
-use App\Models\Channels\Channel;
 use App\Models\Channels\Message;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
@@ -21,7 +19,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Channels\AddIntegrationRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Requests\DialogRequest;
 
 class ChannelsController extends Controller
 {
@@ -40,6 +38,12 @@ class ChannelsController extends Controller
      */
     protected $channelRepository;
 
+    /**
+     * ChannelsController constructor.
+     * @param ChannelService $service
+     * @param ChannelRepository $groupsRepository
+     * @param AvatarService $avatarService
+     */
     public function __construct(ChannelService $service, ChannelRepository $groupsRepository, AvatarService $avatarService)
     {
         $this->channelService = $service;
@@ -254,6 +258,22 @@ class ChannelsController extends Controller
             return new FullUserResource($user);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Создать диалог
+     * @param DialogRequest $request
+     * @return ChannelResource
+     */
+    public function createDialog(DialogRequest $request)
+    {
+        try {
+            $channel = $this->channelService->createDialog($request);
+
+            return new ChannelResource($channel);
+        } catch (\Throwable $e) {
+            abort(500);
         }
     }
 }
