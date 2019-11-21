@@ -121,7 +121,7 @@ class Channel extends Model implements ChannelEntityInterface
      */
     public function toUser()
     {
-        return $this->hasOne(User::class, 'user_id', 'owner_id');
+        return $this->hasOne(User::class, 'user_id', 'to_id');
     }
 
     /**
