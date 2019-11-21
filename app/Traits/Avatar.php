@@ -10,6 +10,7 @@ namespace App\Traits;
 
 
 use App\Models\Interfaces\AvatarInterface;
+use Illuminate\Support\Facades\Auth;
 
 trait Avatar
 {
@@ -20,15 +21,23 @@ trait Avatar
      */
     public function getAvatar($avatar)
     {
-        if ($avatar) {
-            return [
-                'id' => $avatar->getId(),
-                'origin' => $avatar->getOrigin(),
-                'average' => $avatar->getAverage(),
-                'small' => $avatar->getSmall(),
-            ];
+        if($this->getType() == 'channel' && $this->isDialog()){
+            $avatar = Auth::id() == $this->owner_id
+                ? $this->toUser->avatar
+                : $this->owner->avatar;
         }
-        return null;
+
+        if (!$avatar) {
+            return null;
+        }
+
+        return [
+            'id' => $avatar->getId(),
+            'origin' => $avatar->getOrigin(),
+            'average' => $avatar->getAverage(),
+            'small' => $avatar->getSmall(),
+        ];
+
     }
 
 }

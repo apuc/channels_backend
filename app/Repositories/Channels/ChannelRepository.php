@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 25.09.18
- * Time: 14:44
- */
 
 namespace App\Repositories\Channels;
-
 
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\DialogRequest;
+use Illuminate\Support\Str;
 
 class ChannelRepository
 {
@@ -50,7 +45,27 @@ class ChannelRepository
     }
 
     /**
-     * Method for update Group
+     * Создание диалога
+     * @param int $owner
+     * @param int $to
+     * @return mixed
+     */
+    public function createDialog(int $owner, int $to)
+    {
+        $str = Str::random(5);
+
+        return $this->model::create([
+            'slug' => "{$owner}_{$str}_{$to}",
+            'to_id' => $to,
+            'status'=>$this->model::STATUS_ACTIVE,
+            'owner_id' => $owner,
+            'type' => $this->model::TYPE_DIALOG,
+            'private' => $this->model::PRIVATE_CHANNEL,
+        ]);
+    }
+
+    /**
+     * Method for update channel
      *
      * @param ChannelRequest $request
      * @param Channel $channel
@@ -76,10 +91,11 @@ class ChannelRepository
     }
 
     /**
-     * Method for destroy group
+     * Method for destroy channel
      *
      * @param Channel $channel
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Channel $channel)
     {
@@ -87,7 +103,7 @@ class ChannelRepository
             return true;
         }
 
-        throw new \DomainException('Error deleting group');
+        throw new \DomainException('Error deleting channel');
     }
 
     /**
@@ -146,6 +162,7 @@ class ChannelRepository
                where message.channel_id = channel.channel_id
                order by message_id desc limit 1) as m_date")
             )->orderBy('m_date','desc')->take(20)
+            ->where('private','=',$this->model::PUBLIC_CHANNEL)
             ->get();
 
         return $this->model::hydrate($channels->toArray());

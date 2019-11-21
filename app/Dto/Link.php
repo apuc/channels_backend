@@ -119,14 +119,21 @@ class Link
         return $this;
     }
 
-    public static function fromArray($data) : Link{
+    /**
+     * @param $data
+     * @return Link
+     */
+    public static function fromArray($data) : Link
+    {
         $instance = new self;
+
         $instance
             ->setUrl($data['url'])
             ->setTitle($data['title'])
             ->setDescription($data['description'])
             ->setIcon($data['icon'])
             ->setBase($data['base']);
+
         return $instance;
     }
 

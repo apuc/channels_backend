@@ -18,6 +18,7 @@ use App\Repositories\Users\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\Channels\AddIntegrationRequest;
 use Faker\Factory;
+use App\Http\Requests\DialogRequest;
 
 class ChannelService
 {
@@ -54,6 +55,24 @@ class ChannelService
             $channel = $this->repository->create($request);
 
             $channel->users()->sync($request->get('user_ids'));
+
+            return $channel;
+        });
+    }
+
+    /**
+     * Создание диалога
+     *
+     * @param DialogRequest $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function createDialog(DialogRequest $request)
+    {
+        return \DB::transaction(function () use ($request) {
+            $channel = $this->repository->createDialog($request->owner_id,$request->to_id);
+
+            $channel->users()->sync([$request->owner_id,$request->to_id]);
 
             return $channel;
         });
@@ -108,9 +127,9 @@ class ChannelService
 
     /**
      * Удаление канала
-     *
      * @param Channel $channel
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Channel $channel)
     {
@@ -134,7 +153,8 @@ class ChannelService
      * @param int $channel_id
      * @return \App\Models\User|\Illuminate\Database\Eloquent\Builder
      */
-    public function addUserByEmail(string $email,int $channel_id){
+    public function addUserByEmail(string $email,int $channel_id)
+    {
 
         $user = $this->userRepository->findByEmailOrUsername($email);
 
