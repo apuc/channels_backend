@@ -14,7 +14,11 @@ trait Sluggable
 
     public function findOrFail($data)
     {
-        return $this->model::where([$this->model->primaryKey => $data])->orWhere([$this->model->getSlugFieldName() => $data])->firstOrFail();
+        if(is_numeric($data)){
+            return $this->model::where([$this->model->primaryKey => $data])->firstOrFail();
+        }else{
+            return $this->model::where([$this->model->getSlugFieldName() => $data])->firstOrFail();
+        }
     }
 
 }
