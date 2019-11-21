@@ -165,4 +165,13 @@ class User extends Authenticatable
 
         return self::findOrFail($credentials['id']);
     }
+
+    /**
+     * Тип сущности. Нужно чтобы работал аватар трейт
+     * @return string
+     */
+    public function getType()
+    {
+        return 'user';
+    }
 }
