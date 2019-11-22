@@ -25,7 +25,7 @@ class DialogRequest extends FormRequest
     public function rules()
     {
         return [
-            'to_id' => 'required|integer|exists:users,user_id',
+            'to_id' => 'required|integer|exists:users,user_id|unique_with_reverse:channel,owner_id,to_id,'. $this->owner_id .','.$this->to_id,
             'owner_id' => 'required|integer|exists:users,user_id',
         ];
     }
@@ -33,7 +33,8 @@ class DialogRequest extends FormRequest
     public function messages()
     {
         return [
-            '*.required' => 'Это поле обязательно'
+            '*.required' => 'Это поле обязательно',
+            'to_id.unique_with_reverse' => 'Диалог уже создан!',
         ];
     }
 }

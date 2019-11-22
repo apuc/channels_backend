@@ -28,7 +28,11 @@ trait Avatar
         }
 
         if (!$avatar) {
-            return getenv('FILES_SERVER_URL') . '/no-avatar.png';
+            return [
+                'origin' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
+                'average' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
+                'small' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
+            ];
         }
 
         return [
