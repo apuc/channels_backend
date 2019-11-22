@@ -40,6 +40,10 @@ class LeftSideBarResource extends JsonResource
             $data['channels'] = $this->addChannels();
         }
 
+        if ($this->getType() === self::TYPE_CHANNEL) {
+            $data['channel_type'] = $this->type;
+        }
+
         return $data;
     }
 

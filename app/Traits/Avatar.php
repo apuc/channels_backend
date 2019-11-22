@@ -28,7 +28,7 @@ trait Avatar
         }
 
         if (!$avatar) {
-            return null;
+            return getenv('FILES_SERVER_URL') . '/no-avatar.png';
         }
 
         return [
