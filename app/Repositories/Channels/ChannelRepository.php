@@ -139,13 +139,13 @@ class ChannelRepository
                 $query->where('channels_group_users.user_id', $userId);
                 $query->whereNull('channels_group_users.channels_group_id');
             })
-            ->orWhere(function (Builder $query) use ($userId) {
-                $query->where('channel.owner_id', $userId);
-                $query->where(function (Builder $query) use ($userId) {
-                    $query->where('channels_group_users.user_id', '<>', $userId);
-                    $query->orWhereNull('channels_group_users.user_id');
-                });
-            })
+//            ->orWhere(function (Builder $query) use ($userId) {
+//                $query->where('channel.owner_id', $userId);
+//                $query->where(function (Builder $query) use ($userId) {
+//                    $query->where('channels_group_users.user_id', '<>', $userId);
+//                    $query->orWhereNull('channels_group_users.user_id');
+//                });
+//            })
             ->get();
     }
 
