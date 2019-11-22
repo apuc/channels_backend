@@ -164,7 +164,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
 
-        'App\Services\Validation\UniquePairValidationServiceProvider',
+        App\Services\Validation\UniquePairValidationServiceProvider::class,
 
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
