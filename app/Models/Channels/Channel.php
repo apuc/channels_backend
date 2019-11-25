@@ -138,6 +138,22 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
+     * Непрочитаные сообщения в диалогах
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function dialogUnread()
+    {
+        return $this->hasMany(
+            Message::class,
+            'channel_id',
+            'channel_id'
+        )->where([
+            ['from','<>',Auth::id()],
+            ['read',Message::MESSAGE_UNREAD],
+        ]);
+    }
+
+    /**
      * @return bool
      */
     public function isPrivate()
