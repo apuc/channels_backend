@@ -31,6 +31,9 @@ class Message extends Model
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLE = 'disable';
 
+    public const MESSAGE_READ = 1;
+    public const MESSAGE_UNREAD = 0;
+
     /**
      * Сообщений на странице
      */

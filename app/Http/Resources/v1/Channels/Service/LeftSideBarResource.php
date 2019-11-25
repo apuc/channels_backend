@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\v1\Channels\Service;
 
+use App\Models\Channels\Channel;
 use App\Models\Contracts\ChannelEntityInterface;
 use App\Traits\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -42,6 +43,7 @@ class LeftSideBarResource extends JsonResource
 
         if ($this->getType() === self::TYPE_CHANNEL) {
             $data['channel_type'] = $this->type;
+            $data['unread_count'] = $this->getUnreadCount();
         }
 
         return $data;
@@ -55,5 +57,18 @@ class LeftSideBarResource extends JsonResource
     protected function addChannels()
     {
         return self::collection($this->channels);
+    }
+
+    /**
+     * Непрочитанные сообщения
+     * @return int
+     */
+    protected function getUnreadCount()
+    {
+        if($this->type == Channel::TYPE_DIALOG){
+            return $this->dialogUnread->count();
+        }
+
+        return 0;
     }
 }

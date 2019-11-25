@@ -38,6 +38,7 @@ class MessageRepository
             'from' => $request->from,
             'to' => $request->to,
             'text' => $request->text,
+            'read'=>$this->model::MESSAGE_UNREAD
         ]);
     }
 
