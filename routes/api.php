@@ -67,6 +67,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
             Route::get('/text-link', 'Channels\LinkController@textLink')->name('text-link');
 
+            Route::post('/messages/read', 'Channels\MessagesController@markReadDialog')->name('messages.read');
+
         });
 
 

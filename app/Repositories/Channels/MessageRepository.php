@@ -71,6 +71,7 @@ class MessageRepository
      *
      * @param Message $message
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Message $message)
     {
@@ -78,7 +79,7 @@ class MessageRepository
             return true;
         }
 
-        throw new \DomainException('Error deleting group');
+        throw new \DomainException('Error deleting message!');
     }
 
     /**
@@ -99,5 +100,15 @@ class MessageRepository
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
             ->first();
+    }
+
+    /**
+     * Отметить сообщения прочитаными
+     * @param array $messages_ids
+     * @return mixed
+     */
+    public function markAsRead(array $messages_ids)
+    {
+        return $this->model::whereIn('message_id',$messages_ids)->update(['read' => $this->model::MESSAGE_READ]);
     }
 }
