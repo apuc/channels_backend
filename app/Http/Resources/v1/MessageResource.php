@@ -33,7 +33,7 @@ class MessageResource extends JsonResource
             'from' => new ShortUserResource($this->fromUser),
             'attachments' => AttachmentResource::collection($this->attachments)->toArray($request),
             'read' => ($this->read) ? $this->read : 0,
-            'created_at' => $this->created_at->format('d-m-Y H:i:s'),
+            'created_at' => $this->created_at->format('d-m-y H:i'),
             'text' => $this->text
         ];
     }
