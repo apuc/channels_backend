@@ -68,13 +68,13 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/text-link', 'Channels\LinkController@textLink')->name('text-link');
 
             Route::post('/messages/read', 'Channels\MessagesController@markReadDialog')->name('messages.read');
-
+            Route::resource('message', 'Channels\MessagesController')->only(['update','destroy','show']);
         });
 
 
         /** Роуты для общения между сервисами*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
-            Route::resource('message', 'Channels\MessagesController')->except(['edit', 'create', 'index']);
+            Route::resource('message', 'Channels\MessagesController')->only(['store']);
 
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
         });
