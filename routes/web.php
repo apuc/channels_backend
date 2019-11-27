@@ -33,6 +33,12 @@ Route::get('/api/doc', function (){
     return view('vendor.swagger.index');
 });
 
+Route::domain('docs.mychannels.gq')->group(function () {
+    Route::get('/', function () {
+        return view('vendor.swagger.index');
+    });
+});
+
 Auth::routes();
 
 
