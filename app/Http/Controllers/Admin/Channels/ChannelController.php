@@ -21,6 +21,11 @@ class ChannelController extends Controller
      */
     protected $channelRepository;
 
+    /**
+     * ChannelController constructor.
+     * @param ChannelService $service
+     * @param ChannelRepository $channelRepository
+     */
     public function __construct(ChannelService $service, ChannelRepository $channelRepository)
     {
         $this->channelService = $service;

@@ -134,7 +134,7 @@ class Channel extends Model implements ChannelEntityInterface
             'integrations_channels',
             'channel_id',
             'integration_id'
-        );
+        )->withPivot('data');
     }
 
     /**
