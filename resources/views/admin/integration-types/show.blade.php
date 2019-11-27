@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <a href="{{ route('integration-types.index') }}" class="btn btn-success">List</a>
+    <a href="{{ route('integration-types.index') }}" class="btn btn-success mb-3">Назад к списку</a>
 
     <table class="table table-bordered table stripped">
         <tbody>
@@ -27,6 +27,11 @@
         <tr>
             <th>Options</th>
             <td>{{ $type->options }}</td>
+        </tr>
+
+        <tr>
+            <th>Url</th>
+            <td>{{ $type->url }}</td>
         </tr>
         </tbody>
     </table>

@@ -1,17 +1,27 @@
 <?php
-
-
-namespace App\Services\Channels;
-
+namespace App\Services\Integrations;
 
 use App\Http\Requests\Channels\IntegrationTypeRequest;
 use App\Models\Channels\IntegrationType;
-use foo\bar;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use phpDocumentor\Reflection\Types\Boolean;
+use App\Repositories\Integrations\IntegrationTypeRepository;
 
 class IntegrationTypesService
 {
+    /**
+     * @var IntegrationTypeRepository
+     */
+    protected $repository;
+
+    /**
+     * IntegrationService constructor.
+     *
+     * @param IntegrationRepository $repository
+     */
+    public function __construct(IntegrationTypeRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Method for create integration type
      * @return IntegrationType
@@ -19,11 +29,8 @@ class IntegrationTypesService
      */
     public function create(IntegrationTypeRequest $request): IntegrationType
     {
-        $newIntegrationType = IntegrationType::create(['title' => $request->post('title'), 'slug' => $request->post('slug'), 'fields' => $request->post('fields'), 'options' => $request->post('options'),]);
-
-        return $newIntegrationType;
+        return $this->repository->create($request);
     }
-
 
     /**
      * Method for update integration type
@@ -31,12 +38,9 @@ class IntegrationTypesService
      * @var IntegrationType $integrationType
      * @return IntegrationType
      */
-    public function update(IntegrationTypeRequest $request, IntegrationType $integrationType): IntegrationType
+    public function update(IntegrationTypeRequest $request, IntegrationType $integrationType)
     {
-        $integrationType->fill($request->all());
-        $integrationType->save();
-
-        return $integrationType;
+        return $this->repository->update($request,$integrationType);
     }
 
     /**
@@ -48,11 +52,7 @@ class IntegrationTypesService
      */
     public function destroy(IntegrationType $type)
     {
-        if($type->delete()) {
-            return true;
-        }
-
-        throw new \DomainException('Error deleting integration type');
+        return $this->repository->destroy($type);
     }
 
 }

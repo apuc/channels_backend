@@ -6,8 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class IntegrationType extends Model
 {
+    /**
+     * @inherit doc
+     */
     protected $table = 'integration_types';
 
-    protected $fillable = ['title', 'slug', 'fields', 'options'];
+    /**
+     * @inherit doc
+     */
+    public $timestamps = false;
+
+    /**
+     * @inherit doc
+     */
+    protected $guarded = ['id'];
 
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Channels;
 
 use App\Http\Requests\Channels\IntegrationTypeRequest;
 use App\Models\Channels\IntegrationType;
-use App\Services\Channels\IntegrationTypesService;
+use App\Services\Integrations\IntegrationTypesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,6 +15,10 @@ class IntegrationTypesController extends Controller
      */
     protected $integrationTypeService;
 
+    /**
+     * IntegrationTypesController constructor.
+     * @param IntegrationTypesService $service
+     */
     public function __construct(IntegrationTypesService $service)
     {
         $this->integrationTypeService = $service;
@@ -28,9 +32,7 @@ class IntegrationTypesController extends Controller
      */
     public function index()
     {
-
         $types = IntegrationType::paginate(15);
-
 
         return view('admin.integration-types.index', compact('types'));
     }
@@ -59,7 +61,6 @@ class IntegrationTypesController extends Controller
             return redirect(route('integration-types.show',$integrationType))
                 ->with(['success' => 'Успешно создано']);
        }catch (\Throwable $exception){
-//           return back()->with(['error' => $exception->getMessage()]);
            return $exception->getMessage();
        }
     }
@@ -87,6 +88,8 @@ class IntegrationTypesController extends Controller
 
         return view('admin.integration-types.edit', compact('type'));
     }
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -100,7 +103,7 @@ class IntegrationTypesController extends Controller
             $integrationType = IntegrationType::find($id);
             $type = $this->integrationTypeService->update($request, $integrationType);
 
-            return redirect(route('integration-types.show', compact('type')))
+            return redirect(route('integration-types.show', $type->id))
                 ->with(['warning' => 'Изменено!']);
         }catch (\Throwable $ex){
             return back()->with(['error' => $ex->getMessage()]);

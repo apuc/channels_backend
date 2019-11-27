@@ -14202,7 +14202,7 @@ window.Vue = __webpack_require__(36);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(40));
+Vue.component('fields-editor', __webpack_require__(46));
 
 var app = new Vue({
   el: '#app'
@@ -40898,6 +40898,16 @@ function activateChildComponent (vm, direct) {
     }
   } else if (vm._directInactive) {
     return
+<<<<<<< HEAD
+=======
+  }
+  if (vm._inactive || vm._inactive === null) {
+    vm._inactive = false;
+    for (var i = 0; i < vm.$children.length; i++) {
+      activateChildComponent(vm.$children[i]);
+    }
+    callHook(vm, 'activated');
+>>>>>>> integrations
   }
   if (vm._inactive || vm._inactive === null) {
     vm._inactive = false;
@@ -40906,6 +40916,38 @@ function activateChildComponent (vm, direct) {
     }
     callHook(vm, 'activated');
   }
+}
+
+function deactivateChildComponent (vm, direct) {
+  if (direct) {
+    vm._directInactive = true;
+    if (isInInactiveTree(vm)) {
+      return
+    }
+  }
+  if (!vm._inactive) {
+    vm._inactive = true;
+    for (var i = 0; i < vm.$children.length; i++) {
+      deactivateChildComponent(vm.$children[i]);
+    }
+    callHook(vm, 'deactivated');
+  }
+}
+
+function callHook (vm, hook) {
+  // #7573 disable dep collection when invoking lifecycle hooks
+  pushTarget();
+  var handlers = vm.$options[hook];
+  var info = hook + " hook";
+  if (handlers) {
+    for (var i = 0, j = handlers.length; i < j; i++) {
+      invokeWithErrorHandling(handlers[i], vm, null, vm, info);
+    }
+  }
+  if (vm._hasHookEvent) {
+    vm.$emit('hook:' + hook);
+  }
+  popTarget();
 }
 
 function deactivateChildComponent (vm, direct) {
@@ -41064,6 +41106,57 @@ function callUpdatedHooks (queue) {
     var vm = watcher.vm;
     if (vm._watcher === watcher && vm._isMounted && !vm._isDestroyed) {
       callHook(vm, 'updated');
+<<<<<<< HEAD
+    }
+  }
+}
+
+/**
+ * Queue a kept-alive component that was activated during patch.
+ * The queue will be processed after the entire tree has been patched.
+ */
+function queueActivatedComponent (vm) {
+  // setting _inactive to false here so that a render function can
+  // rely on checking whether it's in an inactive tree (e.g. router-view)
+  vm._inactive = false;
+  activatedChildren.push(vm);
+}
+
+function callActivatedHooks (queue) {
+  for (var i = 0; i < queue.length; i++) {
+    queue[i]._inactive = true;
+    activateChildComponent(queue[i], true /* true */);
+  }
+}
+
+/**
+ * Push a watcher into the watcher queue.
+ * Jobs with duplicate IDs will be skipped unless it's
+ * pushed when the queue is being flushed.
+ */
+function queueWatcher (watcher) {
+  var id = watcher.id;
+  if (has[id] == null) {
+    has[id] = true;
+    if (!flushing) {
+      queue.push(watcher);
+    } else {
+      // if already flushing, splice the watcher based on its id
+      // if already past its id, it will be run next immediately.
+      var i = queue.length - 1;
+      while (i > index && queue[i].id > watcher.id) {
+        i--;
+      }
+      queue.splice(i + 1, 0, watcher);
+    }
+    // queue the flush
+    if (!waiting) {
+      waiting = true;
+
+      if (!config.async) {
+        flushSchedulerQueue();
+        return
+=======
     }
   }
 }
@@ -41284,6 +41377,339 @@ Watcher.prototype.run = function run () {
         }
       } else {
         this.cb.call(this.vm, value, oldValue);
+>>>>>>> integrations
+      }
+      nextTick(flushSchedulerQueue);
+    }
+  }
+}
+
+<<<<<<< HEAD
+/*  */
+
+
+
+var uid$2 = 0;
+
+/**
+ * A watcher parses an expression, collects dependencies,
+ * and fires callback when the expression value changes.
+ * This is used for both the $watch() api and directives.
+ */
+var Watcher = function Watcher (
+  vm,
+  expOrFn,
+  cb,
+  options,
+  isRenderWatcher
+) {
+  this.vm = vm;
+  if (isRenderWatcher) {
+    vm._watcher = this;
+  }
+  vm._watchers.push(this);
+  // options
+  if (options) {
+    this.deep = !!options.deep;
+    this.user = !!options.user;
+    this.lazy = !!options.lazy;
+    this.sync = !!options.sync;
+    this.before = options.before;
+  } else {
+    this.deep = this.user = this.lazy = this.sync = false;
+  }
+  this.cb = cb;
+  this.id = ++uid$2; // uid for batching
+  this.active = true;
+  this.dirty = this.lazy; // for lazy watchers
+  this.deps = [];
+  this.newDeps = [];
+  this.depIds = new _Set();
+  this.newDepIds = new _Set();
+  this.expression = expOrFn.toString();
+  // parse expression for getter
+  if (typeof expOrFn === 'function') {
+    this.getter = expOrFn;
+  } else {
+    this.getter = parsePath(expOrFn);
+    if (!this.getter) {
+      this.getter = noop;
+      warn(
+        "Failed watching path: \"" + expOrFn + "\" " +
+        'Watcher only accepts simple dot-delimited paths. ' +
+        'For full control, use a function instead.',
+        vm
+      );
+    }
+  }
+  this.value = this.lazy
+    ? undefined
+    : this.get();
+};
+
+/**
+ * Evaluate the getter, and re-collect dependencies.
+ */
+Watcher.prototype.get = function get () {
+  pushTarget(this);
+  var value;
+  var vm = this.vm;
+  try {
+    value = this.getter.call(vm, vm);
+  } catch (e) {
+    if (this.user) {
+      handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
+    } else {
+      throw e
+=======
+/**
+ * Evaluate the value of the watcher.
+ * This only gets called for lazy watchers.
+ */
+Watcher.prototype.evaluate = function evaluate () {
+  this.value = this.get();
+  this.dirty = false;
+};
+
+/**
+ * Depend on all deps collected by this watcher.
+ */
+Watcher.prototype.depend = function depend () {
+  var i = this.deps.length;
+  while (i--) {
+    this.deps[i].depend();
+  }
+};
+
+/**
+ * Remove self from all dependencies' subscriber list.
+ */
+Watcher.prototype.teardown = function teardown () {
+  if (this.active) {
+    // remove self from vm's watcher list
+    // this is a somewhat expensive operation so we skip it
+    // if the vm is being destroyed.
+    if (!this.vm._isBeingDestroyed) {
+      remove(this.vm._watchers, this);
+    }
+    var i = this.deps.length;
+    while (i--) {
+      this.deps[i].removeSub(this);
+    }
+    this.active = false;
+  }
+};
+
+/*  */
+
+var sharedPropertyDefinition = {
+  enumerable: true,
+  configurable: true,
+  get: noop,
+  set: noop
+};
+
+function proxy (target, sourceKey, key) {
+  sharedPropertyDefinition.get = function proxyGetter () {
+    return this[sourceKey][key]
+  };
+  sharedPropertyDefinition.set = function proxySetter (val) {
+    this[sourceKey][key] = val;
+  };
+  Object.defineProperty(target, key, sharedPropertyDefinition);
+}
+
+function initState (vm) {
+  vm._watchers = [];
+  var opts = vm.$options;
+  if (opts.props) { initProps(vm, opts.props); }
+  if (opts.methods) { initMethods(vm, opts.methods); }
+  if (opts.data) {
+    initData(vm);
+  } else {
+    observe(vm._data = {}, true /* asRootData */);
+  }
+  if (opts.computed) { initComputed(vm, opts.computed); }
+  if (opts.watch && opts.watch !== nativeWatch) {
+    initWatch(vm, opts.watch);
+  }
+}
+
+function initProps (vm, propsOptions) {
+  var propsData = vm.$options.propsData || {};
+  var props = vm._props = {};
+  // cache prop keys so that future props updates can iterate using Array
+  // instead of dynamic object key enumeration.
+  var keys = vm.$options._propKeys = [];
+  var isRoot = !vm.$parent;
+  // root instance props should be converted
+  if (!isRoot) {
+    toggleObserving(false);
+  }
+  var loop = function ( key ) {
+    keys.push(key);
+    var value = validateProp(key, propsOptions, propsData, vm);
+    /* istanbul ignore else */
+    {
+      var hyphenatedKey = hyphenate(key);
+      if (isReservedAttribute(hyphenatedKey) ||
+          config.isReservedAttr(hyphenatedKey)) {
+        warn(
+          ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
+          vm
+        );
+      }
+      defineReactive$$1(props, key, value, function () {
+        if (!isRoot && !isUpdatingChildComponent) {
+          warn(
+            "Avoid mutating a prop directly since the value will be " +
+            "overwritten whenever the parent component re-renders. " +
+            "Instead, use a data or computed property based on the prop's " +
+            "value. Prop being mutated: \"" + key + "\"",
+            vm
+          );
+        }
+      });
+    }
+    // static props are already proxied on the component's prototype
+    // during Vue.extend(). We only need to proxy props defined at
+    // instantiation here.
+    if (!(key in vm)) {
+      proxy(vm, "_props", key);
+    }
+  };
+
+  for (var key in propsOptions) loop( key );
+  toggleObserving(true);
+}
+
+function initData (vm) {
+  var data = vm.$options.data;
+  data = vm._data = typeof data === 'function'
+    ? getData(data, vm)
+    : data || {};
+  if (!isPlainObject(data)) {
+    data = {};
+    warn(
+      'data functions should return an object:\n' +
+      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+      vm
+    );
+  }
+  // proxy data on instance
+  var keys = Object.keys(data);
+  var props = vm.$options.props;
+  var methods = vm.$options.methods;
+  var i = keys.length;
+  while (i--) {
+    var key = keys[i];
+    {
+      if (methods && hasOwn(methods, key)) {
+        warn(
+          ("Method \"" + key + "\" has already been defined as a data property."),
+          vm
+        );
+      }
+    }
+    if (props && hasOwn(props, key)) {
+      warn(
+        "The data property \"" + key + "\" is already declared as a prop. " +
+        "Use prop default value instead.",
+        vm
+      );
+    } else if (!isReserved(key)) {
+      proxy(vm, "_data", key);
+>>>>>>> integrations
+    }
+  } finally {
+    // "touch" every property so they are all tracked as
+    // dependencies for deep watching
+    if (this.deep) {
+      traverse(value);
+    }
+    popTarget();
+    this.cleanupDeps();
+  }
+<<<<<<< HEAD
+  return value
+};
+
+/**
+ * Add a dependency to this directive.
+ */
+Watcher.prototype.addDep = function addDep (dep) {
+  var id = dep.id;
+  if (!this.newDepIds.has(id)) {
+    this.newDepIds.add(id);
+    this.newDeps.push(dep);
+    if (!this.depIds.has(id)) {
+      dep.addSub(this);
+    }
+  }
+};
+
+/**
+ * Clean up for dependency collection.
+ */
+Watcher.prototype.cleanupDeps = function cleanupDeps () {
+  var i = this.deps.length;
+  while (i--) {
+    var dep = this.deps[i];
+    if (!this.newDepIds.has(dep.id)) {
+      dep.removeSub(this);
+    }
+  }
+  var tmp = this.depIds;
+  this.depIds = this.newDepIds;
+  this.newDepIds = tmp;
+  this.newDepIds.clear();
+  tmp = this.deps;
+  this.deps = this.newDeps;
+  this.newDeps = tmp;
+  this.newDeps.length = 0;
+};
+
+/**
+ * Subscriber interface.
+ * Will be called when a dependency changes.
+ */
+Watcher.prototype.update = function update () {
+  /* istanbul ignore else */
+  if (this.lazy) {
+    this.dirty = true;
+  } else if (this.sync) {
+    this.run();
+  } else {
+    queueWatcher(this);
+  }
+};
+
+/**
+ * Scheduler job interface.
+ * Will be called by the scheduler.
+ */
+Watcher.prototype.run = function run () {
+  if (this.active) {
+    var value = this.get();
+    if (
+      value !== this.value ||
+      // Deep watchers and watchers on Object/Arrays should fire even
+      // when the value is the same, because the value may
+      // have mutated.
+      isObject(value) ||
+      this.deep
+    ) {
+      // set new value
+      var oldValue = this.value;
+      this.value = value;
+      if (this.user) {
+        try {
+          this.cb.call(this.vm, value, oldValue);
+        } catch (e) {
+          handleError(e, this.vm, ("callback for watcher \"" + (this.expression) + "\""));
+        }
+      } else {
+        this.cb.call(this.vm, value, oldValue);
       }
     }
   }
@@ -41322,9 +41748,68 @@ Watcher.prototype.teardown = function teardown () {
     var i = this.deps.length;
     while (i--) {
       this.deps[i].removeSub(this);
+=======
+  // observe data
+  observe(data, true /* asRootData */);
+}
+
+function getData (data, vm) {
+  // #7573 disable dep collection when invoking data getters
+  pushTarget();
+  try {
+    return data.call(vm, vm)
+  } catch (e) {
+    handleError(e, vm, "data()");
+    return {}
+  } finally {
+    popTarget();
+  }
+}
+
+var computedWatcherOptions = { lazy: true };
+
+function initComputed (vm, computed) {
+  // $flow-disable-line
+  var watchers = vm._computedWatchers = Object.create(null);
+  // computed properties are just getters during SSR
+  var isSSR = isServerRendering();
+
+  for (var key in computed) {
+    var userDef = computed[key];
+    var getter = typeof userDef === 'function' ? userDef : userDef.get;
+    if (getter == null) {
+      warn(
+        ("Getter is missing for computed property \"" + key + "\"."),
+        vm
+      );
+    }
+
+    if (!isSSR) {
+      // create internal watcher for the computed property.
+      watchers[key] = new Watcher(
+        vm,
+        getter || noop,
+        noop,
+        computedWatcherOptions
+      );
+    }
+
+    // component-defined computed properties are already defined on the
+    // component prototype. We only need to define computed properties defined
+    // at instantiation here.
+    if (!(key in vm)) {
+      defineComputed(vm, key, userDef);
+    } else {
+      if (key in vm.$data) {
+        warn(("The computed property \"" + key + "\" is already defined in data."), vm);
+      } else if (vm.$options.props && key in vm.$options.props) {
+        warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
+      }
+>>>>>>> integrations
     }
     this.active = false;
   }
+<<<<<<< HEAD
 };
 
 /*  */
@@ -41534,6 +42019,35 @@ function defineComputed (
         this
       );
     };
+=======
+}
+
+function defineComputed (
+  target,
+  key,
+  userDef
+) {
+  var shouldCache = !isServerRendering();
+  if (typeof userDef === 'function') {
+    sharedPropertyDefinition.get = shouldCache
+      ? createComputedGetter(key)
+      : createGetterInvoker(userDef);
+    sharedPropertyDefinition.set = noop;
+  } else {
+    sharedPropertyDefinition.get = userDef.get
+      ? shouldCache && userDef.cache !== false
+        ? createComputedGetter(key)
+        : createGetterInvoker(userDef.get)
+      : noop;
+    sharedPropertyDefinition.set = userDef.set || noop;
+  }
+  if (sharedPropertyDefinition.set === noop) {
+    sharedPropertyDefinition.set = function () {
+      warn(
+        ("Computed property \"" + key + "\" was assigned to but it has no setter."),
+        this
+      );
+    };
   }
   Object.defineProperty(target, key, sharedPropertyDefinition);
 }
@@ -41559,6 +42073,86 @@ function createGetterInvoker(fn) {
   }
 }
 
+function initMethods (vm, methods) {
+  var props = vm.$options.props;
+  for (var key in methods) {
+    {
+      if (typeof methods[key] !== 'function') {
+        warn(
+          "Method \"" + key + "\" has type \"" + (typeof methods[key]) + "\" in the component definition. " +
+          "Did you reference the function correctly?",
+          vm
+        );
+      }
+      if (props && hasOwn(props, key)) {
+        warn(
+          ("Method \"" + key + "\" has already been defined as a prop."),
+          vm
+        );
+      }
+      if ((key in vm) && isReserved(key)) {
+        warn(
+          "Method \"" + key + "\" conflicts with an existing Vue instance method. " +
+          "Avoid defining component methods that start with _ or $."
+        );
+      }
+    }
+    vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm);
+>>>>>>> integrations
+  }
+  Object.defineProperty(target, key, sharedPropertyDefinition);
+}
+
+<<<<<<< HEAD
+function createComputedGetter (key) {
+  return function computedGetter () {
+    var watcher = this._computedWatchers && this._computedWatchers[key];
+    if (watcher) {
+      if (watcher.dirty) {
+        watcher.evaluate();
+      }
+      if (Dep.target) {
+        watcher.depend();
+      }
+      return watcher.value
+=======
+function initWatch (vm, watch) {
+  for (var key in watch) {
+    var handler = watch[key];
+    if (Array.isArray(handler)) {
+      for (var i = 0; i < handler.length; i++) {
+        createWatcher(vm, key, handler[i]);
+      }
+    } else {
+      createWatcher(vm, key, handler);
+>>>>>>> integrations
+    }
+  }
+}
+
+<<<<<<< HEAD
+function createGetterInvoker(fn) {
+  return function computedGetter () {
+    return fn.call(this, this)
+=======
+function createWatcher (
+  vm,
+  expOrFn,
+  handler,
+  options
+) {
+  if (isPlainObject(handler)) {
+    options = handler;
+    handler = handler.handler;
+  }
+  if (typeof handler === 'string') {
+    handler = vm[handler];
+>>>>>>> integrations
+  }
+  return vm.$watch(expOrFn, handler, options)
+}
+
+<<<<<<< HEAD
 function initMethods (vm, methods) {
   var props = vm.$options.props;
   for (var key in methods) {
@@ -41636,6 +42230,28 @@ function stateMixin (Vue) {
       warn("$props is readonly.", this);
     };
   }
+=======
+function stateMixin (Vue) {
+  // flow somehow has problems with directly declared definition object
+  // when using Object.defineProperty, so we have to procedurally build up
+  // the object here.
+  var dataDef = {};
+  dataDef.get = function () { return this._data };
+  var propsDef = {};
+  propsDef.get = function () { return this._props };
+  {
+    dataDef.set = function () {
+      warn(
+        'Avoid replacing instance root $data. ' +
+        'Use nested data properties instead.',
+        this
+      );
+    };
+    propsDef.set = function () {
+      warn("$props is readonly.", this);
+    };
+  }
+>>>>>>> integrations
   Object.defineProperty(Vue.prototype, '$data', dataDef);
   Object.defineProperty(Vue.prototype, '$props', propsDef);
 
@@ -48927,6 +49543,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
 
 /***/ }),
+<<<<<<< HEAD
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48974,6 +49591,9 @@ module.exports = Component.exports
 
 
 /***/ }),
+=======
+/* 40 */,
+>>>>>>> integrations
 /* 41 */
 /***/ (function(module, exports) {
 
@@ -49083,6 +49703,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 42 */
 /***/ (function(module, exports) {
 
@@ -49091,44 +49712,224 @@ throw new Error("Module build failed: SyntaxError: /home/skat/websites/channels/
 /***/ }),
 /* 43 */,
 /* 44 */
+=======
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.vue_json_editor_block_view=e():t.vue_json_editor_block_view=e()}(this,function(){return function(t){function e(o){if(n[o])return n[o].exports;var i=n[o]={i:o,l:!1,exports:{}};return t[o].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,o){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:o})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="/dist/",e(e.s=13)}([function(t,e){t.exports=function(t,e,n,o){var i,r=t=t||{},a=typeof t.default;"object"!==a&&"function"!==a||(i=t,r=t.default);var s="function"==typeof r?r.options:r;if(e&&(s.render=e.render,s.staticRenderFns=e.staticRenderFns),n&&(s._scopeId=n),o){var d=Object.create(s.computed||null);Object.keys(o).forEach(function(t){var e=o[t];d[t]=function(){return e}}),s.computed=d}return{esModule:i,exports:r,options:s}}},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var n=this[e];n[2]?t.push("@media "+n[2]+"{"+n[1]+"}"):t.push(n[1])}return t.join("")},t.i=function(e,n){"string"==typeof e&&(e=[[null,e,""]]);for(var o={},i=0;i<this.length;i++){var r=this[i][0];"number"==typeof r&&(o[r]=!0)}for(i=0;i<e.length;i++){var a=e[i];"number"==typeof a[0]&&o[a[0]]||(n&&!a[2]?a[2]=n:n&&(a[2]="("+a[2]+") and ("+n+")"),t.push(a))}},t}},function(t,e,n){function o(t){for(var e=0;e<t.length;e++){var n=t[e],o=l[n.id];if(o){o.refs++;for(var i=0;i<o.parts.length;i++)o.parts[i](n.parts[i]);for(;i<n.parts.length;i++)o.parts.push(r(n.parts[i]));o.parts.length>n.parts.length&&(o.parts.length=n.parts.length)}else{for(var a=[],i=0;i<n.parts.length;i++)a.push(r(n.parts[i]));l[n.id]={id:n.id,refs:1,parts:a}}}}function i(){var t=document.createElement("style");return t.type="text/css",c.appendChild(t),t}function r(t){var e,n,o=document.querySelector('style[data-vue-ssr-id~="'+t.id+'"]');if(o){if(h)return _;o.parentNode.removeChild(o)}if(m){var r=f++;o=p||(p=i()),e=a.bind(null,o,r,!1),n=a.bind(null,o,r,!0)}else o=i(),e=s.bind(null,o),n=function(){o.parentNode.removeChild(o)};return e(t),function(o){if(o){if(o.css===t.css&&o.media===t.media&&o.sourceMap===t.sourceMap)return;e(t=o)}else n()}}function a(t,e,n,o){var i=n?"":o.css;if(t.styleSheet)t.styleSheet.cssText=v(e,i);else{var r=document.createTextNode(i),a=t.childNodes;a[e]&&t.removeChild(a[e]),a.length?t.insertBefore(r,a[e]):t.appendChild(r)}}function s(t,e){var n=e.css,o=e.media,i=e.sourceMap;if(o&&t.setAttribute("media",o),i&&(n+="\n/*# sourceURL="+i.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(i))))+" */"),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}var d="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!d)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var u=n(29),l={},c=d&&(document.head||document.getElementsByTagName("head")[0]),p=null,f=0,h=!1,_=function(){},m="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());t.exports=function(t,e,n){h=n;var i=u(t,e);return o(i),function(e){for(var n=[],r=0;r<i.length;r++){var a=i[r],s=l[a.id];s.refs--,n.push(s)}e?(i=u(t,e),o(i)):i=[];for(var r=0;r<n.length;r++){var s=n[r];if(0===s.refs){for(var d=0;d<s.parts.length;d++)s.parts[d]();delete l[s.id]}}}};var v=function(){var t=[];return function(e,n){return t[e]=n,t.filter(Boolean).join("\n")}}()},function(t,e,n){n(25);var o=n(0)(n(9),n(19),"data-v-2447b360",null);t.exports=o.exports},function(t,e,n){n(28);var o=n(0)(n(10),n(24),"data-v-edb82666",null);t.exports=o.exports},function(t,e,n){n(26);var o=n(0)(n(11),n(20),"data-v-57d348a3",null);t.exports=o.exports},function(t,e,n){var o=n(0)(null,n(21),null,null);t.exports=o.exports},function(t,e,n){var o=n(0)(null,n(22),null,null);t.exports=o.exports},function(t,e,n){n(27);var o=n(0)(n(12),n(23),"data-v-78e4c6da",null);t.exports=o.exports},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default={props:{data:[Object,Array],instruct:[String],editable:[Boolean],query_mode_function:{type:Function,required:!1,default:function(t){return{mode:"free_style",keys:null,options:null,instruct:null}}}},data:function(){return{ini_data:{}}},methods:{onChange:function(){this.$emit("change")}},mounted:function(){this.ini_data=this.data}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var o=n(14);e.default={name:"jsonMap",props:{label:[String],instruct:{type:String,required:!1,default:""},data:[Array,Object],edit_mode:{type:Boolean,required:!1,default:!1},query_mode_function:{type:Function,required:!1,default:function(t){return{mode:"free_style",keys:null,options:null}}}},data:function(){return{color_of_object_data:[52,52,219],color_of_array_data:[121,85,72],reCompute:!1,data_is_array:!1,operation_mode:{mode:"free_style",keys:null,options:null}}},computed:{container_style:function(){return{display:"inline-flex",width:"100%","border-bottom-right-radius":"3px","border-top-right-radius":"3px",border:"1px solid rgba("+this.style_color_rgb+",1)","border-left":"6px solid rgba("+this.style_color_rgb+",1)","box-shadow":"0 0 10px 0 rgba("+this.style_color_rgb+", 0.26)"}},init_btn_style:function(){return{visibility:this.edit_mode?"visible":"hidden",display:"flex","margin-left":"5px"}},width_transition_style:function(){return{width:this.sub_component_width_max+"px",transition:"width 0.15s linear"}},style_color_rgb:function(){return this.data_is_array?this.color_of_array_data:this.color_of_object_data},label_width_max:function(){this.reCompute;var t=[24];return this.operation_mode.options?Object.values(this.operation_mode.options).forEach(function(e){return t.push(n.i(o.a)(e))}):Object.keys(this.data).forEach(function(e){return t.push(n.i(o.a)(e))}),Math.max.apply(Math,t)},value_width_max:function(){this.reCompute;var t=[36];return Object.values(this.data).filter(function(t){return!(t instanceof Object)}).forEach(function(e){return t.push(n.i(o.a)(e))}),Math.max.apply(Math,t)},sub_component_width_max:function(){var t=this;if(this.reCompute,Object.keys(this.data).length>0){var e=this.label_width_max,n=[this.label_width_max+this.value_width_max+80];return Object.values(this.$children).filter(function(e){return e.value instanceof Object&&t.data.hasOwnProperty(e.label)}).forEach(function(t){var o=t.$children[t.$children.length-1];n.push(e+(o?o.sub_component_width_max:0)+80)}),Math.max.apply(Math,n)}return 80}},methods:{addFirstKv:function(){this.data_is_array?this.onChange("insert",0,""):this.onChange("insert")},delThis:function(){this.$emit("change","delete")},onChange:function(t,e,i){if(this.data_is_array)"delete"===t?this.data.splice(e,1):"insert"===t?this.data.splice(e+1,0,this.operation_mode.instruct?{}:i):"update_value"===t&&(this.data[e]="{}"===i?{}:"[]"===i?[]:i);else if("delete"===t)delete this.data[e];else if("insert"===t)n.i(o.b)(this.data,e);else if("update_key"===t&&e!==i)if(this.data.hasOwnProperty(i))this.$children.filter(function(t){return t.label===e}).forEach(function(t){return t.$forceUpdate()});else{var r=this.query_mode_function(e),a=this.query_mode_function(i);"free_style"!==r.mode||this.data[e]instanceof Object?confirm("switch plugin may remove data, ok?")?(n.i(o.c)(this.data,e,i),"free_style"!==a.mode&&(this.data[i]="array"===a.mode?[]:{})):this.$children.filter(function(t){return t.label===e}).forEach(function(t){return t.$forceUpdate()}):(n.i(o.c)(this.data,e,i),"free_style"!==a.mode&&(this.data[i]="array"===a.mode?[]:{}))}else"update_value"===t&&(this.data[e]="{}"===i?{}:"[]"===i?[]:i);this.$forceUpdate(),this.reCompute=!this.reCompute,this.$emit("change")},value_width:function(t){return Math.max(n.i(o.a)(t),36)}},created:function(){var t=this;this.operation_mode=this.query_mode_function(this.instruct),this.data&&0===Object.keys(this.data).length&&"fixed_keys"===this.operation_mode.mode&&this.operation_mode.keys.forEach(function(e){return t.data[e]="free_style"===t.query_mode_function(e).mode?"":{}}),this.data instanceof Array?(this.data_is_array=!0,this.operation_mode.mode="array"):this.data_is_array=!1},mounted:function(){this.$emit("change")}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default={props:{label:{type:[String,Number,Boolean],required:!1,default:null},value:[String,Number,Boolean,Object,Array],instruct:{type:String,required:!1,default:""},label_width:{type:Number,required:!1,default:6},value_width:{type:Number,required:!1,default:36},edit_mode:{type:Boolean,required:!1,default:!1},mode:{type:String,required:!0,default:1},options:{type:Array,required:!1,default:function(){return[]}},query_mode_function:{type:Function,required:!1,default:function(t){return{mode:"free_style",keys:null,options:null}}}},data:function(){return{editing_color:[33,150,243],adding_color:[76,175,80],deleting_color:[244,67,54]}},methods:{show_container_border:function(t){this.edit_mode&&"fixed_keys"!==this.mode&&this.$refs.container&&(this.$refs.container.style.borderColor="rgba("+t+", 1)",this.$refs.container.style.boxShadow="0 0 10px 0 rgba("+t+", 1)")},transparent_container_border:function(){this.edit_mode&&"fixed_keys"!==this.mode&&this.$refs.container&&(this.$refs.container.style.borderColor="transparent",this.$refs.container.style.boxShadow="0 0 0 0 transparent")},show_op_button:function(){this.edit_mode&&"fixed_keys"!==this.mode&&this.$refs.add&&this.$refs.del&&(this.$refs.add.style.backgroundColor="rgba("+this.adding_color+", 0.9)",this.$refs.add.style.boxShadow="0 0 3px 0 rgba("+this.adding_color+", 1)",this.$refs.del.style.backgroundColor="rgba("+this.deleting_color+", 0.9)",this.$refs.del.style.boxShadow="0 0 3px 0 rgba("+this.deleting_color+", 1)")},transparent_op_button:function(){this.edit_mode&&"fixed_keys"!==this.mode&&this.$refs.add&&this.$refs.del&&(this.$refs.add.style.backgroundColor="transparent",this.$refs.add.style.boxShadow="0 0 0 0 transparent",this.$refs.del.style.backgroundColor="transparent",this.$refs.del.style.boxShadow="0 0 0 0 transparent")},adding_new_kv:function(){this.edit_mode&&"fixed_keys"!==this.mode&&this.$emit("change","insert",this.label)},deleting_kv:function(){this.edit_mode&&"fixed_keys"!==this.mode&&this.$emit("change","delete",this.label)},keyChanged:function(t){this.$emit("change","update_key",this.label,t)},valueChanged:function(t){this.$emit("change","update_value",this.label,t.target.value)},onChange:function(t){"delete"===t?this.$emit("change","update_value",this.label,""):this.$emit("change")}},computed:{style_label_width:function(){return{width:this.label_width+"px"}},style_value_width:function(){return{width:this.value_width+"px"}}}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default={props:{value:[Number,String],width:{type:Number,required:!1,default:200},menu_height:{type:Number,required:!1,default:100},disabled:{type:Boolean,required:!1,default:!1},options:{type:Array,require:!1,default:function(){return[]}}},data:function(){return{ctl_drop_down:!1}},computed:{css_input:function(){return{width:this.width+"px"}},css_menu_group:function(){return{"max-height":this.menu_height+"px","min-height":"15px"}}},methods:{mt_focus:function(){this.ctl_drop_down=!0},selecting:function(t){this.ctl_drop_down=!1,this.$emit("input",t)}},mounted:function(){var t=this;window.addEventListener("click",function(){t.ctl_drop_down=!1})}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var o=n(4),i=n.n(o),r=n(5),a=n.n(r),s=n(7),d=n.n(s),u=n(6),l=n.n(u),c=n(8),p=n.n(c),f=n(3),h=n.n(f),_=function(t){t.component("t-map",i.a),t.component("t-kv",a.a),t.component("t-plus-btn",d.a),t.component("t-minus-btn",l.a),t.component("t-select",p.a),t.component("v-json-editor",h.a)};e.default={install:_}},function(t,e,n){"use strict";n.d(e,"a",function(){return o}),n.d(e,"c",function(){return i}),n.d(e,"b",function(){return r});var o=function(t){var e=document.getElementById("sp");return e.innerHTML=t,e.clientWidth},i=function(t,e,n){if(t&&(e||""===e)&&(n||""===n)){if(n=/^[\d]+$/.test(n)?"#".concat(n)===e?n.concat("#"):"#".concat(n):n,e===n||t.hasOwnProperty(n))return;var o={};Object.keys(t).forEach(function(i){i===e?o[n]=t[i]:o[i]=t[i],delete t[i]}),Object.keys(o).forEach(function(e){return t[e]=o[e]})}},r=function(t,e){if(t)if(e){var n={};Object.keys(t).forEach(function(o){o===e?(n[o]=t[o],n[""]=""):n[o]=t[o],delete t[o]}),Object.keys(n).forEach(function(e){return t[e]=n[e]})}else void 0!==e&&null!==e||(t[""]="")}},function(t,e,n){e=t.exports=n(1)(),e.push([t.i,"div[data-v-2447b360]{font-family:Avenir,Helvetica,Arial,sans-serif;font-size:12px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#2c3e50}",""])},function(t,e,n){e=t.exports=n(1)(),e.push([t.i,"div.kvContainer_style[data-v-57d348a3]{color:#000;display:flex;margin:2px 0;padding:1px;border:1px solid transparent;border-radius:9px;box-shadow:0;background-color:transparent;transition-property:border,background-color;transition-duration:.15s;transition-timing-function:linear}div.input[data-v-57d348a3]{margin:0 3px;border:0 solid transparent;border-radius:9px}div.input_ctl[data-v-57d348a3]:hover{box-shadow:0 0 10px 0 rgba(33,150,243,.8)}input[data-v-57d348a3]{font-size:12px;padding:0 10px;outline:none;border:0 solid transparent;border-radius:9px;background-color:transparent;color:#2e7d32;transition:width,background-color .15s linear}div.fixed_label[data-v-57d348a3]{white-space:nowrap;color:#795548;padding:0 10px;font-style:italic}input[data-v-57d348a3]:focus{background-color:rgba(33,150,243,.5)}div.semicolon[data-v-57d348a3]{margin:0 1px}div.pull_right[data-v-57d348a3]{margin-left:auto}div.op_outer[data-v-57d348a3]{padding:2px 0}div.op[data-v-57d348a3]{width:10px;height:100%;border-radius:5px;background-color:transparent;box-shadow:0 0 0 0 transparent}div.op_ctl[data-v-57d348a3]{cursor:pointer}input[data-v-57d348a3]::-webkit-input-placeholder{color:#a5d6a7}input[data-v-57d348a3]:focus::-webkit-input-placeholder{color:#fff}",""])},function(t,e,n){e=t.exports=n(1)(),e.push([t.i,"div.container[data-v-78e4c6da]{display:block}input[data-v-78e4c6da]{font-size:12px;padding:0 10px;outline:none;border:0;border-radius:9px;background:transparent;color:#2e7d32;transition:width,background-color .15s linear}input[data-v-78e4c6da]:focus{background:rgba(33,150,243,.5)}input[data-v-78e4c6da]::-webkit-input-placeholder{color:#a5d6a7}input[data-v-78e4c6da]:focus::-webkit-input-placeholder{color:#fff}div.menu[data-v-78e4c6da]{margin-top:5px;border-radius:4px;box-shadow:0 0 5px 0 #bdc3c7;background:#fff;overflow:auto;position:absolute}div.menu_item[data-v-78e4c6da]{margin:1px 0;padding:1px 7px;border-radius:7px;cursor:pointer;transition:background .15s linear}div.menu_item[data-v-78e4c6da]:hover{background:hsla(204,8%,76%,.4)}[data-v-78e4c6da]::-webkit-scrollbar{width:7px;height:7px}[data-v-78e4c6da]::-webkit-scrollbar-thumb{-webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.5);border-radius:4px}[data-v-78e4c6da]::-webkit-scrollbar-thumb:hover{-webkit-box-shadow:inset 0 0 6px #000}",""])},function(t,e,n){e=t.exports=n(1)(),e.push([t.i,"div.content_style[data-v-edb82666]{width:auto;padding:5px 1px;display:block}",""])},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",[n("t-map",{style:{boxShadow:t.editable?"0 0 10px 0 green":""},attrs:{data:t.ini_data,instruct:t.instruct,edit_mode:t.editable,query_mode_function:t.query_mode_function},on:{change:t.onChange}}),t._v(" "),n("span",{staticStyle:{display:"inline-block",visibility:"hidden",position:"absolute"},attrs:{id:"sp"}})],1)},staticRenderFns:[]}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",[n("div",{ref:"container",staticClass:"kvContainer_style",on:{mouseover:function(e){e.stopPropagation(),t.show_op_button(e)},mouseout:function(e){e.stopPropagation(),t.transparent_op_button(e)}}},[n("div",{staticClass:"op_outer"},[n("div",{ref:"del",staticClass:"op",class:{op_ctl:t.edit_mode&&"fixed_keys"!==t.mode},on:{mouseover:function(e){t.show_container_border(t.deleting_color)},mouseout:t.transparent_container_border,click:function(e){e.stopPropagation(),t.deleting_kv(e)}}})]),t._v(" "),n("div",{class:{input:!0,input_ctl:t.edit_mode&&("free_style"===t.mode||"options_key"===t.mode)}},["free_style"===t.mode?n("input",{style:t.style_label_width,attrs:{type:"text",placeholder:"key...",disabled:!t.edit_mode},domProps:{value:t.label},on:{focusout:function(e){t.keyChanged(e.target.value)}}}):t._e(),t._v(" "),"fixed_keys"===t.mode||"array"===t.mode?n("div",{staticClass:"fixed_label",style:t.style_label_width},[t._v(t._s(t.label)+"\n            ")]):t._e(),t._v(" "),"options_key"===t.mode?n("t-select",{attrs:{value:t.label,width:t.label_width,disabled:!t.edit_mode,options:t.options},on:{input:t.keyChanged}}):t._e()],1),t._v(" "),t._m(0),t._v(" "),t.value instanceof Object?n("div",{class:{input:!0,input_ctl:!1}},[n("t-map",{attrs:{label:t.label,instruct:t.instruct,data:t.value,edit_mode:t.edit_mode,query_mode_function:t.query_mode_function},on:{change:t.onChange}})],1):n("div",{class:{input:!0,input_ctl:t.edit_mode}},[n("input",{style:t.style_value_width,attrs:{type:"text",placeholder:"value...",disabled:!t.edit_mode},domProps:{value:t.value},on:{input:t.valueChanged}})]),t._v(" "),n("div",{staticClass:"pull_right op_outer"},[n("div",{ref:"add",staticClass:"op",class:{op_ctl:t.edit_mode&&"fixed_keys"!==t.mode},on:{mouseover:function(e){t.show_container_border(t.adding_color)},mouseout:t.transparent_container_border,click:function(e){e.stopPropagation(),t.adding_new_kv(e)}}})])])])},staticRenderFns:[function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"semicolon"},[n("strong",[t._v(":")])])}]}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement;return(t._self._c||e)("div",{ref:"container",staticStyle:{width:"30px",height:"30px",border:"1px dashed rgba(244, 67, 54,1)","border-radius":"3px",display:"flex",cursor:"pointer"},on:{mouseover:function(e){e.stopPropagation(),t.$refs.container.style.boxShadow="0 0 5px 0 rgba(244, 67, 54,0.7)"},mouseout:function(e){e.stopPropagation(),t.$refs.container.style.boxShadow=""}}},[t._m(0)])},staticRenderFns:[function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticStyle:{margin:"auto"}},[n("div",{staticStyle:{color:"#BDBDBD","user-select":"none"}},[t._v("-")])])}]}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement;return(t._self._c||e)("div",{ref:"container",staticStyle:{width:"30px",height:"30px",border:"1px dashed rgba(76, 175, 80,1)","border-radius":"3px",display:"flex",cursor:"pointer"},on:{mouseover:function(e){e.stopPropagation(),t.$refs.container.style.boxShadow="0 0 5px 0 rgba(76, 175, 80,0.7)"},mouseout:function(e){e.stopPropagation(),t.$refs.container.style.boxShadow=""}}},[t._m(0)])},staticRenderFns:[function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticStyle:{margin:"auto"}},[n("div",{staticStyle:{color:"#BDBDBD","user-select":"none"}},[t._v("+")])])}]}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"container"},[n("input",{style:t.css_input,attrs:{placeholder:"key...",disabled:t.disabled},domProps:{value:t.value},on:{click:function(e){e.stopPropagation(),t.mt_focus(e)}}}),t._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:t.ctl_drop_down,expression:"ctl_drop_down"}],staticClass:"menu",style:t.css_menu_group,on:{mouseout:function(t){t.stopPropagation()}}},t._l(t.options,function(e){return n("div",{key:e,staticClass:"menu_item",on:{click:function(n){t.selecting(e)}}},[t._v(t._s(e))])}))])},staticRenderFns:[]}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{style:t.container_style,on:{mouseover:function(t){t.stopPropagation()},mouseout:function(t){t.stopPropagation()},click:function(t){t.stopPropagation()}}},[n("div",{staticClass:"content_style"},[t.data&&Object.keys(t.data).length>0?t._l(t.data,function(e,o){return n("div",{key:o},[n("t-kv",{attrs:{label:o.toString(),instruct:t.data_is_array?t.operation_mode.instruct:o,value:e,label_width:t.label_width_max,value_width:t.value_width(e),edit_mode:t.edit_mode,mode:t.operation_mode.mode,options:t.operation_mode.options,query_mode_function:t.query_mode_function},on:{change:t.onChange}})],1)}):[n("div",{style:t.init_btn_style},[n("div",{staticStyle:{margin:"0 2px"},on:{click:t.addFirstKv}},[n("t-plus-btn")],1),t._v(" "),n("div",{staticStyle:{margin:"0 2px"},on:{click:t.delThis}},[n("t-minus-btn")],1)])],t._v(" "),n("div",{style:t.width_transition_style})],2)])},staticRenderFns:[]}},function(t,e,n){var o=n(15);"string"==typeof o&&(o=[[t.i,o,""]]),o.locals&&(t.exports=o.locals);n(2)("f4817810",o,!0)},function(t,e,n){var o=n(16);"string"==typeof o&&(o=[[t.i,o,""]]),o.locals&&(t.exports=o.locals);n(2)("203d3102",o,!0)},function(t,e,n){var o=n(17);"string"==typeof o&&(o=[[t.i,o,""]]),o.locals&&(t.exports=o.locals);n(2)("39a2974e",o,!0)},function(t,e,n){var o=n(18);"string"==typeof o&&(o=[[t.i,o,""]]),o.locals&&(t.exports=o.locals);n(2)("546d7d84",o,!0)},function(t,e){t.exports=function(t,e){for(var n=[],o={},i=0;i<e.length;i++){var r=e[i],a=r[0],s=r[1],d=r[2],u=r[3],l={id:t+":"+i,css:s,media:d,sourceMap:u};o[a]?o[a].parts.push(l):n.push(o[a]={id:a,parts:[l]})}return n}}])});
+//# sourceMappingURL=vue-json-editor-block-view.min.js.map
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(41)
+/* script */
+var __vue_script__ = __webpack_require__(47)
+/* template */
+var __vue_template__ = __webpack_require__(48)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/FieldsEditor.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4043c31e", Component.options)
+  } else {
+    hotAPI.reload("data-v-4043c31e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_json_editor_block_view__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_json_editor_block_view___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_json_editor_block_view__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_0_vue_json_editor_block_view___default.a);
+
+var fieldItem = {
+    "label": "",
+    "type": "input",
+    "name": "",
+    "input_type": "text",
+    "select_options": []
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'FieldsEditor',
+
+    components: { JsonEditor: __WEBPACK_IMPORTED_MODULE_0_vue_json_editor_block_view___default.a },
+
+    props: {
+        title: String,
+
+        fields: {
+            type: String,
+            default: null
+        },
+
+        inputName: {
+            type: String,
+            required: true
+        }
+    },
+
+    created: function created() {
+        if (this.fields) {
+            this.root.fields = JSON.parse(this.fields);
+        }
+    },
+    data: function data() {
+        return {
+            root: {
+                fields: []
+            }
+        };
+    },
+
+
+    methods: {
+        add: function add() {
+            this.root.fields.push(Object.assign({}, fieldItem));
+        }
+    }
+});
+
+/***/ }),
+/* 48 */
+>>>>>>> integrations
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "card card-default" }, [
+    _c("div", { staticClass: "card-header" }, [
+      _c("label", [_vm._v(_vm._s(_vm.title))])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _c("p", [_vm._v("Label - заголовок поля *")]),
+        _vm._v(" "),
+        _c("p", [_vm._v("Type - тип поля(select,input,checkbox) *")]),
+        _vm._v(" "),
+        _c("p", [_vm._v("Name - name инпута *")]),
+        _vm._v(" "),
+        _c("p", [_vm._v("Input Type - тип инпута")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "Select Options - элементы списка для селекта(ключ - текст,значение - value селекта)"
+          )
+        ]),
+        _vm._v(" "),
+        _c("v-json-editor", {
+          attrs: { data: _vm.root, editable: true },
+          on: {
+            change: function($event) {
+              return _vm.$forceUpdate()
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "mt-3 mb-3 btn btn-primary",
+            attrs: { type: "button" },
+            on: { click: _vm.add }
+          },
+          [_vm._v("Добавить")]
+        ),
+        _vm._v(" "),
+        _c("pre", [_vm._v(_vm._s(_vm.root.fields))]),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "hidden", name: _vm.inputName },
+          domProps: { value: JSON.stringify(_vm.root.fields) }
+        })
+      ],
+      1
+    )
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-299e239e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-4043c31e", module.exports)
   }
 }
 
