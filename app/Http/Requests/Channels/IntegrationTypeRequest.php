@@ -26,8 +26,8 @@ class IntegrationTypeRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|min:3',
             'slug' => 'required|string|max:255|min:3',
-            'fields' => 'required|json',
-            'options' => 'required|json',
+            'fields' => 'json',
+            'options' => 'json',
         ];
     }
 
