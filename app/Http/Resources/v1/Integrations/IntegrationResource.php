@@ -19,7 +19,7 @@ class IntegrationResource extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name,
             'fields'=>$this->fields,
-            'options'=>json_decode($this->pivot->data),
+            'options'=> $this->pivot ? json_decode($this->pivot->data) : null,
             'type'=> new IntegrationTypeResource($this->type),
         ];
     }
