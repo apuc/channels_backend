@@ -34,7 +34,7 @@ Route::get('/api/doc', function (){
 });
 
 Route::domain('docs.mychannels.gq')->group(function () {
-    Route::get('/', function () {
+    Route::get('/v1', function () {
         return view('vendor.swagger.index');
     });
 });
