@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Channels\AddIntegrationRequest;
 use App\Http\Requests\DialogRequest;
+use App\Http\Resources\v1\Integrations\IntegrationResource;
 
 class ChannelsController extends Controller
 {
@@ -272,6 +273,22 @@ class ChannelsController extends Controller
             $channel = $this->channelService->createDialog($request);
 
             return new ChannelResource($channel);
+        } catch (\Throwable $e) {
+            abort(500);
+        }
+    }
+
+    /**
+     * Список интеграций канала
+     * @param $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function integrationsList($id)
+    {
+        try {
+            $channel = $this->channelRepository->findById($id);
+
+            return IntegrationResource::collection($channel->integrations);
         } catch (\Throwable $e) {
             abort(500);
         }

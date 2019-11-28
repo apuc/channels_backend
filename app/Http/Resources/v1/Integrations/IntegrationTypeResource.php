@@ -21,7 +21,7 @@ class IntegrationTypeResource extends JsonResource
             'user_can_create'=>$this->user_can_create,
             'fields'=>$this->fields,
             'options'=>$this->options,
-            'integrations'=>IntegrationResource::collection($this->integrations)
+            'integrations'=>IntegrationResource::collection($this->whenLoaded('integrations'))
         ];
     }
 }
