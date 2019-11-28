@@ -148,6 +148,17 @@ class ChannelService
     }
 
     /**
+     * Удаление интеграции из каналы
+     * @param AddIntegrationRequest $request
+     * @param $id
+     */
+    public function removeIntegration(AddIntegrationRequest $request,$id)
+    {
+        $channel = $this->repository->findById($id);
+        $channel->integrations()->detach($request->integration_id);
+    }
+
+    /**
      * Приглашение в канал по email
      * @param string $email
      * @param int $channel_id

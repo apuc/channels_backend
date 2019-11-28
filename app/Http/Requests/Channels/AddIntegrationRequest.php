@@ -34,9 +34,17 @@ class AddIntegrationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'integration_id' => 'required',
+        $rules = [
+            'integration_id' => [
+                'required',
+            ],
         ];
+
+        if ($this->method() === 'POST'){
+            $rules['integration_id'][] = 'unique_with:integrations_channels,channel_id,' . $this->route('channel');
+        }
+
+        return $rules;
     }
 
     /**
@@ -47,7 +55,8 @@ class AddIntegrationRequest extends FormRequest
     public function messages()
     {
         return [
-            '*.required' => 'Это поле обязательно'
+            '*.required' => 'Это поле обязательно',
+            'integration_id.unique_with' => 'Эта интеграция уже есть в канале!',
         ];
     }
 }
