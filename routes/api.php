@@ -73,7 +73,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
         });
 
 
-        /** Роуты для общения между сервисами*/
+        /** Роуты для общения между сервисамииии*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
             Route::resource('message', 'Channels\MessagesController')->only(['store']);
 
