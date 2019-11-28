@@ -246,6 +246,23 @@ class ChannelsController extends Controller
     }
 
     /**
+     * Удаление интеграции из канала
+     * @param AddIntegrationRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeIntegration(AddIntegrationRequest $request,$id)
+    {
+        try {
+            $this->channelService->removeIntegration($request,$id);
+
+            return response()->json(['msg' => 'success'], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * Приглашение юзера в канал по email
      * @param InviteRequest $request
      * @param $channel
