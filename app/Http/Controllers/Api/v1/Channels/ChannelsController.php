@@ -237,9 +237,9 @@ class ChannelsController extends Controller
     public function addIntegration(AddIntegrationRequest $request,$id)
     {
         try {
-            $this->channelService->addIntegration($request,$id);
+            $integration = $this->channelService->addIntegration($request,$id);
 
-            return response()->json(['msg' => 'success'], 200);
+            return new IntegrationResource($integration);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
