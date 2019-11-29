@@ -34,6 +34,8 @@ class AddIntegrationRequest extends FormRequest
      */
     public function rules()
     {
+        var_dump($this->all()); die();
+
         $rules = [
             'integration_id' => [
                 'required',
