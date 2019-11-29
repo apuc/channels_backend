@@ -140,11 +140,14 @@ class ChannelService
      * Добавление интеграции в канал
      * @param AddIntegrationRequest $request
      * @param $id
+     * @return mixed
      */
     public function addIntegration(AddIntegrationRequest $request,$id)
     {
         $channel = $this->repository->findById($id);
         $channel->integrations()->attach([$request->integration_id =>['data'=>json_encode($request->data)]]);
+
+        return $channel->integrations()->where('integrations.id',$request->integration_id)->first();
     }
 
     /**
