@@ -60,7 +60,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
             Route::post('/channels/{channel}/integrations', 'Channels\ChannelsController@addIntegration')->name('channels.addIntegration');
             Route::get('/channels/{channel}/integrations', 'Channels\ChannelsController@integrationsList')->name('channels.integrationsList');
-            Route::delete('/channels/{channel}/integrations', 'Channels\ChannelsController@removeIntegration')->name('channels.removeIntegration');
+            Route::delete('/channels/{channel}/integrations/{integration}', 'Channels\ChannelsController@removeIntegration')->name('channels.removeIntegration');
 
             Route::post('/channels/{channel}/invite', 'Channels\ChannelsController@inviteByEmail')->name('channels.invite');
             Route::post('/dialog', 'Channels\ChannelsController@createDialog')->name('dialog.create');

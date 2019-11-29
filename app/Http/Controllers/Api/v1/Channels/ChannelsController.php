@@ -247,14 +247,14 @@ class ChannelsController extends Controller
 
     /**
      * Удаление интеграции из канала
-     * @param AddIntegrationRequest $request
-     * @param $id
+     * @param $channel
+     * @param $integration
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeIntegration(AddIntegrationRequest $request,$id)
+    public function removeIntegration($channel,$integration)
     {
         try {
-            $this->channelService->removeIntegration($request,$id);
+            $this->channelService->removeIntegration($channel,$integration);
 
             return response()->json(['msg' => 'success'], 200);
         } catch (\Throwable $e) {

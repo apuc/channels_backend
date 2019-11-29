@@ -152,13 +152,13 @@ class ChannelService
 
     /**
      * Удаление интеграции из каналы
-     * @param AddIntegrationRequest $request
-     * @param $id
+     * @param $channel
+     * @param $integration
      */
-    public function removeIntegration(AddIntegrationRequest $request,$id)
+    public function removeIntegration($channel,$integration)
     {
-        $channel = $this->repository->findById($id);
-        $channel->integrations()->detach($request->integration_id);
+        $channel = $this->repository->findById($channel);
+        $channel->integrations()->detach($integration);
     }
 
     /**
