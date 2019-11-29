@@ -67,8 +67,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channels/popular', 'Channels\ChannelsController@popular')->name('channels.popular');
 
 
-            Route::get('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
-            Route::get('/text-link', 'Channels\LinkController@textLink')->name('text-link');
+            Route::post('/single-link', 'Channels\LinkController@singleLink')->name('single-link');
+            Route::post('/text-link', 'Channels\LinkController@textLink')->name('text-link');
 
             Route::post('/messages/read', 'Channels\MessagesController@markReadDialog')->name('messages.read');
             Route::resource('message', 'Channels\MessagesController')->only(['update','destroy','show']);

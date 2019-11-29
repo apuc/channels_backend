@@ -27,7 +27,8 @@ class LinkRequest extends FormRequest
 		    $link_rule = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
 	    } else{
 		    $link_rule = 'required|regex:/^.*(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.*$/';
-		}	
+		}
+
         return [
             'link' => $link_rule
         ];
