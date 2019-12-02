@@ -50,6 +50,7 @@ class MessageService
                    'options'  => $attachment['options'],
                    'message_id'  => $message->message_id,
                    'status'  => Attachment::STATUS_ACTIVE,
+                   'type'  => $attachment['type'],
                ]);
 
                $this->attachmentRepository->create($data);
