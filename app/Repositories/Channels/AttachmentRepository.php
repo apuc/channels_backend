@@ -42,7 +42,7 @@ class AttachmentRepository
             'message_id' => $request->message_id,
         ]);
 
-        $attachment->setType();
+        $attachment->setType($request->type);
         $attachment->save();
 
         return $attachment;
