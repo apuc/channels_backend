@@ -54,6 +54,7 @@ class LinkService
         if(!preg_match_all(self::URL_REGEX, $text, $matches)){
             throw new \Exception('invalid url');
         }
+
         return $matches;
     }
 
@@ -84,7 +85,9 @@ class LinkService
         $links = new Collection();
 
         foreach ($matches[0] as $url) {
-            $links[] = self::grabMeta($url);
+            if($link = $this->grabMeta($url)){
+                $links[] = $link;
+            }
         }
 
         return $links;
@@ -105,7 +108,13 @@ class LinkService
 
         self::validateSingle($url);
 
-        $dom = new Document($this->html($url));
+        $html = $this->html($url);
+
+        if(!$html){
+            return null;
+        }
+
+        $dom = new Document($html);
 
         $base = parse_url($url, PHP_URL_HOST);
 
@@ -113,9 +122,9 @@ class LinkService
         $description = $description_el? $description_el->attr('content') : '';
 
         $title_el = $dom->first('title');
-        $title = $title_el? $title_el->text() : '';
+        $title = $title_el ? $title_el->text() : '';
 
-        $icon_selectors = ['meta[property="og:image"]', 'img', 'link[rel="apple-touch-icon"]', 'link[rel="icon"][type="image/png"]', 'link[rel$="icon"][type="image/png"]'];
+        $icon_selectors = ['meta[property="og:image"]','link[rel="apple-touch-icon"]', 'link[rel="icon"][type="image/png"]', 'link[rel$="icon"][type="image/png"]'];
         $icon_attr      = ['content', 'src', 'href', 'href', 'href'];
         $icon = '';
 

@@ -38,9 +38,10 @@ class LinkController extends Controller
     {
         try{
             $link = $this->linkService->grabMeta($request->link);
+
             return new LinkResource($link);
         } catch (\Throwable $e){
-            return response()->json(['data' => null]);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 
@@ -54,9 +55,10 @@ class LinkController extends Controller
     {
         try{
             $links = $this->linkService->parse($request->link);
+
             return LinkResource::collection($links);
         } catch (\Throwable $e){
-            return response()->json(['data' => []]);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 }
