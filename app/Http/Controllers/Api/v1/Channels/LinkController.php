@@ -37,7 +37,7 @@ class LinkController extends Controller
     public function singleLink(LinkRequest $request)
     {
         try{
-            $link = $this->linkService->grabMeta($request->get('link'));
+            $link = $this->linkService->grabMeta($request->link);
             return new LinkResource($link);
         } catch (\Throwable $e){
             return response()->json(['data' => null]);
@@ -53,7 +53,7 @@ class LinkController extends Controller
     public function textLink(LinkRequest $request)
     {
         try{
-            $links = $this->linkService->parse($request->get('link'));
+            $links = $this->linkService->parse($request->link);
             return LinkResource::collection($links);
         } catch (\Throwable $e){
             return response()->json(['data' => []]);
