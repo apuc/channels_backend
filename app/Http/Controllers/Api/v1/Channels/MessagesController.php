@@ -106,7 +106,7 @@ class MessagesController extends Controller
     public function markReadDialog(MarkReadRequest $request)
     {
         try {
-            $messages = $this->messageRepository->markAsRead($request->message_ids);
+            $messages = $this->messageRepository->markReadDialog($request->channel_id);
 
             return $messages;
         } catch (\Throwable $e) {

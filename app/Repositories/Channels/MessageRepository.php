@@ -11,6 +11,7 @@ namespace App\Repositories\Channels;
 
 use App\Http\Requests\Channels\MessageRequest;
 use App\Models\Channels\Message;
+use Illuminate\Support\Facades\Auth;
 
 class MessageRepository
 {
@@ -107,8 +108,12 @@ class MessageRepository
      * @param array $messages_ids
      * @return mixed
      */
-    public function markAsRead(array $messages_ids)
+    public function markReadDialog($channel_id)
     {
-        return $this->model::whereIn('message_id',$messages_ids)->update(['read' => $this->model::MESSAGE_READ]);
+        return $this->model::where([
+            ['channel_id',$channel_id],
+            ['from','<>',Auth::id()],
+            ['read',$this->model::MESSAGE_UNREAD],
+        ])->update(['read' => $this->model::MESSAGE_READ]);
     }
 }

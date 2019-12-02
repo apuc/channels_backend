@@ -25,7 +25,7 @@ class MarkReadRequest extends FormRequest
     public function rules()
     {
         return [
-            'message_ids' => 'required|array',
+            'channel_id' => 'required',
         ];
     }
 
