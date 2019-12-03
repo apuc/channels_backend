@@ -69,6 +69,6 @@ class LeftSideBarResource extends JsonResource
             return $this->dialogUnread->count();
         }
 
-        return 0;//$this->chatUnread();
+        return $this->chatUnread();
     }
 }
