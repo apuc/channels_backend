@@ -12,6 +12,7 @@ namespace App\Repositories\Channels;
 use App\Http\Requests\Channels\MessageRequest;
 use App\Models\Channels\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MessageRepository
 {
@@ -104,7 +105,7 @@ class MessageRepository
     }
 
     /**
-     * Отметить сообщения прочитаными
+     * Отметить сообщения прочитаными диалог
      * @param array $messages_ids
      * @return mixed
      */
@@ -115,5 +116,18 @@ class MessageRepository
             ['from','<>',Auth::id()],
             ['read',$this->model::MESSAGE_UNREAD],
         ])->update(['read' => $this->model::MESSAGE_READ]);
+    }
+
+    /**
+     * Отметить сообщения прочитаными чат
+     * @param array $messages_ids
+     * @return mixed
+     */
+    public function markReadChat($channel_id)
+    {
+        return DB::table('message_user')->where([
+            ['user_id',Auth::id()],
+            ['channel_id',$channel_id],
+        ])->delete();
     }
 }

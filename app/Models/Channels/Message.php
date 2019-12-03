@@ -101,7 +101,7 @@ class Message extends Model
             'message_user',
             'message_id',
             'user_id',
-            'from',
+            'message_id',
             'user_id'
         );
     }

@@ -113,4 +113,20 @@ class MessagesController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+
+    /**
+     * Отмечает прочитанные сообщения в чате
+     * @param MarkReadRequest $request
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function markReadChat(MarkReadRequest $request)
+    {
+        try {
+            $messages = $this->messageRepository->markReadChat($request->channel_id);
+
+            return $messages;
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
 }
