@@ -160,7 +160,7 @@ class Channel extends Model implements ChannelEntityInterface
      */
     public function chatUnread()
     {
-        return DB::table('message_users')->where([
+        return DB::table('message_user')->where([
             ['user_id',Auth::id()],
             ['channel_id',$this->channel_id],
         ])->count('message_id');
