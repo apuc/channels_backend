@@ -11,6 +11,7 @@ use App\Traits\SluggableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Channel
@@ -151,6 +152,18 @@ class Channel extends Model implements ChannelEntityInterface
             ['from','<>',Auth::id()],
             ['read',Message::MESSAGE_UNREAD],
         ]);
+    }
+
+    /**
+     * Непрочитаные сообщения в чатах
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function chatUnread()
+    {
+        return DB::table('message_users')->where([
+            ['user_id',Auth::id()],
+            ['channel_id',$this->channel_id],
+        ])->count('message_id');
     }
 
     /**

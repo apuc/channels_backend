@@ -7,6 +7,7 @@ use App\Models\Channels\Attachment;
 use App\Models\Channels\Message;
 use App\Repositories\Channels\MessageRepository;
 use App\Repositories\Channels\AttachmentRepository;
+use Illuminate\Support\Facades\Auth;
 
 class MessageService
 {
@@ -41,6 +42,7 @@ class MessageService
     public function create(MessageRequest $request): Message
     {
         $message = $this->repository->create($request);
+        $message->load('channel');
 
         if($request->attachments){
 
@@ -55,6 +57,11 @@ class MessageService
 
                $this->attachmentRepository->create($data);
            }
+        }
+
+        if(!$message->channel->isDialog()){
+            $users = $message->channel->users()->wherePivot('user_id','<>',1)->get()->pluck('user_id')->toArray();
+            $message->users()->attach($users,['channel_id'=>$message->channel_id]);
         }
 
         return $message;
