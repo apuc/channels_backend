@@ -71,6 +71,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/text-link', 'Channels\LinkController@textLink')->name('text-link');
 
             Route::post('/messages/read', 'Channels\MessagesController@markReadDialog')->name('messages.read');
+            Route::post('/messages/read/chat', 'Channels\MessagesController@markReadChat')->name('messages.read.chat');
             Route::resource('message', 'Channels\MessagesController')->only(['update','destroy','show']);
         });
 
