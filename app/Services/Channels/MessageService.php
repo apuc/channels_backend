@@ -60,7 +60,7 @@ class MessageService
         }
 
         if(!$message->channel->isDialog()){
-            $users = $message->channel->users()->wherePivot('user_id','<>',1)->get()->pluck('user_id')->toArray();
+            $users = $message->channel->users()->wherePivot('user_id','<>',Auth::id())->get()->pluck('user_id')->toArray();
             $message->users()->attach($users,['channel_id'=>$message->channel_id]);
         }
 
