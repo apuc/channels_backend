@@ -28,19 +28,38 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     public function acceptHook(Request $request)
     {
+
+        $attachments = [];
+        $text = '';
+
         //вакансия
-        if($request->company_id){
+        if($request->company_id)
+        {
             $attachments = [];
             $text = $this->getVacancyText($request);
-            $this->sendToChannels($text,$attachments);
+
+            $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
+                $options = json_decode($el->pivot->data,true);
+                return $options['type'] == 2;
+            })->pluck('channel_id')->toArray());
         }
 
         //резюме
-        if($request->employer_id){
+        if($request->employer_id)
+        {
             $attachments = $this->parseAttachments($request);
             $text = $this->getResumeText($request);
-            $this->sendToChannels($text,$attachments);
+
+            $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
+                $options = json_decode($el->pivot->data,true);
+                return $options['type'] == 0;
+            })->pluck('channel_id')->toArray());
         }
+
+        $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
+            $options = json_decode($el->pivot->data,true);
+            return $options['type'] == 2;
+        })->pluck('channel_id')->toArray());
 
         return "ok";
     }
@@ -76,12 +95,12 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     private function getVacancyText(Request $request)
     {
-         return "Вакансия: {$request->post}. 
-                 Требования: {$request->qualification_requirements}. 
-                 Обязанности: {$request->responsibilities}. 
-                 Условия работы: {$request->working_conditions}. 
-                 Зарплата от {$request->min_salary} до {$request->max_salary}. 
-                 Город: {$request->city}. 
+         return "Вакансия: {$request->post}.
+                 Требования: {$request->qualification_requirements}.
+                 Обязанности: {$request->responsibilities}.
+                 Условия работы: {$request->working_conditions}.
+                 Зарплата от {$request->min_salary} до {$request->max_salary}.
+                 Город: {$request->city}.
                  ";
     }
 
@@ -92,12 +111,12 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
      */
     private function getResumeText(Request $request)
     {
-        return "Резюме: {$request->title}. 
-                 VK: {$request->vk}. 
-                 instagram: {$request->instagram}. 
-                 skype: {$request->skype}. 
-                 Зарплата от {$request->min_salary} до {$request->max_salary}. 
-                 Город: {$request->city}. 
+        return "Резюме: {$request->title}.
+                 VK: {$request->vk}.
+                 instagram: {$request->instagram}.
+                 skype: {$request->skype}.
+                 Зарплата от {$request->min_salary} до {$request->max_salary}.
+                 Город: {$request->city}.
                  ";
     }
 }
