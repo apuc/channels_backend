@@ -33,6 +33,12 @@ class GroupsController extends Controller
      */
     protected $avatarService;
 
+    /**
+     * GroupsController constructor.
+     * @param GroupsService $service
+     * @param GroupsRepository $groupsRepository
+     * @param AvatarService $avatarService
+     */
     public function __construct(GroupsService $service, GroupsRepository $groupsRepository, AvatarService $avatarService)
     {
         $this->groupsService = $service;
