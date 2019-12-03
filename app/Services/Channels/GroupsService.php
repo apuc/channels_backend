@@ -63,6 +63,8 @@ class GroupsService
      */
     public function destroy(Group $group)
     {
+        $group->channels()->detach();
+
         return $this->repository->destroy($group);
     }
 
