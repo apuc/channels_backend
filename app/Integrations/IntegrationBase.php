@@ -38,12 +38,14 @@ class IntegrationBase
      * @param $text
      * @param $attachments
      */
-    protected function sendToChannels(string $text,array $attachments)
+    protected function sendToChannels(string $text,array $attachments,array $channels_ids = [])
     {
-        foreach ($this->integration->channels as $channel){
+        $ids = empty($channels_ids) ? $this->integration->channels->pluck('channel_id')->toArray() : $channels_ids;
+
+        foreach ($ids as $id){
 
             $data = new MessageRequest([
-                'channel_id'=>$channel->channel_id,
+                'channel_id'=>$id,
                 'from'=>1,
                 'text'=>$text,
                 'attachments'=>$attachments
@@ -53,7 +55,7 @@ class IntegrationBase
 
         }
 
-        $this->sendToNode($message,$this->integration->channels->pluck('channel_id')->toArray());
+        $this->sendToNode($message,$ids);
     }
 
 

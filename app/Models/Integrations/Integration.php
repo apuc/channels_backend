@@ -32,7 +32,7 @@ class Integration extends Model
             'integrations_channels',
             'integration_id',
             'channel_id'
-        );
+        )->withPivot('data');
     }
 
     /**
