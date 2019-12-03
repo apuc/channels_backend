@@ -56,14 +56,16 @@ class GroupsService
     }
 
     /**
-     * Method for destroy group
-     *
+     * Удалить группу
      * @param Group $group
      * @return bool
+     * @throws \Throwable
      */
     public function destroy(Group $group)
     {
-        $group->channels()->detach();
+        foreach ($group->channels as $channel){
+            $this->repository->detachChannel($group, $channel->channel_id);
+        }
 
         return $this->repository->destroy($group);
     }
