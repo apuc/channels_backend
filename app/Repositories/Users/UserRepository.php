@@ -78,7 +78,7 @@ class UserRepository
     {
         $result = $user->update([
             'username' => $request->username ?? $user->username,
-            'avatar_id' => $request->avatar_id ?? $user->avatar_id
+            'avatar_id' => $request->avatar_id
         ]);
 
         if ($result) {
