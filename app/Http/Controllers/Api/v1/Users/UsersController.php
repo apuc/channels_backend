@@ -166,7 +166,7 @@ class UsersController extends Controller
 
             return response()->json(['msg' => 'success'], 204);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -199,7 +199,7 @@ class UsersController extends Controller
 
             return response()->json(['msg' => 'success'], 200);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
     }
@@ -219,7 +219,7 @@ class UsersController extends Controller
 
             return response()->json(['msg' => 'success'], 200);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
     }
@@ -239,7 +239,7 @@ class UsersController extends Controller
 
             return response()->json(['msg' => 'success'], 204);
         } catch (\Throwable $e) {
-            return back()->with(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
