@@ -42,7 +42,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
             Route::post('/user/add-contact', 'Users\UsersController@addContact')->name('user.add-contact');
             Route::put('/user/confirm-contact', 'Users\UsersController@confirmContact')->name('user.confirm-contact');
-            Route::delete('/user/reject-contact', 'Users\UsersController@rejectContact')->name('user.reject-contact');
+            Route::post('/user/reject-contact', 'Users\UsersController@rejectContact')->name('user.reject-contact');
             Route::get('/user/contacts', 'Users\UsersController@contacts')->name('user.contacts');
             Route::get('/user/senders', 'Users\UsersController@senders')->name('user.senders');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create']);
