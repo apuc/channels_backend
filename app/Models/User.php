@@ -38,8 +38,8 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'username', 'email', 'password', 'login', 'avatar_id'
+    protected $guarded = [
+        'user_id'
     ];
 
     /**
@@ -51,11 +51,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    protected $casts = [
-
-    ];
 
     public $primaryKey = 'user_id';
+
+    /**
+     * Бот
+     */
+    public const BOT = 1;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

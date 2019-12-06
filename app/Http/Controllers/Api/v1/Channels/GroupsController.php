@@ -91,7 +91,7 @@ class GroupsController extends Controller
 
 
     /**
-     * Update the specified resource in storage.
+     * Редактировать группу.
      *
      * @param  GroupRequest $request
      * @param  int $id
@@ -110,7 +110,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить группу.
      *
      * @return \Illuminate\Http\Response
      */
@@ -138,19 +138,21 @@ class GroupsController extends Controller
         }
     }
 
-    /**
+    /**Загрузить аватар группы
      * @param AvatarRequest $request
      * @return AvatarResource
      */
     public function avatar(AvatarRequest $request)
     {
-        //dd($request->file('avatar')->getClientOriginalExtension());
         $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'group');
         $avatar = $this->avatarService->save($avatarRequest);
 
         return new AvatarResource($avatar);
     }
 
+    /**Удалить аватар группы
+     * @param $id
+     */
     public function delava($id)
     {
         $avatar = Avatar::where('avatar_id', $id)->first();

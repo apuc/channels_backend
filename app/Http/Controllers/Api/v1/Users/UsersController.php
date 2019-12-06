@@ -152,10 +152,8 @@ class UsersController extends Controller
 
     /**
      * Удалить юзера
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -263,16 +261,5 @@ class UsersController extends Controller
     public function senders()
     {
         return new ContactUserResource(Auth::user());
-    }
-
-    /**
-     * Удалить аватар
-     *
-     * @param $id
-     */
-    public function delava($id)
-    {
-        $avatar = Avatar::where('avatar_id', $id)->first();
-        $this->avatarService->destroy($avatar);
     }
 }
