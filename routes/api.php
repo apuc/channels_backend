@@ -16,7 +16,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
 
-//        Route::middleware('auth:api')->group(function () {
+        Route::middleware('auth:api')->group(function () {
 
             //////////////// ГРУППЫ //////////////////////////////////
             Route::group([], function () {
@@ -75,7 +75,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
             ////////////// БОТЫ /////////////////
             Route::resource('bot', 'Users\BotController')->except(['create','edit']);
-//        });
+        });
 
 
         /** Роуты для общения между сервисамииии*/
