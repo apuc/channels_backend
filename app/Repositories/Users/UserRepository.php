@@ -1,29 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 16.10.18
- * Time: 16:31
- */
-
 namespace App\Repositories\Users;
 
 
 use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
-use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\ProfileRequest;
-use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Psy\Util\Str;
+use App\Http\Requests\Bot\BotRequest;
 
 class UserRepository
 {
     protected $model;
 
     /**
-     * GroupsRepository constructor.
+     * UserRepository constructor.
      * @param User $user
      */
     public function __construct(User $user)
@@ -32,7 +22,7 @@ class UserRepository
     }
 
     /**
-     * C
+     * Cоздать юзера
      * @param RegistrationRequest $request
      * @return User|\Illuminate\Database\Eloquent\Model
      */
@@ -40,23 +30,37 @@ class UserRepository
     {
         return $this->model::create([
             'email' => $request->email,
-            'login' => $request->email,
-            'username' => ($request->username) ?: $request->login,
+            'username' => ($request->username) ?: $request->email,
             'password' => bcrypt($request->password),
         ]);
     }
 
     /**
+     * Создать бота
+     * @param $request
+     * @return User|\Illuminate\Database\Eloquent\Model
+     */
+    public function createBot(BotRequest $request)
+    {
+        return $this->model::create([
+            'username' => $request->name,
+            'owner_id' => $request->owner_id,
+            'avatar_id' => $request->avatar_id,
+            'webhook' => $request->webhook,
+            'is_bot' => $this->model::BOT,
+        ]);
+    }
+
+    /**
+     * Редактировать данные юзера
      * @param UpdateRequest $request
      * @param User $user
      * @return User
      */
     public function update(UpdateRequest $request, User $user)
     {
-
         $result = $user->update([
             'email' => $request->email ?? $user->email,
-            'login' => $request->login ?? $user->login,
             'username' => $request->username ?? $user->username,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
@@ -66,10 +70,10 @@ class UserRepository
         }
 
         throw new \DomainException('Error updating user!');
-
     }
 
     /**
+     * Редактировать публичные данные профиля
      * @param ProfileRequest $request
      * @param User $user
      * @return User
@@ -89,6 +93,7 @@ class UserRepository
     }
 
     /**
+     * Удалить юзера
      * @param User $user
      * @return bool
      * @throws \Exception

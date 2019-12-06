@@ -15,10 +15,10 @@ use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use App\Repositories\Users\UserRepository;
+use App\Http\Requests\Bot\BotRequest;
 
 class UserService
 {
-
     /**
      * @var UserRepository
      */
@@ -43,6 +43,17 @@ class UserService
     public function create(CreateRequest $request): User
     {
         return $this->repository->create($request);
+    }
+
+    /**
+     * Method for create bot
+     *
+     * @param BotRequest $request
+     * @return User
+     */
+    public function createBot(BotRequest $request): User
+    {
+        return $this->repository->createBot($request);
     }
 
     /**
