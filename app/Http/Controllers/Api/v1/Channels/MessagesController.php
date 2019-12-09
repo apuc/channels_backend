@@ -7,8 +7,10 @@ use App\Http\Requests\Channels\Messages\MarkReadRequest;
 use App\Http\Resources\v1\MessageResource;
 use App\Repositories\Channels\MessageRepository;
 use App\Services\Channels\MessageService;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 
 class MessagesController extends Controller
 {
@@ -46,8 +48,8 @@ class MessagesController extends Controller
             $message = $this->messageService->create($request);
 
             return new MessageResource($message);
-        } catch (\Throwable $e) {
-            abort(500);
+        }catch (Exception $e) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR,$e->getMessage());
         }
     }
 
