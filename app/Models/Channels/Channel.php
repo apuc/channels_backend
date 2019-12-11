@@ -77,7 +77,7 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * Пользователи канала
+     * Пользователи канала (включая ботов)
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
@@ -88,6 +88,20 @@ class Channel extends Model implements ChannelEntityInterface
             'channel_id',
             'user_id'
         );
+    }
+
+    /**
+     * Боты канала
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function bots()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'channels_group_users',
+            'channel_id',
+            'user_id'
+        )->where('is_bot','=',User::BOT);
     }
 
     /**

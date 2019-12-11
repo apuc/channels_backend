@@ -3,11 +3,15 @@ namespace App\Services\Channels;
 
 use App\Http\Requests\Channels\MessageRequest;
 use App\Http\Requests\Channels\AttachmentRequest;
+use App\Http\Resources\v1\MessageResource;
+use App\Jobs\Messages\AttachToUsers;
+use App\Jobs\Messages\SendToBot;
 use App\Models\Channels\Attachment;
 use App\Models\Channels\Message;
 use App\Repositories\Channels\MessageRepository;
 use App\Repositories\Channels\AttachmentRepository;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
 
 class MessageService
 {
@@ -42,7 +46,7 @@ class MessageService
     public function create(MessageRequest $request): Message
     {
         $message = $this->repository->create($request);
-        $message->load('channel');
+        $message->load(['channel','channel.bots']);
 
         if($request->attachments){
 
@@ -59,9 +63,14 @@ class MessageService
            }
         }
 
+        //создает связи пользователь-сообщение чтобы определять ктро прочитал а кто нет в чатах
         if(!$message->channel->isDialog()){
-            $users = $message->channel->users()->wherePivot('user_id','<>',Auth::id())->get()->pluck('user_id')->toArray();
-            $message->users()->attach($users,['channel_id'=>$message->channel_id]);
+            AttachToUsers::dispatch($message);
+        }
+
+        //отправка сообщений ботам
+        if($message->channel->bots->count() > 0){
+            SendToBot::dispatch($message);
         }
 
         return $message;
@@ -80,10 +89,10 @@ class MessageService
     }
 
     /**
-     * Method for destroy group
-     *
+     * Удалить сообщение
      * @param Message $message
      * @return bool
+     * @throws \Exception
      */
     public function destroy(Message $message)
     {
