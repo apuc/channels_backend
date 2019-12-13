@@ -28,10 +28,13 @@ trait Avatar
         }
 
         if (!$avatar) {
+
+            $default = ($this->getType() == 'user' && $this->isBot()) ? '/bot_avatar.png' : '/no-avatar.png';
+
             return [
-                'origin' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
-                'average' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
-                'small' => getenv('FILES_SERVER_URL') . '/no-avatar.png',
+                'origin' => getenv('FILES_SERVER_URL') . $default,
+                'average' => getenv('FILES_SERVER_URL') . $default,
+                'small' => getenv('FILES_SERVER_URL') . $default,
             ];
         }
 

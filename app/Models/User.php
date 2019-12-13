@@ -176,4 +176,13 @@ class User extends Authenticatable
     {
         return 'user';
     }
+
+    /**
+     * Является ли юзер ботом
+     * @return bool
+     */
+    public function isBot()
+    {
+        return $this->is_bot == self::BOT;
+    }
 }
