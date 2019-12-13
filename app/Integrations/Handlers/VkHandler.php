@@ -50,6 +50,10 @@ class VkHandler extends IntegrationBase implements IntegrationContract
     {
         $res = [];
 
+        if(!isset($request->object['attachments'])){
+            return $res;
+        }
+
         foreach ($request->object['attachments'] as $attachment){
 
             //пока пропускаем все кроме фоток
