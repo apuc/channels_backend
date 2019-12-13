@@ -44,6 +44,10 @@ class SendToBot implements ShouldQueue
                 continue;
             }
 
+            if($bot->user_id == $this->message->fromUser->user_id){
+                continue;
+            }
+
             $data = (new MessageResource($this->message))->toResponse(app('request'))->getData();
             $client->post($bot->webhook,['form_params'=>[$data]]);
         }
