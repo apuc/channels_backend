@@ -29,6 +29,8 @@ Route::group(['middleware' => 'auth'], function (){
 // Route for changing language...
 Route::get('setting/change-language/{language}', 'SettingsController@changeLanguage');
 
+Route::post('/bot-test', 'Admin\DashboardController@bot');
+
 Route::domain('docs.mychannels.gq')->group(function () {
     Route::get('/v1', function () {
         return view('vendor.swagger.index');
