@@ -10,6 +10,7 @@ namespace App\Services\Channels;
 
 
 use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
+use App\Http\Requests\Bot\BotRequest;
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Notifications\InviteToChannelNotification;
@@ -54,7 +55,14 @@ class ChannelService
         return \DB::transaction(function () use ($request) {
             $channel = $this->repository->create($request);
 
-            $channel->users()->sync($request->get('user_ids'));
+            $channelBot = $this->userRepository->createBot(new BotRequest([
+               'name'=>$channel->getDefaultBotName(),
+               'owner_id'=>0,
+            ]));
+
+            $users = array_merge($request->get('user_ids'),[$channelBot->user_id]);
+
+            $channel->users()->sync($users);
 
             return $channel;
         });

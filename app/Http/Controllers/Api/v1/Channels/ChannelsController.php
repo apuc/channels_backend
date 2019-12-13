@@ -99,8 +99,8 @@ class ChannelsController extends Controller
             $channel = $this->channelService->create($request);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e) {
-            abort(500);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 

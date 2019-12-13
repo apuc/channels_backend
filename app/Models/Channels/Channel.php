@@ -244,4 +244,13 @@ class Channel extends Model implements ChannelEntityInterface
         return $this->getUserCount();
     }
 
+    /**
+     * Имя дефолтного бота канала
+     * @return string
+     */
+    public function getDefaultBotName()
+    {
+        return strtolower(str_replace(' ','_',$this->title)).'_bot';
+    }
+
 }
