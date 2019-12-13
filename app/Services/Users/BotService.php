@@ -41,6 +41,6 @@ class BotService
           'read'=>Message::MESSAGE_UNREAD
       ]));
 
-      NodeService::broadcastMessage($message,[$request->channel_id]);
+      NodeService::broadcastMessage($message,[(int)$request->channel_id]);
    }
 }
