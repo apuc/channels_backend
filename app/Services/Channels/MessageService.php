@@ -64,14 +64,14 @@ class MessageService
         }
 
         //создает связи пользователь-сообщение чтобы определять ктро прочитал а кто нет в чатах
-        if(!$message->channel->isDialog()){
-            AttachToUsers::dispatch($message);
-        }
-
-        //отправка сообщений ботам
-        if($message->channel->bots->count() > 0){
-            SendToBot::dispatch($message);
-        }
+//        if(!$message->channel->isDialog()){
+//            AttachToUsers::dispatch($message);
+//        }
+//
+//        //отправка сообщений ботам
+//        if($message->channel->bots->count() > 0){
+//            SendToBot::dispatch($message);
+//        }
 
         return $message;
     }

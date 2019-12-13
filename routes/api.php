@@ -77,6 +77,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('bot', 'Users\BotController')->except(['create','edit']);
         });
 
+        Route::post('/bot/send-message', 'Users\BotController@sendMessage')->name('bot.message');
+
 
         /** Роуты для общения между сервисамииии*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
