@@ -37,6 +37,7 @@ class BotController extends Controller
      * BotController constructor.
      * @param UserService $userService
      * @param UserRepository $userRepository
+     * @param BotService $userRepository
      */
     public function __construct(UserService $userService, UserRepository $userRepository, BotService $botService)
     {

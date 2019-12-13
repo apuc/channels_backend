@@ -49,7 +49,7 @@ class SendToBot implements ShouldQueue
             }
 
             $data = (new MessageResource($this->message))->toResponse(app('request'))->getData();
-            $client->post($bot->webhook,['form_params'=>[$data]]);
+            $client->post($bot->webhook,['json'=>$data]);
         }
     }
 }
