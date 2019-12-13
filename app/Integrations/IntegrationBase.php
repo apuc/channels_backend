@@ -23,7 +23,7 @@ class IntegrationBase
     protected $integration;
 
     /**
-     * VkHandler constructor.
+     * IntegrationBase constructor.
      * @param MessageService $service
      * @param Integration $integration
      */
@@ -31,6 +31,7 @@ class IntegrationBase
     {
         $this->messageService = $service;
         $this->integration = $integration;
+        $this->integration->load('channels');
     }
 
     /**
@@ -42,17 +43,20 @@ class IntegrationBase
     {
         $ids = empty($channels_ids) ? $this->integration->channels->pluck('channel_id')->toArray() : $channels_ids;
 
+        $channels = $this->integration->channels->keyBy('channel_id');
+
         foreach ($ids as $id){
+
+            $bot = $channels[$id]->bots()->where('users.owner_id',0)->first();
 
             $data = new MessageRequest([
                 'channel_id'=>$id,
-                'from'=>1,
+                'from'=> $bot ? $bot->user_id : 1,
                 'text'=>$text,
                 'attachments'=>$attachments
             ]);
 
             $message = $this->messageService->create($data);
-
         }
 
         $this->sendToNode($message,$ids);
