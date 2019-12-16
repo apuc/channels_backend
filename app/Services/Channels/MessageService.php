@@ -38,7 +38,7 @@ class MessageService
     }
 
     /**
-     * Method for create group
+     * Method for create message
      *
      * @param MessageRequest $request
      * @return Message
