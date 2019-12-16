@@ -19,13 +19,17 @@ class AttachToUsers implements ShouldQueue
      */
     private $message;
 
+    private $userId;
+
     /**
      * AttachToUsers constructor.
      * @param Message $message
+     * @param $userId
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message,$userId)
     {
         $this->message = $message;
+        $this->userId = $userId;
     }
 
     /**
@@ -36,7 +40,7 @@ class AttachToUsers implements ShouldQueue
     public function handle()
     {
         $users = $this->message->channel->users()
-            ->wherePivot('user_id','<>',Auth::id())
+            ->wherePivot('user_id','<>',$this->userId)
             ->get()
             ->pluck('user_id')
             ->toArray();
