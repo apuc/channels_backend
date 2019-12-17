@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 09.11.18
- * Time: 11:34
- */
-
 namespace App\Http\Resources\v1\User;
 
 
@@ -25,6 +18,7 @@ class ShortUserResource extends JsonResource
             'id' => $this->user_id,
             'username' => $this->getName(),
             'avatar' => ($this->avatar) ? $this->avatar->getSmall() : null,
+            'is_bot' => $this->isBot()
         ];
     }
 }
