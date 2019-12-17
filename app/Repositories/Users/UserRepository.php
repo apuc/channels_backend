@@ -123,7 +123,8 @@ class UserRepository
     public function findByEmailOrUsername(string $search_request,$return_builder = false)
     {
         $query = $this->model->where('email', 'like', "%$search_request%")
-            ->orWhere('username', 'like', "%$search_request%");
+            ->orWhere('username', 'like', "%$search_request%")
+            ->where('is_bot','<>',$this->model::BOT);
 
         if($return_builder){
             return $query;

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kirill
- * Date: 16.10.18
- * Time: 17:04
- */
-
 namespace App\Http\Resources\v1\User;
 
 
@@ -28,7 +21,8 @@ class FullUserResource extends JsonResource
             'user_id' => $this->user_id,
             'email' => $this->email,
             'username' => $this->getName(),
-            'avatar' => $this->getAvatar($this->avatar)
+            'avatar' => $this->getAvatar($this->avatar),
+            'is_bot' => $this->isBot()
         ];
     }
 
