@@ -38,9 +38,18 @@
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ $usersCount }}</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <h3>{{ $usersCount }}</h3>
 
-                    <p>@choice('general.user', $usersCount)</p>
+                            <p>@choice('general.user', $usersCount)</p>
+                        </div>
+                        <div class="col-6">
+                            <h3>{{ $botsCount }}</h3>
+
+                            <p>Ботов</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
@@ -53,14 +62,14 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ $messagesCount }}</h3>
 
-                    <p>Unique Visitors</p>
+                    <p>Сообщений</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer">Больше информации <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
