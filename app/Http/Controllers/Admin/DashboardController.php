@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Bot\BotMessageRequest;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
+use App\Models\Channels\Message;
 use App\Models\User;
 use App\Services\Users\BotService;
 use Illuminate\Http\Request;
@@ -15,10 +16,12 @@ class DashboardController extends Controller
     public function index()
     {
         $groupsCount = Group::count();
-        $usersCount = User::count();
+        $usersCount = User::where('is_bot','<>',User::BOT)->count();
+        $botsCount = User::where('is_bot',User::BOT)->count();
         $channelsCount = Channel::count();
+        $messagesCount = Message::count();
 
-        return view('admin.dashboard.index', compact('groupsCount', 'usersCount', 'channelsCount'));
+        return view('admin.dashboard.index', compact('groupsCount', 'usersCount', 'channelsCount','messagesCount','botsCount'));
     }
 
     /**
