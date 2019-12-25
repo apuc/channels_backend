@@ -43,8 +43,6 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create']);
 
             ////////////// КАНАЛЫ //////////////////
-            Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
-
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
@@ -58,6 +56,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/dialog', 'Channels\ChannelsController@createDialog')->name('dialog.create');
             Route::get('/channels/popular', 'Channels\ChannelsController@popular')->name('channels.popular');
 
+            Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
             ////////////// ИНТЕГРАЦИИ //////////////////
             Route::resource('integrations', 'Integrations\IntegrationsController')->only(['index', 'store']);
             Route::post('/channels/{channel}/integrations', 'Channels\ChannelsController@addIntegration')->name('channels.addIntegration');
