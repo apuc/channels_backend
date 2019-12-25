@@ -54,7 +54,6 @@ class ChannelsController extends Controller
         $this->middleware('owner:channel', ['only' => [
             'update',
             'destroy',
-            'deleteUser',
             'addIntegration',
             'removeIntegration',
         ]]);
