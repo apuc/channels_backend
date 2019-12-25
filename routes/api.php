@@ -19,7 +19,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
         Route::middleware('auth:api')->group(function () {
 
             //////////////// ГРУППЫ //////////////////////////////////
-            Route::group([], function () {
+            Route::group([],function () {
                 Route::resource('group', 'Channels\GroupsController')->except(['edit', 'create']);
                 Route::post('group/{group_id}/channels', 'Channels\GroupsController@channels')->name('group.channels');
                 Route::delete('group/{group_id}/delete-channel', 'Channels\GroupsController@deleteChannel')->name('group.delete-channel');

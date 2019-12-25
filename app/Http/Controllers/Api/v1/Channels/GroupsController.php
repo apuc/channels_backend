@@ -44,6 +44,8 @@ class GroupsController extends Controller
         $this->groupsService = $service;
         $this->groupRepository = $groupsRepository;
         $this->avatarService = $avatarService;
+
+        $this->middleware('owner:groups', ['except' => ['store']]);
     }
 
     /**

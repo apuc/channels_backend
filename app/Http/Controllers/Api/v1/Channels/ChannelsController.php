@@ -50,6 +50,14 @@ class ChannelsController extends Controller
         $this->channelService = $service;
         $this->channelRepository = $groupsRepository;
         $this->avatarService = $avatarService;
+
+        $this->middleware('owner:channel', ['only' => [
+            'update',
+            'destroy',
+            'deleteUser',
+            'addIntegration',
+            'removeIntegration',
+        ]]);
     }
 
     /**
@@ -89,9 +97,9 @@ class ChannelsController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  ChannelRequest $request
-     * @return ChannelResource
+     * @param ChannelRequest $request
+     * @return ChannelResource|\Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function store(ChannelRequest $request)
     {
