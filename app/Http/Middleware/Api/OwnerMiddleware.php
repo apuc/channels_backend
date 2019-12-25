@@ -38,6 +38,6 @@ class OwnerMiddleware
 
     private function getChannelId($request)
     {
-        return (int)$request->channel_id ?? $request->route('channel');
+        return $request->channel_id ?? $request->route('channel');
     }
 }
