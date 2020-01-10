@@ -40,7 +40,7 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
 
             $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
                 $options = json_decode($el->pivot->data,true);
-                return $options['type'] == 2;
+                return $options['type'] == 2 || $options['type'] == 0;
             })->pluck('channel_id')->toArray());
         }
 
@@ -52,14 +52,9 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
 
             $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
                 $options = json_decode($el->pivot->data,true);
-                return $options['type'] == 1;
+                return $options['type'] == 1 || $options['type'] == 0;
             })->pluck('channel_id')->toArray());
         }
-
-        $this->sendToChannels($text,$attachments,$this->integration->channels->filter(function($el){
-            $options = json_decode($el->pivot->data,true);
-            return $options['type'] == 0;
-        })->pluck('channel_id')->toArray());
 
         return "ok";
     }
