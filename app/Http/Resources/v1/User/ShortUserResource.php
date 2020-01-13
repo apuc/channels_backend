@@ -14,11 +14,17 @@ class ShortUserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $response = [
             'id' => $this->user_id,
             'username' => $this->getName(),
             'avatar' => ($this->avatar) ? $this->avatar->getSmall() : null,
             'is_bot' => $this->isBot()
         ];
+
+        if($this->isBot()){
+            $response['webhook'] = $this->webhook;
+        }
+
+        return $response;
     }
 }
