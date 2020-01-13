@@ -9,7 +9,9 @@ use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Bot\BotRequest;
 use App\Http\Requests\Bot\BotMessageRequest;
 use App\Http\Resources\v1\User\ShortUserResource;
+use Composer\DependencyResolver\Request;
 use\Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class AttachmentsController.
@@ -46,6 +48,14 @@ class BotController extends Controller
         $this->botService = $botService;
     }
 
+    /**
+     * Возвращает ботов пользователя
+     * @return ShortUserResource
+     */
+    public function index()
+    {
+        return ShortUserResource::collection(Auth::user()->bots);
+    }
 
     /**
      * Создать бота

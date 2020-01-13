@@ -118,6 +118,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Боты пользователя
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bots()
+    {
+        return $this->hasMany(self::class,'owner_id','user_id');
+    }
+
+    /**
      * Заявки в друзья которые отправил пользователь
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
