@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14b13b88a9f36f68636d1bf6ec30d139",
+    "content-hash": "80d299d63962ecdad0515988489ede00",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -63,12 +63,12 @@
             "version": "v0.11.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/barryvdh/laravel-cors.git",
+                "url": "https://github.com/fruitcake/laravel-cors.git",
                 "reference": "c95ac944f2f20a17949aae6645692dfd3b402bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-cors/zipball/c95ac944f2f20a17949aae6645692dfd3b402bca",
+                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/c95ac944f2f20a17949aae6645692dfd3b402bca",
                 "reference": "c95ac944f2f20a17949aae6645692dfd3b402bca",
                 "shasum": ""
             },
@@ -304,6 +304,63 @@
                 "symmetric key cryptography"
             ],
             "time": "2018-07-24T23:27:56+00:00"
+        },
+        {
+            "name": "denismitr/laravel-json-attributes",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/denismitr/laravel-json-attributes.git",
+                "reference": "afaead1a304badf8aacaec5ea365ce601d84ed70"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/denismitr/laravel-json-attributes/zipball/afaead1a304badf8aacaec5ea365ce601d84ed70",
+                "reference": "afaead1a304badf8aacaec5ea365ce601d84ed70",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "~5.7.0|~5.8.0",
+                "illuminate/support": "~5.7.0|~5.8.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.1",
+                "orchestra/testbench": "~3.7.0|~3.8.0",
+                "phpunit/phpunit": "^7.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Denismitr\\JsonAttributes\\JsonAttributesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Denismitr\\JsonAttributes\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Mitrofanov",
+                    "email": "denis.mitr@gmail.com"
+                }
+            ],
+            "description": "Laravel Json Attributes for Eloquent Models",
+            "keywords": [
+                "denismitr",
+                "eloquent",
+                "json",
+                "json-attributes",
+                "laravel"
+            ],
+            "time": "2019-07-20T20:45:14+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -5114,6 +5171,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2019-07-10T16:13:25+00:00"
         },
         {

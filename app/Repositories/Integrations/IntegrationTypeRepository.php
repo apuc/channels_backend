@@ -2,22 +2,23 @@
 namespace App\Repositories\Integrations;
 
 use App\Http\Requests\Integrations\CreateRequest;
-use App\Models\Channels\IntegrationType;
+use App\Models\Integrations\IntegrationType;
 use App\Models\Integrations\Integration;
+use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Channels\IntegrationTypeRequest;
 
-class IntegrationTypeRepository
+class IntegrationTypeRepository extends BaseRepository
 {
     /**
      * Integration
-     * @var Integration|User
+     * @var IntegrationType
      */
     protected $model;
 
     /**
      * GroupsRepository constructor.
-     * @param Integration $integration
+     * @param IntegrationType $integration
      */
     public function __construct(IntegrationType $integration)
     {
@@ -25,8 +26,8 @@ class IntegrationTypeRepository
     }
 
     /**
-     * @param CreateRequest $request
-     * @return User|\Illuminate\Database\Eloquent\Model
+     * @param IntegrationTypeRequest $request
+     * @return IntegrationType
      */
     public function create(IntegrationTypeRequest $request)
     {
@@ -62,14 +63,14 @@ class IntegrationTypeRepository
 
     /**
      * Method for deleting integration type
-     * @param IntegrationType $type
+     * @param IntegrationType $integrationType
      * @return bool
      * @throws \Exception
      * @throws  \DomainException
      */
-    public function destroy(IntegrationType $type)
+    public function destroy(IntegrationType $integrationType)
     {
-        if($type->delete()) {
+        if($integrationType->delete()) {
             return true;
         }
 

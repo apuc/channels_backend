@@ -152,6 +152,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Denismitr\JsonAttributes\JsonAttributesServiceProvider::class,
 
         /*
          * Application Service Providers...
