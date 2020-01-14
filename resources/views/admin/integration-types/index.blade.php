@@ -1,4 +1,4 @@
-<?php /** @var \App\Models\Channels\IntegrationType[] $types */ ?>
+<?php /** @var \App\Models\Integrations\IntegrationType[] $types */ ?>
 @extends('layouts.admin')
 
 @section('title', trans('general.integration_types'))
@@ -29,8 +29,8 @@
                 <th scope="row">{{ $type->id }}</th>
                 <td><a href="{{ route('integration-types.show', $type) }}">{{ $type->title }}</a></td>
                 <td>{{ $type->slug }}</td>
-                <td>{{ $type->fields }}</td>
-                <td>{{ $type->options }}</td>
+                <td>{{ $type->getOriginal('fields') }}</td>
+                <td>{{ $type->getOriginal('options') }}</td>
                 <td>
                     <form action="{{ route('integration-types.destroy', $type) }}" method="post">
                         @csrf

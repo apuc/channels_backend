@@ -23,18 +23,24 @@ class IntegrationTypeRequest extends FormRequest
      */
     public function rules()
     {
+        //костыль чтобы casts не энкодил json еще раз потому что в реквесте уже и так json приходит
+        $this->fields = json_decode($this->fields);
+        $this->options = json_decode($this->options);
+
         return [
             'title' => 'required|string|max:255|min:3',
             'slug' => 'required|string|max:255|min:3',
             'fields' => 'json',
             'options' => 'json',
+            'rss_url'=>'required_with:is_rss|url|nullable'
         ];
     }
 
     public function messages()
     {
         return [
-            '*.required' => 'Это поле обязательно'
+            '*.required' => 'Это поле обязательно',
+            'rss_url.required_with' => 'Укажите url для прсинга rss!'
         ];
     }
 

@@ -1,4 +1,4 @@
-<?php /**@var \App\Models\Channels\IntegrationType $type */ ?>
+<?php /**@var \App\Models\Integrations\IntegrationType $type */ ?>
 
 @extends('layouts.admin')
 
@@ -22,11 +22,11 @@
         </tr>
         <tr>
             <th>Fields</th>
-            <td>{{ $type->fields }}</td>
+            <td>{{ $type->getOriginal('fields') }}</td>
         </tr>
         <tr>
             <th>Options</th>
-            <td>{{ $type->options }}</td>
+            <td>{{ $type->getOriginal('options') }}</td>
         </tr>
 
         <tr>

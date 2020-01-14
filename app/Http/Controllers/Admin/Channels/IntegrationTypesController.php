@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin\Channels;
 
 use App\Http\Requests\Channels\IntegrationTypeRequest;
-use App\Models\Channels\IntegrationType;
+use App\Models\Integrations\IntegrationType;
+use App\Repositories\Integrations\IntegrationTypeRepository;
 use App\Services\Integrations\IntegrationTypesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,12 +17,19 @@ class IntegrationTypesController extends Controller
     protected $integrationTypeService;
 
     /**
+     * @var IntegrationTypeRepository
+     */
+    protected $integrationTypeRepository;
+
+    /**
      * IntegrationTypesController constructor.
      * @param IntegrationTypesService $service
+     * @param IntegrationTypeRepository $repository
      */
-    public function __construct(IntegrationTypesService $service)
+    public function __construct(IntegrationTypesService $service,IntegrationTypeRepository $repository)
     {
         $this->integrationTypeService = $service;
+        $this->integrationTypeRepository = $repository;
     }
 
 
@@ -68,11 +76,13 @@ class IntegrationTypesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Channels\IntegrationType  $integrationType
+     * @param  IntegrationType  $integrationType
      * @return \Illuminate\Http\Response
      */
-    public function show(IntegrationType $integrationType)
+    public function show($id)
     {
+        $integrationType = $this->integrationTypeRepository->findById($id);
+
         return view('admin.integration-types.show')->with(['type' => $integrationType]);
     }
 
@@ -84,9 +94,9 @@ class IntegrationTypesController extends Controller
      */
     public function edit($id)
     {
-        $type = IntegrationType::find($id);
+        $integrationType = $this->integrationTypeRepository->findById($id);
 
-        return view('admin.integration-types.edit', compact('type'));
+        return view('admin.integration-types.edit', ['type'=>$integrationType]);
     }
 
 
@@ -100,7 +110,7 @@ class IntegrationTypesController extends Controller
     public function update(IntegrationTypeRequest $request, $id)
     {
         try {
-            $integrationType = IntegrationType::find($id);
+            $integrationType = $this->integrationTypeRepository->findById($id);
             $type = $this->integrationTypeService->update($request, $integrationType);
 
             return redirect(route('integration-types.show', $type->id))
@@ -119,7 +129,7 @@ class IntegrationTypesController extends Controller
     public function destroy($id)
     {
         try{
-            $integrationType = IntegrationType::find($id);
+            $integrationType = $this->integrationTypeRepository->findById($id);
             $this->integrationTypeService->destroy($integrationType);
 
             return redirect(route('integration-types.index'))->with(['info' => 'Тип удален успешно!']);

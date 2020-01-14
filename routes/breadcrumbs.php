@@ -92,7 +92,7 @@ Breadcrumbs::register('integration-types.create', function(BreadcrumbsGenerator 
 
 Breadcrumbs::register('integration-types.show', function (BreadcrumbsGenerator $crumbs ,$integrationType){
     $crumbs->parent('integration-types.index');
-    $crumbs->push(trans('general.integration_types') . ': ' . $integrationType->id, route('integration-types.show', $integrationType));
+    $crumbs->push(trans('general.integration_types') . ': ' . $integrationType, route('integration-types.show', $integrationType));
 });
 
 Breadcrumbs::register('integration-types.edit', function (BreadcrumbsGenerator $crumbs, $id){
