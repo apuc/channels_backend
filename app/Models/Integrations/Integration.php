@@ -5,6 +5,7 @@ namespace App\Models\Integrations;
 use App\Models\Channels\Channel;
 use App\Models\Integrations\IntegrationType;
 use App\Models\User;
+use Denismitr\JsonAttributes\JsonAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 class Integration extends Model
@@ -20,6 +21,11 @@ class Integration extends Model
     protected $casts = [
       'fields' => 'array',
     ];
+
+    public function getFieldsAttribute(): JsonAttributes
+    {
+        return JsonAttributes::create($this, 'fields');
+    }
 
     /**
      * Каналы в которых есть эта интеграция

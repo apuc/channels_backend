@@ -10,6 +10,7 @@ use App\Services\Channels\MessageService;
 use App\Services\NodeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\Resource;
+use Vedmant\FeedReader\Facades\FeedReader;
 
 class IntegrationBase
 {
@@ -61,5 +62,44 @@ class IntegrationBase
         }
 
         NodeService::broadcastMessage($message,$ids);
+    }
+
+    /**
+     * Парсит rss и отправляет новые новости в каналы
+     */
+    public function parseRss()
+    {
+        $items = FeedReader::read($this->integration->rss_url)->get_items();
+
+        //первый парсинг(берем первую новость и запоминаем ее тайтл)
+        if(!$this->integration->fields->get('last_item'))
+        {
+            $this->integration->fields->set('last_item',$items[0]->get_title());
+            $this->integration->save();
+
+            $this->sendToChannels(
+                $this->integration->name,
+                $this->parseAttachments($items[0]),
+                $this->integration->channels->pluck('channel_id')->toArray()
+            );
+
+            return 1;
+        }
+
+        //последующие парсинги(идем по новостям и добавляем пока не найдем прошлый тайтл)
+        foreach ($items as $item)
+        {
+            if($item->get_title() == $this->integration->fields->get('last_item')){
+                $this->integration->fields->set('last_item',$items[0]->get_title());
+                $this->integration->save();
+                break;
+            }
+
+            $this->sendToChannels(
+                $this->integration->name,
+                $this->parseAttachments($item),
+                $this->integration->channels->pluck('channel_id')->toArray()
+            );
+        }
     }
 }
