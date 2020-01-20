@@ -2,8 +2,12 @@
 
 namespace App\Console\Commands\Integrations;
 
+use App\Integrations\IntegrationHandlerFactory;
 use App\Models\Integrations\Integration;
+use App\Repositories\Integrations\IntegrationRepository;
+use App\Repositories\Integrations\IntegrationTypeRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ParseRssCommand extends Command
 {
@@ -36,13 +40,19 @@ class ParseRssCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(IntegrationRepository $repository)
     {
         try{
-            $integrations  = Integration::whereRaw('fields -> "$.rss" = true')->get();
-            var_dump($integrations->first()->name);
+            $integrations  = $repository->getRssIntegrarions();
+
+            foreach($integrations as $integration){
+                $handler = IntegrationHandlerFactory::createHandler($integration->slug,$integration);
+                $handler->parseRss();
+            }
+
         }catch (\Exception $e){
-          var_dump($e->getMessage());
+            $this->error($e->getMessage().' '. $e->getTraceAsString());
+            Log::info($e->getMessage().' '. $e->getTraceAsString());
         }
     }
 }
