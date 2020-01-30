@@ -38,7 +38,7 @@ class BotRequest extends FormRequest
             'owner_id' => 'required|integer',
             'name' => 'required|string',
             'avatar' => 'integer|exists:avatars,avatar_id|nullable',
-            'hook_url' => 'url|nullable',
+            'webhook' => 'url|nullable',
         ];;
     }
 
