@@ -7,11 +7,11 @@ use App\Services\Channels\MessageService;
 
 class IntegrationHandlerFactory
 {
-    public static function createHandler(string $type,$id)
+    public static function createHandler(string $type,$record)
     {
         $name = ucfirst($type).'Handler';
         $class = "App\Integrations\Handlers\\".$name;
-        $integration = is_int($id) ? Integration::find($id) : $id;
+        $integration = $record  instanceof Integration ? $record : Integration::find($record);
         return new $class($integration,app()->make(MessageService::class));
     }
 }
