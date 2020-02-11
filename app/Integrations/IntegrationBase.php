@@ -47,6 +47,8 @@ class IntegrationBase
 
         $channels = $this->integration->channels->keyBy('channel_id');
 
+        $message = null;
+
         foreach ($ids as $id){
 
             $bot = $channels[$id]->bots()->where('users.owner_id',0)->first();
