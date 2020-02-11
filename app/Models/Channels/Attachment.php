@@ -31,6 +31,7 @@ class Attachment extends Model
     public const TYPE_IMAGE = 'image';
     public const TYPE_ARCHIVE = 'archive';
     public const TYPE_RSS = 'rss';
+    public const TYPE_GITHUB = 'github';
 
     private $mimeTypes = [
         self::TYPE_DOCUMENT=>['vnd.openxmlformats-officedocument.wordprocessingml.document'],
