@@ -23,7 +23,7 @@ class HooksController extends Controller
             return $handler->acceptHook($request);
 
         }catch (\Exception $e){
-            Log::error($e->getMessage().' '. $e->getTraceAsString());
+            Log::error("Type: {$type} Id: {$id} Message: {$e->getMessage()} Trace: {$e->getTraceAsString()}");
         }
     }
 }
