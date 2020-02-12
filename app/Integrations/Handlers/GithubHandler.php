@@ -11,7 +11,9 @@ class GithubHandler extends IntegrationBase implements IntegrationContract
 {
     public function acceptHook(Request $request)
     {
-       $messageText = "{$request->sender['login']} сделал пуш в репозиторий {$request->repository['name']}";
+       $messageText = "{$request->sender['login']} сделал пуш в репозиторий {$request->repository['name']}
+       в ветку {$request->ref}";
+
        $attachments = $this->parseAttachments($request);
 
        $this->sendToChannels($messageText,$attachments);
@@ -34,5 +36,10 @@ class GithubHandler extends IntegrationBase implements IntegrationContract
                 'status'  => Attachment::STATUS_ACTIVE,
             ]
         ];
+    }
+
+    public function defaultAnswer()
+    {
+        return "ok";
     }
 }

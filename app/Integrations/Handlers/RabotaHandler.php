@@ -114,4 +114,9 @@ class RabotaHandler extends IntegrationBase implements IntegrationContract
                  Город: {$request->city}.
                  ";
     }
+
+    public function defaultAnswer()
+    {
+        return "ok";
+    }
 }

@@ -20,6 +20,10 @@ class HooksController extends Controller
                 return $confirmation;
             }
 
+            if(!$handler->integration->hasChannels()){
+                return $handler->defaultAnswer();
+            }
+
             return $handler->acceptHook($request);
 
         }catch (\Exception $e){
