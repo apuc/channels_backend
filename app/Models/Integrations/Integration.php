@@ -53,4 +53,13 @@ class Integration extends Model
             'id'
         );
     }
+
+    /**
+     * Есть ли интеграцияя в каком-либо канале
+     * @return bool
+     */
+    public function hasChannels()
+    {
+        return $this->channels->count() > 0;
+    }
 }

@@ -73,4 +73,9 @@ class VkHandler extends IntegrationBase implements IntegrationContract
 
         return $res;
     }
+
+    public function defaultAnswer()
+    {
+        return "ok";
+    }
 }
