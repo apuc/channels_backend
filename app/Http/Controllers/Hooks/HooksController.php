@@ -20,7 +20,7 @@ class HooksController extends Controller
                 return $confirmation;
             }
 
-            if(!$handler->integration->hasChannels()){
+            if(!$handler->integrationHasChannels()){
                 return $handler->defaultAnswer();
             }
 
