@@ -38,6 +38,15 @@ class IntegrationBase
     }
 
     /**
+     * Есть ли интеграцияя в каком-либо канале
+     * @return bool
+     */
+    public function integrationHasChannels()
+    {
+        return $this->integration->channels->count() > 0;
+    }
+
+    /**
      * Создает сообщения в каналах
      * @param $text
      * @param $attachments
