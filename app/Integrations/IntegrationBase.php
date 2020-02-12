@@ -10,6 +10,7 @@ use App\Services\Channels\MessageService;
 use App\Services\NodeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Log;
 use Vedmant\FeedReader\Facades\FeedReader;
 
 class IntegrationBase
@@ -72,6 +73,8 @@ class IntegrationBase
     public function parseRss()
     {
         $items = FeedReader::read($this->integration->rss_url)->get_items();
+        Log::info($this->integration->channels->pluck('channel_id')->toArray());
+        Log::info("ID ".$this->integration->id);
 
         //первый парсинг(берем первую новость и запоминаем ее тайтл)
         if(!$this->integration->fields->get('last_item'))
