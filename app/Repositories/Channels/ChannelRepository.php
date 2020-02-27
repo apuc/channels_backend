@@ -167,4 +167,19 @@ class ChannelRepository
 
         return $this->model::hydrate($channels->toArray());
     }
+
+    /**
+     * Получает пользователей канала для отправки пуш уведомлений
+     * @param $channelId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUsersToPush($channelId)
+    {
+        $channel = $this->findById($channelId);
+
+        return $channel->users()->where([
+            ['push_endpoints','<>',null],
+            ['is_bot',0],
+        ])->get();
+    }
 }

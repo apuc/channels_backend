@@ -7,6 +7,7 @@ use App\Models\Channels\Group;
 use App\Models\User\UserContact;
 use Carbon\Carbon;
 use DB;
+use Denismitr\JsonAttributes\JsonAttributes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -51,13 +52,30 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
+    /**
+     * @var string
+     */
     public $primaryKey = 'user_id';
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'push_endpoints' => 'array',
+    ];
 
     /**
      * Бот
      */
     public const BOT = 1;
+
+    /**
+     * @return JsonAttributes
+     */
+    public function getPushEndpointsAttribute(): JsonAttributes
+    {
+        return JsonAttributes::create($this, 'push_endpoints');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
