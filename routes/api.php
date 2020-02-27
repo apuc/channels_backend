@@ -42,6 +42,10 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/user/senders', 'Users\UsersController@senders')->name('user.senders');
             Route::resource('user', 'Users\UsersController')->except(['edit', 'create']);
 
+            ////////////////// ПУШ УВЕДОМЛЕНИЯ ////////////////////////////////
+            Route::post('/user/{id}/push-subscribe', 'Channels\PushNotificationsController@subscribe')->name('push.subscribe');
+            Route::post('/user/{id}/push-unsubscribe', 'Channels\PushNotificationsController@unSubscribe')->name('push.unsubscribe');
+
             ////////////// КАНАЛЫ //////////////////
             Route::delete('/channel/delete-user', 'Channels\ChannelsController@deleteUser')->name('channel.deleteUser');
             Route::post('/channel/avatar', 'Channels\ChannelsController@avatar')->name('channel.avatar');
@@ -57,6 +61,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channels/popular', 'Channels\ChannelsController@popular')->name('channels.popular');
 
             Route::resource('channel', 'Channels\ChannelsController')->except(['edit', 'create', 'show']);
+
             ////////////// ИНТЕГРАЦИИ //////////////////
             Route::resource('integrations', 'Integrations\IntegrationsController')->only(['index', 'store']);
             Route::post('/channels/{channel}/integrations', 'Channels\ChannelsController@addIntegration')->name('channels.addIntegration');
@@ -84,6 +89,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
         /** Роуты для общения между сервисамииии*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
             Route::resource('message', 'Channels\MessagesController')->only(['store']);
+            Route::post('/channel/{id}/users-push', 'Channels\PushNotificationsController@getUsersToPush')->name('push.users');
 
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
         });
