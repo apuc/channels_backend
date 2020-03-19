@@ -58,7 +58,7 @@ class UniquePairValidation extends Validator {
                 [$parameters[1], '=', $parameters[4]],
                 [$parameters[2], '=', $parameters[3]],
             ]);
-        })->first();
+        })->whereNull('deleted_at')->first();
 
         //если запись существует, возвращаем ошибку валидации
         return $result ? false : true;

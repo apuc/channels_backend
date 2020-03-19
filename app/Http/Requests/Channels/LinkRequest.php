@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Channels;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LinkRequest extends FormRequest
 {
@@ -46,5 +48,12 @@ class LinkRequest extends FormRequest
         ];
     }
 
-
+    /**
+     * Статус 200 чтобы на фронте не сыпало рошибки в консоль
+     * @param Validator $validator
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors()->all(), 200));
+    }
 }

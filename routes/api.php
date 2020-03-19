@@ -55,6 +55,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channel/{channel}/messages', 'Channels\ChannelsController@messagesList')->name('messages.list');
             Route::get('/channel/service/left-side-bar', 'Channels\ServiceController@leftSideBar')->name('channels.service.leftSideBar');
             Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
+            Route::get('/channel/{id}/full', 'Channels\ChannelsController@showFull')->name('channel.full');
 
             Route::post('/channels/{channel}/invite', 'Channels\ChannelsController@inviteByEmail')->name('channels.invite');
             Route::post('/dialog', 'Channels\ChannelsController@createDialog')->name('dialog.create');
