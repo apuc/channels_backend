@@ -7,6 +7,7 @@ use App\Http\Requests\Channels\InviteRequest;
 use App\Http\Requests\Files\AvatarRequest;
 use App\Http\Resources\v1\AvatarResource;
 use App\Http\Resources\v1\ChannelResource;
+use App\Http\Resources\v1\Channels\FullChannelResource;
 use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Http\Resources\v1\User\FullUserResource as UserResource;
@@ -126,7 +127,23 @@ class ChannelsController extends Controller
         } catch (\Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
+    }
 
+    /**
+     * Полная инфа о канале
+     *
+     * @param $id
+     * @return FullChannelResource|\Illuminate\Http\JsonResponse
+     */
+    public function showFull($id)
+    {
+        try {
+            $channel = $this->channelRepository->findOrFail($id);
+
+            return new FullChannelResource($channel);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -218,10 +235,7 @@ class ChannelsController extends Controller
     public function messagesList($id)
     {
         $channel = $this->channelRepository->findById($id);
-
-        $messages = $channel->messages()
-            ->orderBy('message_id','desc')
-            ->paginate(Message::MESSAGES_PER_PAGE);
+        $messages = $this->channelRepository->getChannelMessages($channel);
 
         return MessageResource::collection($messages);
     }

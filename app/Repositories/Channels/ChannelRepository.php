@@ -4,6 +4,7 @@ namespace App\Repositories\Channels;
 
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
+use App\Models\Channels\Message;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -181,5 +182,18 @@ class ChannelRepository
             ['push_endpoints','<>',null],
             ['is_bot',0],
         ])->get();
+    }
+
+    /**
+     * Сообщения канала
+     *
+     * @param Channel $channel
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getChannelMessages(Channel $channel)
+    {
+        return $channel->messages()
+            ->orderBy('message_id','desc')
+            ->paginate(Message::MESSAGES_PER_PAGE);
     }
 }
