@@ -7,6 +7,9 @@ use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use App\Http\Requests\Bot\BotRequest;
+use DomainException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class UserRepository
 {
@@ -24,7 +27,7 @@ class UserRepository
     /**
      * Cоздать юзера
      * @param RegistrationRequest $request
-     * @return User|\Illuminate\Database\Eloquent\Model
+     * @return User|Model
      */
     public function create(RegistrationRequest $request)
     {
@@ -38,7 +41,7 @@ class UserRepository
     /**
      * Создать бота
      * @param $request
-     * @return User|\Illuminate\Database\Eloquent\Model
+     * @return User|Model
      */
     public function createBot(BotRequest $request)
     {
@@ -69,7 +72,7 @@ class UserRepository
             return $user;
         }
 
-        throw new \DomainException('Error updating user!');
+        throw new DomainException('Error updating user!');
     }
 
     /**
@@ -89,7 +92,7 @@ class UserRepository
             return $user;
         }
 
-        throw new \DomainException('Error updating profile!');
+        throw new DomainException('Error updating profile!');
     }
 
     /**
@@ -104,7 +107,7 @@ class UserRepository
             return true;
         }
 
-        throw new \DomainException('Error deleting user');
+        throw new DomainException('Error deleting user');
     }
 
     /**
@@ -118,7 +121,7 @@ class UserRepository
 
     /**
      * @param string $search_request
-     * @return User|\Illuminate\Database\Eloquent\Builder
+     * @return User|Builder
      */
     public function findByEmailOrUsername(string $search_request,$return_builder = false)
     {
@@ -131,5 +134,14 @@ class UserRepository
         }
 
         return $query->first();
+    }
+
+    /**
+     * @param string $token
+     * @return Builder|Model|object|null
+     */
+    public function findByResetToken(string  $token)
+    {
+        return $this->model->where('reset_token', $token)->first();
     }
 }

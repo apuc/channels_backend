@@ -5,14 +5,15 @@ namespace App\Models;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 use App\Models\User\UserContact;
-use Carbon\Carbon;
 use DB;
 use Denismitr\JsonAttributes\JsonAttributes;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use Faker\Factory as FakerFactory;
 
 /**
  * App\Models\User
@@ -78,7 +79,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function groups()
     {
@@ -86,7 +87,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function channels()
     {
@@ -117,7 +118,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function userContacts()
     {
@@ -127,7 +128,7 @@ class User extends Authenticatable
     /**
      * Заявки в друзья которые кто-то отправил пользователю
      *
-     * @return $this
+     * @return User|BelongsToMany
      */
     public function senders()
     {
@@ -137,7 +138,7 @@ class User extends Authenticatable
 
     /**
      * Боты пользователя
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function bots()
     {
@@ -147,7 +148,7 @@ class User extends Authenticatable
     /**
      * Заявки в друзья которые отправил пользователь
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function friendshipRequests()
     {
@@ -211,5 +212,13 @@ class User extends Authenticatable
     public function isBot()
     {
         return $this->is_bot == self::BOT;
+    }
+
+    /**
+     * Создает токен востановления пароля для юзера
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->reset_token = Str::random(30);
     }
 }
