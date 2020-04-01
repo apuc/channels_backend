@@ -7,10 +7,11 @@ use App\Http\Requests\Channels\Messages\MarkReadRequest;
 use App\Http\Resources\v1\MessageResource;
 use App\Repositories\Channels\MessageRepository;
 use App\Services\Channels\MessageService;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Throwable;
 
 class MessagesController extends Controller
 {
@@ -48,7 +49,7 @@ class MessagesController extends Controller
             $message = $this->messageService->create($request);
 
             return new MessageResource($message);
-        }catch (Exception $e) {
+        }catch (\Exception $e) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR,$e->getMessage());
         }
     }
@@ -86,7 +87,7 @@ class MessagesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|RedirectResponse|Response
      */
     public function destroy($id)
     {
@@ -95,7 +96,7 @@ class MessagesController extends Controller
             $this->messageService->destroy($message);
 
             return response()->json(['msg' => 'success'], 204);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -103,7 +104,7 @@ class MessagesController extends Controller
     /**
      * Отмечает прочитанные сообщения в диалоге
      * @param MarkReadRequest $request
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
      */
     public function markReadDialog(MarkReadRequest $request)
     {
@@ -111,7 +112,7 @@ class MessagesController extends Controller
             $messages = $this->messageRepository->markReadDialog($request->channel_id);
 
             return $messages;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -119,7 +120,7 @@ class MessagesController extends Controller
     /**
      * Отмечает прочитанные сообщения в чате
      * @param MarkReadRequest $request
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return JsonResponse|mixed
      */
     public function markReadChat(MarkReadRequest $request)
     {
@@ -127,7 +128,7 @@ class MessagesController extends Controller
             $messages = $this->messageRepository->markReadChat($request->channel_id);
 
             return $messages;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }

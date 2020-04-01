@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Auth\PasswordResetController;
 use Laravel\Passport\Passport;
 
 /*
@@ -97,6 +98,12 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
         Route::post('/registration', 'Auth\RegistrationController@registration')
             ->name('registration');
+
+        Route::post('/request-reset', [PasswordResetController::class,'requestReset'])
+            ->name('request.reset');
+
+        Route::post('/reset', [PasswordResetController::class,'reset'])
+            ->name('reset');
     });
 
 

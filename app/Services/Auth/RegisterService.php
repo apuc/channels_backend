@@ -11,6 +11,7 @@ namespace App\Services\Auth;
 
 use App\Http\Requests\Api\v1\Auth\RegistrationRequest;
 use App\Repositories\Users\UserRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class RegisterService
 {
@@ -32,7 +33,7 @@ class RegisterService
 
     /**
      * @param RegistrationRequest $request
-     * @return $this|\Illuminate\Database\Eloquent\Model
+     * @return $this|Model
      */
     public function register(RegistrationRequest $request)
     {
