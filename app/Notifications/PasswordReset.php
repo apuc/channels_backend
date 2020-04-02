@@ -45,6 +45,7 @@ class PasswordReset extends Notification
         $url = env('FRONTEND_URL','https://mychannels.gq/');
 
         return (new MailMessage)
+                    ->from('channels@web-artcraft.com')
                     ->subject('Channels password reset')
                     ->greeting("Уважаемый {$notifiable->username}")
                     ->line("Вы сделали запрос на восстановление пароля на сайте {$url} Чтобы восстановить пароль, пройдите по ссылке ниже")
