@@ -42,7 +42,7 @@ class PasswordReset extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = getenv('FRONTEND_URL');
+        $url = env('FRONTEND_URL','https://mychannels.gq/');
 
         return (new MailMessage)
                     ->subject('Channels password reset')
