@@ -50,6 +50,7 @@ class InviteToChannelNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
+                    ->from('channels@web-artcraft.com')
                     ->subject('Channels: Приглашение в канал')
                     ->line('Вас пригласили в канал')
                     ->line("Логин: {$notifiable->email}")
