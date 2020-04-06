@@ -38,7 +38,8 @@ class BotService
           'channel_id' => $request->channel_id,
           'from' => $request->bot_id,
           'text' => $request->message,
-          'read'=>Message::MESSAGE_UNREAD
+          'attachments' => $request->attachments,
+          'read'=>Message::MESSAGE_UNREAD,
       ]));
 
       NodeService::broadcastMessage($message,[(int)$request->channel_id]);
