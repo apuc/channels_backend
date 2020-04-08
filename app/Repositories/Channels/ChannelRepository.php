@@ -164,6 +164,7 @@ class ChannelRepository
                order by message_id desc limit 1) as m_date")
             )->orderBy('m_date','desc')->take(20)
             ->where('private','=',$this->model::PUBLIC_CHANNEL)
+            ->whereNull('deleted_at')
             ->get();
 
         return $this->model::hydrate($channels->toArray());
