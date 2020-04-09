@@ -3,6 +3,7 @@ namespace App\Repositories\Integrations;
 
 use App\Http\Requests\Integrations\CreateRequest;
 use App\Models\Integrations\Integration;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +26,7 @@ class IntegrationRepository
 
     /**
      * @param CreateRequest $request
-     * @return User|\Illuminate\Database\Eloquent\Model
+     * @return User|Model
      */
     public function create(CreateRequest $request)
     {
@@ -35,19 +36,6 @@ class IntegrationRepository
             'name' => $request->name,
             'fields' => $request->fields,
         ]);
-    }
-
-    public function getRssIntegrarions()
-    {
-        return $this->model->newQuery()
-                ->select(DB::raw(
-                    'integrations.*,
-                    JSON_UNQUOTE(JSON_EXTRACT(settings,"$.parse_url")) as rss_url,
-                    integration_types.slug'
-                ))
-                ->leftJoin('integration_types', 'integrations.type_id', '=', 'integration_types.id')
-                ->whereRaw('integration_types.settings -> "$.is_rss" = true')
-                ->get();
     }
 
 }

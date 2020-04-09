@@ -6,8 +6,12 @@ use App\Http\Requests\Channels\IntegrationTypeRequest;
 use App\Models\Integrations\IntegrationType;
 use App\Repositories\Integrations\IntegrationTypeRepository;
 use App\Services\Integrations\IntegrationTypesService;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
+use Throwable;
 
 class IntegrationTypesController extends Controller
 {
@@ -36,7 +40,7 @@ class IntegrationTypesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|Response|View
      */
     public function index()
     {
@@ -48,7 +52,7 @@ class IntegrationTypesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|Response|View
      */
     public function create()
     {
@@ -59,7 +63,7 @@ class IntegrationTypesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  IntegrationTypeRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse|Response|string
      */
     public function store(IntegrationTypeRequest $request)
     {
@@ -68,7 +72,7 @@ class IntegrationTypesController extends Controller
 
             return redirect(route('integration-types.show',$integrationType))
                 ->with(['success' => 'Успешно создано']);
-       }catch (\Throwable $exception){
+       }catch (Throwable $exception){
            return $exception->getMessage();
        }
     }
@@ -76,8 +80,8 @@ class IntegrationTypesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  IntegrationType  $integrationType
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return Factory|Response|View
      */
     public function show($id)
     {
@@ -90,7 +94,7 @@ class IntegrationTypesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int Integration Type ID
-     * @return \Illuminate\Http\Response
+     * @return Factory|Response|View
      */
     public function edit($id)
     {
@@ -105,7 +109,7 @@ class IntegrationTypesController extends Controller
      *
      * @param  IntegrationTypeRequest $request
      * @param  int Integration Type ID
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse|Response
      */
     public function update(IntegrationTypeRequest $request, $id)
     {
@@ -115,7 +119,7 @@ class IntegrationTypesController extends Controller
 
             return redirect(route('integration-types.show', $type->id))
                 ->with(['warning' => 'Изменено!']);
-        }catch (\Throwable $ex){
+        }catch (Throwable $ex){
             return back()->with(['error' => $ex->getMessage()]);
         }
     }
@@ -124,7 +128,7 @@ class IntegrationTypesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id IntegrationType ID
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse|Response
      */
     public function destroy($id)
     {
@@ -133,7 +137,7 @@ class IntegrationTypesController extends Controller
             $this->integrationTypeService->destroy($integrationType);
 
             return redirect(route('integration-types.index'))->with(['info' => 'Тип удален успешно!']);
-        }catch (\Throwable $ex){
+        }catch (Throwable $ex){
             return back()->with(['error' => $ex->getMessage()]);
         }
     }

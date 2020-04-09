@@ -76,4 +76,14 @@ class IntegrationTypeRepository extends BaseRepository
 
         throw new \DomainException('Error deleting integration type');
     }
+
+    /**
+     * Получить интеграции по типу
+     * @param string $type
+     * @return mixed
+     */
+    public function getIntegrationsByType(string $type)
+    {
+        return $this->model::where('slug',$type)->first()->integrations;
+    }
 }
