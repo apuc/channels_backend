@@ -36,24 +36,6 @@
             @endif
         </div>
 
-        <div class="form-group">
-            <label for="is_rss">RSS интеграция</label>
-            <input type="checkbox" name="is_rss"  id="is_rss"  value="1"
-            @if($type->settings->get('is_rss')) checked @endif
-            >
-            @if($errors->has('is_rss'))
-                <span class="invalid-feedback"><string>{{ $errors->first('is_rss') }}</string></span>
-            @endif
-        </div>
-
-        <div class="form-group">
-            <label for="slug">RSS Url (Только для rss интеграций)</label>
-            <input type="text" name="rss_url" class="form-control" id="rss_url" placeholder="Url для парсинга rss" value="{{ $type->settings->get('parse_url') }}">
-            @if($errors->has('rss_url'))
-                <span class="invalid-feedback"><strong>{{ $errors->first('rss_url') }}</strong></span>
-            @endif
-        </div>
-
         <fields-editor fields="{{$type->getOriginal('fields')}}" title="Поля для создания" input-name="fields"></fields-editor>
         @if($errors->has('fields'))
             <span class="invalid-feedback"><string>{{ $errors->first('fields') }}</string></span>
