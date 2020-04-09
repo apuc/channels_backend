@@ -59,9 +59,6 @@ class IntegrationTypesService
      */
     public function update(IntegrationTypeRequest $request, IntegrationType $integrationType)
     {
-        $integrationType->settings->set('is_rss',isset($request->is_rss));
-        $integrationType->settings->set('parse_url',$request->rss_url);
-
         return $this->repository->update($request,$integrationType);
     }
 

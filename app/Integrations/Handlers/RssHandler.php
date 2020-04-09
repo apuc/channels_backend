@@ -2,13 +2,12 @@
 
 namespace App\Integrations\Handlers;
 
-use App\Integrations\IntegrationRssContract;
 use App\Models\Channels\Attachment;
 use App\Integrations\IntegrationBase;
 use SimplePie_Item;;
 use Vedmant\FeedReader\Facades\FeedReader;
 
-class RssHandler extends IntegrationBase implements IntegrationRssContract
+class RssHandler extends IntegrationBase
 {
     /**
      * Собирает атачмент
@@ -40,7 +39,7 @@ class RssHandler extends IntegrationBase implements IntegrationRssContract
      */
     public function parseRss()
     {
-        $items = FeedReader::read($this->integration->rss_url)->get_items();
+        $items = FeedReader::read($this->integration->fields->get('rss_url'))->get_items();
 
         //первый парсинг(берем первую новость и запоминаем ее тайтл)
         if(!$this->integration->fields->get('last_item'))
