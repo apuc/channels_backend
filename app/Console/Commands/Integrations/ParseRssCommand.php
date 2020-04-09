@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands\Integrations;
 
+use App\Integrations\Handlers\RssHandler;
 use App\Integrations\IntegrationHandlerFactory;
 use App\Models\Integrations\Integration;
 use App\Repositories\Integrations\IntegrationRepository;
 use App\Repositories\Integrations\IntegrationTypeRepository;
+use App\Services\Channels\MessageService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -38,15 +40,17 @@ class ParseRssCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param IntegrationTypeRepository $repository
      * @return mixed
      */
-    public function handle(IntegrationRepository $repository)
+    public function handle(IntegrationTypeRepository $repository)
     {
         try{
-            $integrations  = $repository->getRssIntegrarions();
+            $integrations  = $repository->getIntegrationsByType('rss');
+            $handler = new RssHandler(app()->make(MessageService::class));
 
             foreach($integrations as $integration){
-                $handler = IntegrationHandlerFactory::createHandler($integration->slug,$integration);
+                $handler->setIntegration($integration);
                 $handler->parseRss();
             }
 

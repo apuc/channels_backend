@@ -12,6 +12,6 @@ class IntegrationHandlerFactory
         $name = ucfirst($type).'Handler';
         $class = "App\Integrations\Handlers\\".$name;
         $integration = $record  instanceof Integration ? $record : Integration::find($record);
-        return new $class($integration,app()->make(MessageService::class));
+        return new $class(app()->make(MessageService::class),$integration);
     }
 }

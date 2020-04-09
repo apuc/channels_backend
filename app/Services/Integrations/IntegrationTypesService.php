@@ -40,10 +40,7 @@ class IntegrationTypesService
     {
         $newType = $this->repository->create($request);
 
-        if($request->is_rss){
-            $newType->settings = ['parse_url'=>$request->rss_url,'is_rss'=>true];
-            $newType->save();
-
+        if(!$request->user_can_create){
             $this->integrationRepository->create(new CreateRequest([
                 'type_id'=>$newType->id,
                 'name'=>$newType->title,
