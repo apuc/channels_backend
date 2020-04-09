@@ -51,6 +51,11 @@ class ParseRssCommand extends Command
 
             foreach($integrations as $integration){
                 $handler->setIntegration($integration);
+
+                if(!$handler->integrationHasChannels()){
+                    continue;
+                }
+
                 $handler->parseRss();
             }
 
