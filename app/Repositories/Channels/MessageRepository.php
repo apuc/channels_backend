@@ -39,7 +39,7 @@ class MessageRepository
             'channel_id' => $request->channel_id,
             'from' => $request->from,
             'to' => $request->to,
-            'text' => $request->text,
+            'text' => strip_tags($request->text),
             'read'=>$this->model::MESSAGE_UNREAD
         ]);
     }
