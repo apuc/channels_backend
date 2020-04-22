@@ -22,7 +22,7 @@ trait Avatar
     public function getAvatar($avatar)
     {
         if($this->getType() == 'channel' && $this->isDialog()){
-            $avatar = Auth::id() == $this->owner_id
+            $avatar = auth('api')->id() == $this->owner_id
                 ? $this->toUser->avatar
                 : $this->owner->avatar;
         }
