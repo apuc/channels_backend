@@ -12,16 +12,22 @@ use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Http\Resources\v1\User\FullUserResource as UserResource;
 use App\Models\Avatar;
-use App\Models\Channels\Message;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use App\Services\Files\AvatarService;
+use http\Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Channels\AddIntegrationRequest;
 use App\Http\Requests\DialogRequest;
 use App\Http\Resources\v1\Integrations\IntegrationResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class ChannelsController extends Controller
 {
@@ -46,7 +52,11 @@ class ChannelsController extends Controller
      * @param ChannelRepository $groupsRepository
      * @param AvatarService $avatarService
      */
-    public function __construct(ChannelService $service, ChannelRepository $groupsRepository, AvatarService $avatarService)
+    public function __construct(
+        ChannelService $service,
+        ChannelRepository $groupsRepository,
+        AvatarService $avatarService
+    )
     {
         $this->channelService = $service;
         $this->channelRepository = $groupsRepository;
@@ -63,18 +73,18 @@ class ChannelsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        $channels = \Auth::user()->channels;
+        $channels = Auth::user()->channels;
 
         return ChannelResource::collection($channels);
     }
 
     /**
      * Каналы для главной
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function popular()
     {
@@ -98,7 +108,7 @@ class ChannelsController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param ChannelRequest $request
-     * @return ChannelResource|\Illuminate\Http\JsonResponse
+     * @return ChannelResource|JsonResponse
      * @throws \Throwable
      */
     public function store(ChannelRequest $request)
@@ -107,7 +117,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->create($request);
 
             return new ChannelResource($channel);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -116,7 +126,7 @@ class ChannelsController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return ChannelResource
+     * @return ChannelResource|JsonResponse
      */
     public function show($id)
     {
@@ -124,7 +134,7 @@ class ChannelsController extends Controller
             $channel = $this->channelRepository->findOrFail($id);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -133,7 +143,7 @@ class ChannelsController extends Controller
      * Полная инфа о канале
      *
      * @param $id
-     * @return FullChannelResource|\Illuminate\Http\JsonResponse
+     * @return FullChannelResource|JsonResponse
      */
     public function showFull($id)
     {
@@ -141,7 +151,7 @@ class ChannelsController extends Controller
             $channel = $this->channelRepository->findOrFail($id);
 
             return new FullChannelResource($channel);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -149,8 +159,8 @@ class ChannelsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  ChannelRequest $request
-     * @param  int $id
+     * @param ChannelRequest $request
+     * @param int $id
      * @return ChannelResource
      */
     public function update(ChannelRequest $request, $id)
@@ -160,7 +170,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->update($request, $channel);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             abort(500);
         }
     }
@@ -168,7 +178,7 @@ class ChannelsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
      */
     public function destroy($id)
     {
@@ -177,7 +187,7 @@ class ChannelsController extends Controller
                 $channel = $this->channelRepository->findById($id);
                 $this->channelService->destroy($channel);
 
-                if ($channel->avatar) {
+                if ( $channel->avatar ) {
                     $this->avatarService->destroy($channel->avatar);
                 }
             });
@@ -185,8 +195,8 @@ class ChannelsController extends Controller
             return response()->json(['msg' => 'success'], 204);
         } catch (ModelNotFoundException $e) {
             return response()->json(['msg' => 'Channel not found'], 404);
-        } catch (\Throwable $e) {
-            if (config('app.debug')) {
+        } catch (Throwable $e) {
+            if ( config('app.debug') ) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
 
@@ -206,7 +216,7 @@ class ChannelsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function deleteUser(Request $request)
     {
@@ -220,7 +230,7 @@ class ChannelsController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function usersList($id)
     {
@@ -230,7 +240,7 @@ class ChannelsController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function messagesList($id)
     {
@@ -251,14 +261,16 @@ class ChannelsController extends Controller
 
     /**
      * Добавление интеграции в канал
+     *
      * @param AddIntegrationRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     *
+     * @return IntegrationResource|JsonResponse
      */
-    public function addIntegration(AddIntegrationRequest $request,$id)
+    public function addIntegration(AddIntegrationRequest $request, $id)
     {
         try {
-            $integration = $this->channelService->addIntegration($request,$id);
+            $integration = $this->channelService->addIntegration($request, $id);
 
             return new IntegrationResource($integration);
         } catch (\Throwable $e) {
@@ -268,14 +280,16 @@ class ChannelsController extends Controller
 
     /**
      * Удаление интеграции из канала
+     *
      * @param $channel
      * @param $integration
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function removeIntegration($channel,$integration)
+    public function removeIntegration($channel, $integration)
     {
         try {
-            $this->channelService->removeIntegration($channel,$integration);
+            $this->channelService->removeIntegration($channel, $integration);
 
             return response()->json(['msg' => 'success'], 200);
         } catch (\Throwable $e) {
@@ -285,14 +299,16 @@ class ChannelsController extends Controller
 
     /**
      * Приглашение юзера в канал по email
+     *
      * @param InviteRequest $request
      * @param $channel
-     * @return UserResource|\Illuminate\Http\JsonResponse
+     *
+     * @return UserResource|JsonResponse
      */
-    public function inviteByEmail(InviteRequest $request,$channel)
+    public function inviteByEmail(InviteRequest $request, $channel)
     {
         try {
-            $user = $this->channelService->addUserByEmail($request->email,intval($channel));
+            $user = $this->channelService->addUserByEmail($request->email, intval($channel));
 
             return new FullUserResource($user);
         } catch (\Throwable $e) {
@@ -302,7 +318,9 @@ class ChannelsController extends Controller
 
     /**
      * Создать диалог
+     *
      * @param DialogRequest $request
+     *
      * @return ChannelResource
      */
     public function createDialog(DialogRequest $request)
@@ -318,8 +336,10 @@ class ChannelsController extends Controller
 
     /**
      * Список интеграций канала
+     *
      * @param $id
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     *
+     * @return AnonymousResourceCollection
      */
     public function integrationsList($id)
     {

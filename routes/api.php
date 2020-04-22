@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Auth\PasswordResetController;
+use App\Http\Controllers\Api\v1\Channels\ChannelsController;
 use Laravel\Passport\Passport;
 
 /*
@@ -12,6 +13,7 @@ use Laravel\Passport\Passport;
 Route::middleware('auth:service')->group(function () {
     Route::get('v1/users/me', 'Api\v1\Users\UsersController@me')->name('get current user');
 });
+
 
 Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
@@ -56,7 +58,6 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::get('/channel/{channel}/messages', 'Channels\ChannelsController@messagesList')->name('messages.list');
             Route::get('/channel/service/left-side-bar', 'Channels\ServiceController@leftSideBar')->name('channels.service.leftSideBar');
             Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
-            Route::get('/channel/{id}/full', 'Channels\ChannelsController@showFull')->name('channel.full');
 
             Route::post('/channels/{channel}/invite', 'Channels\ChannelsController@inviteByEmail')->name('channels.invite');
             Route::post('/dialog', 'Channels\ChannelsController@createDialog')->name('dialog.create');
@@ -82,6 +83,8 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             ////////////// БОТЫ /////////////////
             Route::resource('bot', 'Users\BotController')->except(['create','edit']);
         });
+
+        Route::get('/channel/{id}/full', [ChannelsController::class,'showFull']);
 
         Route::post('/bot/send-message', 'Users\BotController@sendMessage')
             ->middleware('bot.api')
