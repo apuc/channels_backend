@@ -55,7 +55,6 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/channel/add-user', 'Channels\ChannelsController@addUser')->name('channel.addUser');
             Route::get('/channel/delava/{avatar}', 'Channels\ChannelsController@delava')->name('delava');
             Route::get('/channel/{channel}/users', 'Channels\ChannelsController@usersList')->name('users.list');
-            Route::get('/channel/{channel}/messages', 'Channels\ChannelsController@messagesList')->name('messages.list');
             Route::get('/channel/service/left-side-bar', 'Channels\ServiceController@leftSideBar')->name('channels.service.leftSideBar');
             Route::get('/channel/{id}', 'Channels\ChannelsController@show')->name('channel.show');
 
@@ -84,6 +83,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('bot', 'Users\BotController')->except(['create','edit']);
         });
 
+        Route::get('/channel/{channel}/messages', [ChannelsController::class,'messagesList']);
         Route::get('/channel/{id}/full', [ChannelsController::class,'showFull']);
 
         Route::post('/bot/send-message', 'Users\BotController@sendMessage')
