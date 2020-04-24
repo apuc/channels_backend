@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Api\ChannelNoAuthMiddleware;
 use App\Http\Middleware\TestMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -64,7 +65,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'bot.api' => \App\Http\Middleware\Bot\BotApiMiddleware::class,
-        'owner' => \App\Http\Middleware\Api\OwnerMiddleware::class
+        'owner' => \App\Http\Middleware\Api\OwnerMiddleware::class,
+        'channel.auth' => ChannelNoAuthMiddleware::class,
     ];
 
     /**

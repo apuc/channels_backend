@@ -142,15 +142,15 @@ class ChannelsController extends Controller
     /**
      * Полная инфа о канале
      *
-     * @param $id
+     * @param Request $request
+     *
      * @return FullChannelResource|JsonResponse
      */
-    public function showFull($id)
+    public function showFull(Request $request)
     {
         try {
-            $channel = $this->channelRepository->findOrFail($id);
-
-            return new FullChannelResource($channel);
+            //канал добавляется в реквест в миделваре
+            return new FullChannelResource($request->channel);
         } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
@@ -239,13 +239,13 @@ class ChannelsController extends Controller
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function messagesList($id)
+    public function messagesList(Request $request)
     {
-        $channel = $this->channelRepository->findById($id);
-        $messages = $this->channelRepository->getChannelMessages($channel);
+        //канал добавляется в реквест в миделваре
+        $messages = $this->channelRepository->getChannelMessages($request->channel);
 
         return MessageResource::collection($messages);
     }

@@ -83,8 +83,11 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::resource('bot', 'Users\BotController')->except(['create','edit']);
         });
 
-        Route::get('/channel/{channel}/messages', [ChannelsController::class,'messagesList']);
-        Route::get('/channel/{id}/full', [ChannelsController::class,'showFull']);
+        //Канал для не авторизованых
+        Route::middleware('channel.auth')->group(function(){
+            Route::get('/channel/{id}/messages', [ChannelsController::class,'messagesList']);
+            Route::get('/channel/{id}/full', [ChannelsController::class,'showFull']);
+        });
 
         Route::post('/bot/send-message', 'Users\BotController@sendMessage')
             ->middleware('bot.api')

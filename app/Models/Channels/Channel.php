@@ -9,6 +9,10 @@ use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
 use App\Traits\SluggableModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +82,7 @@ class Channel extends Model implements ChannelEntityInterface
 
     /**
      * Пользователи канала (включая ботов)
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
@@ -92,7 +96,7 @@ class Channel extends Model implements ChannelEntityInterface
 
     /**
      * Боты канала
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function bots()
     {
@@ -106,7 +110,7 @@ class Channel extends Model implements ChannelEntityInterface
 
     /**
      * Сообщения канала
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function messages()
     {
@@ -114,7 +118,7 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function avatar()
     {
@@ -122,7 +126,7 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function owner()
     {
@@ -132,7 +136,7 @@ class Channel extends Model implements ChannelEntityInterface
     /**
      * Для диалогов. Получает пользователя с которым диалог
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function toUser()
     {
@@ -140,7 +144,7 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function integrations()
     {
@@ -154,7 +158,7 @@ class Channel extends Model implements ChannelEntityInterface
 
     /**
      * Непрочитаные сообщения в диалогах
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function dialogUnread()
     {
@@ -170,7 +174,7 @@ class Channel extends Model implements ChannelEntityInterface
 
     /**
      * Непрочитаные сообщения в чатах
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return int
      */
     public function chatUnread()
     {
@@ -230,7 +234,9 @@ class Channel extends Model implements ChannelEntityInterface
     public function getTitle()
     {
         if($this->isDialog()){
-          return \Auth::id() == $this->owner_id ? $this->toUser->username : $this->owner->username;
+          return auth('api')->id() == $this->owner_id
+              ? $this->toUser->username
+              : $this->owner->username;
         }
 
         return $this->title;
