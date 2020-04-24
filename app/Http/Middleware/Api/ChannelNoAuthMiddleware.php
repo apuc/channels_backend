@@ -31,7 +31,7 @@ class ChannelNoAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $channel = $this->channelRepository->findById($request->route('id'));
+        $channel = $this->channelRepository->findOrFail($request->route('id'));
         $user = auth('api')->user();
 
         if($user === null && ($channel->isPrivate() || $channel->isDialog()) ){
