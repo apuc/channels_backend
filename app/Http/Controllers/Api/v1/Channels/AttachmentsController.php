@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1\Channels;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\AttachmentRepository;
@@ -127,7 +128,7 @@ class AttachmentsController extends Controller
      *
      * @param AttachmentFileRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse|string
+     * @return JsonResponse|string
      */
     public function upload(AttachmentFileRequest $request)
     {
@@ -136,7 +137,7 @@ class AttachmentsController extends Controller
 
            return response()->json($fileInfo, Response::HTTP_OK);
         }catch (\Throwable $e){
-            return $e->getMessage();
+            return response()->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
