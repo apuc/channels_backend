@@ -73,7 +73,7 @@ class AttachmentService
      *
      * @param UploadedFile $file
      *
-     * @return string
+     * @return array
      */
     public function upload(UploadedFile $file)
     {
@@ -85,7 +85,7 @@ class AttachmentService
         return [
             'type'=> (new Attachment(['options'=>['mimeType'=>$file->getClientMimeType()]]))->getTypeByMime(),
             'mimeType'=> $file->getClientMimeType(),
-            'url'=> 'https://files.mychannels.gq'.$path.$filename,
+            'url'=> getenv('FILES_SERVER_URL').$path.$filename,
         ];
     }
 }
