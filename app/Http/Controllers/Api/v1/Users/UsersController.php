@@ -8,19 +8,21 @@ use App\Http\Requests\Users\ProfileRequest;
 use App\Http\Requests\Users\SearchRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Resources\v1\AvatarResource;
+use App\Http\Resources\v1\Integrations\IntegrationResource;
 use App\Http\Resources\v1\User\FullUserResource;
 use App\Http\Resources\v1\User\ContactUserResource;
-use App\Models\Avatar;
-use App\Models\User;
 use App\Models\User\UserContact;
 use App\Repositories\Users\UserContactRepository;
 use App\Repositories\Users\UserRepository;
 use App\Services\Files\AvatarService;
 use App\Services\Users\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class UsersController extends Controller
 {
@@ -45,6 +47,15 @@ class UsersController extends Controller
     protected $userContactRepository;
 
 
+    /**
+     * UsersController constructor.
+     *
+     * @param UserRepository $userRepository
+     * @param UserService $userService
+     * @param AvatarService $avatarService
+     * @param UserContactRepository $userContactRepository
+     *
+     */
     public function __construct(UserRepository $userRepository, UserService $userService, AvatarService $avatarService, UserContactRepository $userContactRepository)
     {
         $this->userRepository = $userRepository;
@@ -55,7 +66,7 @@ class UsersController extends Controller
 
     /**
      * @param SearchRequest $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection|void
      */
     public function index(SearchRequest $request)
     {
@@ -63,27 +74,32 @@ class UsersController extends Controller
             $users = $this->userService->search($request);
 
             return FullUserResource::collection($users);
-        } catch (\Throwable $e) {
-            abort(500);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
         }
 
     }
 
     /**
-     * @return FullUserResource
+     * @return FullUserResource|JsonResponse
      */
     public function me()
     {
-        $user = \Auth::user();
+        try {
+            $user = \Auth::user();
 
-        return new FullUserResource($user);
+            return new FullUserResource($user);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param CreateRequest $request
-     * @return FullUserResource
+     * @return FullUserResource|JsonResponse
      */
     public function store(CreateRequest $request)
     {
@@ -91,8 +107,8 @@ class UsersController extends Controller
             $user = $this->userService->create($request);
 
             return new FullUserResource($user);
-        } catch (\Throwable $e) {
-            abort(500);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -100,13 +116,19 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return FullUserResource
+     * @return FullUserResource|JsonResponse
      */
     public function show($id)
     {
-        $user = $this->userRepository->findById((int)$id);
+        try {
+            $user = $this->userRepository->findById((int)$id);
 
-        return new FullUserResource($user);
+            return new FullUserResource($user);
+
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
     }
 
 
@@ -116,7 +138,7 @@ class UsersController extends Controller
      * @param UpdateRequest $request
      * @param int $id
      *
-     * @return FullUserResource
+     * @return FullUserResource|JsonResponse
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -125,7 +147,7 @@ class UsersController extends Controller
             $user = $this->userService->update($request, $user);
 
             return new FullUserResource($user);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -136,7 +158,7 @@ class UsersController extends Controller
      * @param ProfileRequest $request
      * @param $id
      *
-     * @return FullUserResource|\Illuminate\Http\JsonResponse
+     * @return FullUserResource|JsonResponse
      */
     public function profile(ProfileRequest $request, $id)
     {
@@ -145,7 +167,7 @@ class UsersController extends Controller
             $user = $this->userService->updateProfile($request, $user);
 
             return new FullUserResource($user);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -163,7 +185,7 @@ class UsersController extends Controller
             $this->avatarService->destroy($user->avatar);
 
             return response()->json(['msg' => 'success'], 204);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -173,14 +195,18 @@ class UsersController extends Controller
      *
      * @param Request $request
      *
-     * @return AvatarResource
+     * @return AvatarResource|JsonResponse
      */
     public function avatar(Request $request)
     {
-        $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'user');
-        $avatar = $this->avatarService->save($avatarRequest);
+        try {
+            $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'user');
+            $avatar = $this->avatarService->save($avatarRequest);
 
-        return new AvatarResource($avatar);
+            return new AvatarResource($avatar);
+        } catch (Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -188,7 +214,7 @@ class UsersController extends Controller
      *
      * @param ContactRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function addContact(ContactRequest $request)
     {
@@ -196,7 +222,7 @@ class UsersController extends Controller
             $this->userContactRepository->create($request);
 
             return response()->json(['msg' => 'success'], 200);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
 
@@ -207,7 +233,7 @@ class UsersController extends Controller
      *
      * @param ContactRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function confirmContact(ContactRequest $request)
     {
@@ -216,7 +242,7 @@ class UsersController extends Controller
             $this->userContactRepository->confirm(UserContact::REQUEST_ACCEPTED, $userContact);
 
             return response()->json(['msg' => 'success'], 200);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
 
@@ -227,7 +253,7 @@ class UsersController extends Controller
      *
      * @param ContactRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function rejectContact(ContactRequest $request)
     {
@@ -236,7 +262,7 @@ class UsersController extends Controller
             $this->userContactRepository->confirm(UserContact::REQUEST_REJECTED, $userContact);
 
             return response()->json(['msg' => 'success'], 204);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -244,22 +270,46 @@ class UsersController extends Controller
     /**
      * Контакты пользователя
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function contacts()
     {
-        $user = \Auth::user()->contacts();
+        try {
+            $user = \Auth::user()->contacts();
 
-        return FullUserResource::collection($user);
+            return FullUserResource::collection($user);
+        } catch (Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
      * Получение всех запросов в друзья(которые отправили пользователю и которые отправил пользователь)
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return ContactUserResource|JsonResponse
      */
     public function senders()
     {
-        return new ContactUserResource(Auth::user());
+        try {
+            return new ContactUserResource(Auth::user());
+        } catch (Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function integrations($id)
+    {
+        try {
+            $user = $this->userRepository->findById($id);
+
+            return IntegrationResource::collection($user->integrations);
+        } catch (Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

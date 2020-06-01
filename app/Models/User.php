@@ -4,13 +4,17 @@ namespace App\Models;
 
 use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
+use App\Models\Integrations\Integration;
 use App\Models\User\UserContact;
 use DB;
 use Denismitr\JsonAttributes\JsonAttributes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Faker\Factory as FakerFactory;
@@ -18,7 +22,7 @@ use Faker\Factory as FakerFactory;
 /**
  * App\Models\User
  *
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @mixin \Eloquent
  * @property int $user_id
  * @property int $avatar_id
@@ -28,8 +32,8 @@ use Faker\Factory as FakerFactory;
  * @property string|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class User extends Authenticatable
 {
@@ -143,6 +147,15 @@ class User extends Authenticatable
     public function bots()
     {
         return $this->hasMany(self::class,'owner_id','user_id');
+    }
+
+    /**
+     * Интеграции пользователя
+     * @return HasMany
+     */
+    public function integrations()
+    {
+        return $this->hasMany(Integration::class,'user_id','user_id');
     }
 
     /**
