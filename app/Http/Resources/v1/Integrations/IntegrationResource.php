@@ -2,15 +2,15 @@
 
 namespace App\Http\Resources\v1\Integrations;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\v1\Integrations\IntegrationTypeResource;
 
 class IntegrationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

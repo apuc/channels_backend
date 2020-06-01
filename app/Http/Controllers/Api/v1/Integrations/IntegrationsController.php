@@ -10,6 +10,7 @@ use App\Services\Integrations\IntegrationService;
 use App\Http\Resources\v1\Integrations\IntegrationTypeResource;
 use App\Http\Resources\v1\Integrations\IntegrationResource;
 use App\Models\Integrations\IntegrationType;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class IntegrationsController extends Controller
 {
@@ -31,23 +32,23 @@ class IntegrationsController extends Controller
     /**
      * Получение списка типов интеграций
      *
-     * @return IntegrationTypeResource
+     * @return AnonymousResourceCollection|void
      */
     public function index()
     {
         try {
             return IntegrationTypeResource::collection(IntegrationType::with('integrations')->get());
         } catch (\Throwable $e) {
-            abort(500);
+            return abort(500);
         }
     }
 
 
     /**
-     * Store a newly created resource in storage.
+     * Создать интеграцию
      *
      * @param CreateRequest $request
-     * @return FullUserResource
+     * @return IntegrationResource|JsonResponse
      */
     public function store(CreateRequest $request)
     {

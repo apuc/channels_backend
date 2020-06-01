@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Auth\PasswordResetController;
 use App\Http\Controllers\Api\v1\Channels\ChannelsController;
+use App\Http\Controllers\Api\v1\Users\UsersController;
 use Laravel\Passport\Passport;
 
 /*
@@ -35,6 +36,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             Route::post('/attachment/upload','Channels\AttachmentsController@upload');
 
             ////////////////// ПОЛЬЗОВАТЕЛИ ////////////////////////////////
+            Route::get('/user/{id}/integrations', [UsersController::class,'integrations']);
             Route::post('/user/avatar', 'Users\UsersController@avatar')->name('user.avatar');
             Route::put('/user/profile/{id}', 'Users\UsersController@profile')->name('user.profile');
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
