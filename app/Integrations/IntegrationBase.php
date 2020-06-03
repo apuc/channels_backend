@@ -58,7 +58,7 @@ class IntegrationBase
      * @param $text
      * @param $attachments
      */
-    protected function sendToChannels(string $text,array $attachments,array $channels_ids = [])
+    protected function sendToChannels(?string $text, array $attachments, array $channels_ids = [])
     {
         $ids = empty($channels_ids) ? $this->integration->channels->pluck('channel_id')->toArray() : $channels_ids;
 
