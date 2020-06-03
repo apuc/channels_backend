@@ -31,7 +31,7 @@ Route::get('setting/change-language/{language}', 'SettingsController@changeLangu
 
 Route::post('/bot-test', 'Admin\DashboardController@bot');
 
-Route::domain('docs.mychannels.gq')->group(function () {
+Route::domain(env('DOCS_DOMAIN','docs.duct.su'))->group(function () {
     Route::get('/v1', function () {
         return view('vendor.swagger.index');
     });
