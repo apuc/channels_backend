@@ -5,9 +5,11 @@ namespace App\Models\Channels;
 use App\Models\Avatar;
 use App\Models\Contracts\ChannelEntityInterface;
 use App\Models\Integrations\Integration;
+use App\Models\Meeting;
 use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
 use App\Traits\SluggableModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -170,6 +172,19 @@ class Channel extends Model implements ChannelEntityInterface
             ['from','<>',Auth::id()],
             ['read',Message::MESSAGE_UNREAD],
         ]);
+    }
+
+    /**
+     * Конференции канала
+     * @return HasMany
+     */
+    public function activeMeetings()
+    {
+        return $this->hasMany(
+            Meeting::class,
+            'channel_id',
+            'channel_id'
+        )->where('created_at', '>',Carbon::yesterday());
     }
 
     /**

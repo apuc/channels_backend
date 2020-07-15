@@ -77,7 +77,7 @@ class ServiceGuard implements Guard
         $data['service_token'] = $this->request->header('Service-Auth-Access-Token');
         $data = array_merge($data, $this->request->only('user_id'));
 
-        return (!empty($data) ? $data : null);
+        return empty($data) ? null : $data;
     }
 
     /**

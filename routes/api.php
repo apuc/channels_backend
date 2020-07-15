@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Auth\PasswordResetController;
 use App\Http\Controllers\Api\v1\Channels\ChannelsController;
+use App\Http\Controllers\Api\v1\MeetingController;
 use App\Http\Controllers\Api\v1\Users\UsersController;
 use Laravel\Passport\Passport;
 
@@ -95,11 +96,14 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
             ->middleware('bot.api')
             ->name('bot.message');
 
+        Route::resource('meeting','MeetingController')->only('store');
 
         /** Роуты для общения между сервисамииии*/
         Route::group(['as' => 'service', 'middleware' => 'auth:service', 'prefix' => 'service'], function () {
             Route::resource('message', 'Channels\MessagesController')->only(['store']);
             Route::post('/channel/{id}/users-push', 'Channels\PushNotificationsController@getUsersToPush')->name('push.users');
+
+            Route::resource('meeting','MeetingController')->only('show');
 
             Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
         });
