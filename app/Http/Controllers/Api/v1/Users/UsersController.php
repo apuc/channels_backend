@@ -88,7 +88,6 @@ class UsersController extends Controller
     {
         try {
             $user = \Auth::user();
-            Log::debug('user/me',$_SERVER);
 
             return new FullUserResource($user);
         } catch (Throwable $e) {
