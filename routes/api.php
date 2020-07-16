@@ -11,12 +11,6 @@ use Laravel\Passport\Passport;
 | API Routes
 |--------------------------------------------------------------------------
 */
-
-Route::middleware('auth:service')->group(function () {
-    Route::get('v1/users/me', 'Api\v1\Users\UsersController@me')->name('get current user');
-});
-
-
 Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
     function () {
         Passport::routes();
@@ -105,7 +99,7 @@ Route::group(['as' => 'v1.', 'namespace' => 'Api\v1', 'prefix' => 'v1'],
 
             Route::resource('meeting','MeetingController')->only('show');
 
-            Route::get('/user/me', 'Users\UsersController@me')->name('get current user');
+            Route::get('/user/me', 'Users\UsersController@me');
         });
 
         Route::post('/registration', 'Auth\RegistrationController@registration')

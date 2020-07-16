@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UsersController extends Controller
@@ -87,6 +88,7 @@ class UsersController extends Controller
     {
         try {
             $user = \Auth::user();
+            Log::debug('user/me',$_SERVER);
 
             return new FullUserResource($user);
         } catch (Throwable $e) {
