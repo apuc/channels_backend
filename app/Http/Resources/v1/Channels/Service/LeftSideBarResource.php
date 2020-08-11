@@ -29,7 +29,7 @@ class LeftSideBarResource extends JsonResource
             if ($item instanceof Channel ) {
                 $data['channels'][] = [
                     'id' => $item->channel_id,
-                    'title' => $item->title,
+                    'title' => $item->getTitle(),
                     'slug' => $item->slug,
                     'status' => $item->status,
                     'owner_id' => $item->owner_id,
