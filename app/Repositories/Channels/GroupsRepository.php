@@ -7,6 +7,7 @@ use App\Models\Channels\Channel;
 use App\Models\Channels\Group;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -147,16 +148,16 @@ class GroupsRepository
     /**
      * @param int $userId
      * @param bool $withChannels
-     * @return null|\Illuminate\Database\Eloquent\Collection
+     * @return null|Collection
      */
     public function findByUser(int $userId, $withChannels = false)
     {
         $query = $this->model->newQuery()
             ->select(['channels_group.*'])
-            ->leftJoin('channels_group_users', 'channels_group_users.channels_group_id', '=', 'channels_group.channels_group_id')
-            ->where('channels_group_users.user_id', $userId)
+            ->leftJoin('channels_group_users as cgu', 'cgu.channels_group_id', '=', 'channels_group.channels_group_id')
+            ->where('cgu.user_id', $userId)
             ->orWhere('channels_group.owner_id', $userId)
-            ->groupBy('channels_group.channels_group_id');
+            ->groupBy(['channels_group.channels_group_id']);
 
         $query = ($withChannels) ? $this->withChannels($query) : $query;
 

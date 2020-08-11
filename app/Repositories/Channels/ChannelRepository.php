@@ -6,9 +6,10 @@ use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Message;
 use App\Traits\Sluggable;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\DialogRequest;
 use Illuminate\Support\Str;
 
 class ChannelRepository
@@ -128,8 +129,9 @@ class ChannelRepository
     }
 
     /**
+     * Получает каналы юзера которые не в группах
      * @param int $userId
-     * @return null|\Illuminate\Database\Eloquent\Collection
+     * @return null|Collection
      */
     public function findByUserWithoutGroups(int $userId)
     {
@@ -140,19 +142,29 @@ class ChannelRepository
                 $query->where('channels_group_users.user_id', $userId);
                 $query->whereNull('channels_group_users.channels_group_id');
             })
-//            ->orWhere(function (Builder $query) use ($userId) {
-//                $query->where('channel.owner_id', $userId);
-//                $query->where(function (Builder $query) use ($userId) {
-//                    $query->where('channels_group_users.user_id', '<>', $userId);
-//                    $query->orWhereNull('channels_group_users.user_id');
-//                });
-//            })
+            ->get();
+    }
+
+    /**
+     * Получает все каналы юзера
+     * @param int $userId
+     * @return Collection
+     */
+    public function findByUser(int $userId)
+    {
+        return $this->model->newQuery()
+            ->select(['channel.*','cgu.channels_group_id'])
+            ->with(['users','avatar'])
+            ->leftJoin('channels_group_users as cgu', 'cgu.channel_id', '=', 'channel.channel_id')
+            ->where(function (Builder $query) use ($userId) {
+                $query->where('cgu.user_id', $userId);
+            })
             ->get();
     }
 
     /**
      * 20 каналов для главной отсортированых по дате последнего сообщения
-     * @return Channel[]|Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
+     * @return mixed
      */
     public function findPopular()
     {
@@ -173,7 +185,7 @@ class ChannelRepository
     /**
      * Получает пользователей канала для отправки пуш уведомлений
      * @param $channelId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getUsersToPush($channelId)
     {
@@ -189,7 +201,7 @@ class ChannelRepository
      * Сообщения канала
      *
      * @param Channel $channel
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function getChannelMessages(Channel $channel)
     {

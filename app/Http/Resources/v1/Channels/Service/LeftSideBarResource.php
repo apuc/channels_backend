@@ -3,9 +3,11 @@
 namespace App\Http\Resources\v1\Channels\Service;
 
 use App\Models\Channels\Channel;
-use App\Models\Contracts\ChannelEntityInterface;
+use App\Models\Channels\Group;
 use App\Traits\Avatar;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 /**
  * Список каналов и групп для левого меню
@@ -14,61 +16,59 @@ class LeftSideBarResource extends JsonResource
 {
     use Avatar;
 
-    protected const TYPE_CHANNEL = 'channel';
-    protected const TYPE_GROUP = 'group';
-
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function toArray($request)
+    public function getResponse(Collection $collection): array
     {
-        /**@var $this ChannelEntityInterface*/
-
         $data = [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'slug' => $this->getSlug(),
-            'owner_id' => $this->getOwnerId(),
-            'type' => $this->getType(),
-            'count' => $this->getCount(),
-            'avatar' => $this->getAvatar($this->avatar)
+            'channels' => [],
+            'groups' => [],
         ];
 
-        if ($this->getType() === self::TYPE_GROUP) {
-            $data['channels'] = $this->addChannels();
+        /** @var $item Channel|Group $item */
+        foreach ($collection as $item){
+
+            if ($item instanceof Channel ) {
+                $data['channels'][] = [
+                    'id' => $item->channel_id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'status' => $item->status,
+                    'owner_id' => $item->owner_id,
+                    'private' => $item->private,
+                    'type' => $item->type,
+                    'count' => $item->users->count(),
+                    'avatar' => $this->getAvatar($item->avatar),
+                    'unread_count' => $this->getUnreadCount($item)
+                ];
+            }
+
+            if ($item instanceof Group ) {
+                $data['groups'][] = [
+                    'id' => $item->channels_group_id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'status' => $item->status,
+                    'owner_id' => $item->owner_id,
+                    'avatar' => $this->getAvatar($item->avatar),
+                ];
+            }
         }
 
-        if ($this->getType() === self::TYPE_CHANNEL) {
-            $data['channel_type'] = $this->type;
-            $data['unread_count'] = $this->getUnreadCount();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Метод для добавления каналов
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    protected function addChannels()
-    {
-        return self::collection($this->channels);
+        return [
+            'data' => $data
+        ];
     }
 
     /**
      * Непрочитанные сообщения
+     * @param Channel $channel
      * @return int
      */
-    protected function getUnreadCount()
+    protected function getUnreadCount(Channel $channel)
     {
-        if($this->type == Channel::TYPE_DIALOG){
-            return $this->dialogUnread->count();
+        if ( $channel->type == Channel::TYPE_DIALOG ) {
+            return $channel->dialogUnread->count();
         }
 
-        return $this->chatUnread();
+        return $channel->chatUnread();
     }
 }

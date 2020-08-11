@@ -16,13 +16,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Class Channel
  * @package App\Models\Channels
+ * @property int $channel_id
  * @property string $title
+ * @property string $type
  * @property string $slug
  * @property string $status
  * @property boolean $private
@@ -30,6 +33,7 @@ use Illuminate\Support\Facades\DB;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Collection $users
  */
 class Channel extends Model implements ChannelEntityInterface
 {
