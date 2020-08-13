@@ -37,7 +37,7 @@ class LeftSideBarResource extends JsonResource
                     'type' => $item->type,
                     'count' => $item->users->count(),
                     'avatar' => $this->getAvatar($item->avatar),
-                    'unread_count' => $this->getUnreadCount($item)
+                    'unread_count' => $item->unread->count()
                 ];
             }
 
@@ -56,19 +56,5 @@ class LeftSideBarResource extends JsonResource
         return [
             'data' => $data
         ];
-    }
-
-    /**
-     * Непрочитанные сообщения
-     * @param Channel $channel
-     * @return int
-     */
-    protected function getUnreadCount(Channel $channel)
-    {
-        if ( $channel->type == Channel::TYPE_DIALOG ) {
-            return $channel->dialogUnread->count();
-        }
-
-        return $channel->chatUnread();
     }
 }

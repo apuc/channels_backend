@@ -59,7 +59,7 @@ class ChannelRepository
         return $this->model::create([
             'slug' => "{$owner}_{$str}_{$to}",
             'to_id' => $to,
-            'status'=>$this->model::STATUS_ACTIVE,
+            'status' => $this->model::STATUS_ACTIVE,
             'owner_id' => $owner,
             'type' => $this->model::TYPE_DIALOG,
             'private' => $this->model::PRIVATE_CHANNEL,
@@ -85,7 +85,7 @@ class ChannelRepository
             'avatar_id' => $request->avatar
         ]);
 
-        if ($result) {
+        if ( $result ) {
             return $channel;
         }
 
@@ -101,7 +101,7 @@ class ChannelRepository
      */
     public function destroy(Channel $channel)
     {
-        if ($channel->delete()) {
+        if ( $channel->delete() ) {
             return true;
         }
 
@@ -112,7 +112,7 @@ class ChannelRepository
      * @param int $id
      * @return Channel|null
      */
-    public function findById(int $id) :?Channel
+    public function findById(int $id): ?Channel
     {
         return $this->model::findOrFail($id);
     }
@@ -121,7 +121,7 @@ class ChannelRepository
      * @param $id
      * @return Channel|null
      */
-    public function findOneWithTrashed($id) :?Channel
+    public function findOneWithTrashed($id): ?Channel
     {
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
@@ -153,8 +153,8 @@ class ChannelRepository
     public function findByUser(int $userId)
     {
         return $this->model->newQuery()
-            ->select(['channel.*','cgu.channels_group_id'])
-            ->with(['users','avatar'])
+            ->select(['channel.*', 'cgu.channels_group_id'])
+            ->with(['users', 'avatar', 'unread', 'toUser', 'owner', 'owner.avatar', 'toUser.avatar'])
             ->leftJoin('channels_group_users as cgu', 'cgu.channel_id', '=', 'channel.channel_id')
             ->where(function (Builder $query) use ($userId) {
                 $query->where('cgu.user_id', $userId);
@@ -168,14 +168,14 @@ class ChannelRepository
      */
     public function findPopular()
     {
-        $channels =  DB::table("channel")
+        $channels = DB::table("channel")
             ->select(
                 "channel.*",
                 DB::raw("(select created_at from message
                where message.channel_id = channel.channel_id
                order by message_id desc limit 1) as m_date")
-            )->orderBy('m_date','desc')->take(20)
-            ->where('private','=',$this->model::PUBLIC_CHANNEL)
+            )->orderBy('m_date', 'desc')->take(20)
+            ->where('private', '=', $this->model::PUBLIC_CHANNEL)
             ->whereNull('deleted_at')
             ->get();
 
@@ -192,8 +192,8 @@ class ChannelRepository
         $channel = $this->findById($channelId);
 
         return $channel->users()->where([
-            ['push_endpoints','<>',null],
-            ['is_bot',0],
+            ['push_endpoints', '<>', null],
+            ['is_bot', 0],
         ])->get();
     }
 
@@ -206,7 +206,7 @@ class ChannelRepository
     public function getChannelMessages(Channel $channel)
     {
         return $channel->messages()
-            ->orderBy('message_id','desc')
+            ->orderBy('message_id', 'desc')
             ->paginate(Message::MESSAGES_PER_PAGE);
     }
 }

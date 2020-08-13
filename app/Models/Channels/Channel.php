@@ -111,7 +111,7 @@ class Channel extends Model implements ChannelEntityInterface
             'channels_group_users',
             'channel_id',
             'user_id'
-        )->where('is_bot','=',User::BOT);
+        )->where('is_bot', '=', User::BOT);
     }
 
     /**
@@ -128,6 +128,12 @@ class Channel extends Model implements ChannelEntityInterface
      */
     public function avatar()
     {
+        if($this->isDialog()){
+            return auth('api')->id() == $this->owner_id
+                ? $this->toUser->avatar()
+                : $this->owner->avatar();
+        }
+
         return $this->belongsTo(Avatar::class, 'avatar_id');
     }
 
@@ -163,22 +169,6 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * Непрочитаные сообщения в диалогах
-     * @return HasMany
-     */
-    public function dialogUnread()
-    {
-        return $this->hasMany(
-            Message::class,
-            'channel_id',
-            'channel_id'
-        )->where([
-            ['from','<>',Auth::id()],
-            ['read',Message::MESSAGE_UNREAD],
-        ]);
-    }
-
-    /**
      * Конференции канала
      * @return HasMany
      */
@@ -188,19 +178,32 @@ class Channel extends Model implements ChannelEntityInterface
             Meeting::class,
             'channel_id',
             'channel_id'
-        )->where('created_at', '>',Carbon::yesterday());
+        )->where('created_at', '>', Carbon::yesterday());
     }
 
     /**
-     * Непрочитаные сообщения в чатах
-     * @return int
+     * Непрочитаные сообщения в канале(для текущего юзера)
+     *
      */
-    public function chatUnread()
+    public function unread()
     {
-        return DB::table('message_user')->where([
-            ['user_id',Auth::id()],
-            ['channel_id',$this->channel_id],
-        ])->count('message_id');
+        if ($this->isDialog() ) {
+            return $this->hasMany(
+                Message::class,
+                'channel_id',
+                'channel_id'
+            )->where([
+                ['from', '<>', Auth::id()],
+                ['read', Message::MESSAGE_UNREAD],
+            ]);
+        }
+
+        return $this->belongsToMany(
+            Message::class,
+            'message_user',
+            'channel_id',
+            'message_id'
+        )->wherePivot('user_id', '=', Auth::id());
     }
 
     /**
@@ -252,10 +255,10 @@ class Channel extends Model implements ChannelEntityInterface
      */
     public function getTitle()
     {
-        if($this->isDialog()){
-          return auth('api')->id() == $this->owner_id
-              ? $this->toUser->username
-              : $this->owner->username;
+        if ( $this->isDialog() ) {
+            return auth('api')->id() == $this->owner_id
+                ? $this->toUser->username
+                : $this->owner->username;
         }
 
         return $this->title;
@@ -275,7 +278,7 @@ class Channel extends Model implements ChannelEntityInterface
      */
     public function getDefaultBotName()
     {
-        return strtolower(str_replace(' ','_',$this->title)).'_bot';
+        return strtolower(str_replace(' ', '_', $this->title)) . '_bot';
     }
 
 }

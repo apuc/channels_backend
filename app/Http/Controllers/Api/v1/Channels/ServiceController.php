@@ -41,7 +41,7 @@ class ServiceController extends Controller
      */
     public function leftSideBar()
     {
-        $groups = $this->groupRepository->findByUser(Auth::id(), true);
+        $groups = $this->groupRepository->findByUser(Auth::id());
         $channels = $this->channelRepository->findByUser(Auth::id());
         $union = $groups->merge($channels);
 

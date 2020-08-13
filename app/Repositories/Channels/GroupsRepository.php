@@ -59,7 +59,7 @@ class GroupsRepository
             'avatar_id' => $request->avatar
         ]);
 
-        if ($result) {
+        if ( $result ) {
             return $group;
         }
 
@@ -74,7 +74,7 @@ class GroupsRepository
      */
     public function destroy(Group $group)
     {
-        if ($group->delete()) {
+        if ( $group->delete() ) {
             return true;
         }
 
@@ -85,7 +85,7 @@ class GroupsRepository
      * @param int $id
      * @return Group|null
      */
-    public function findById(int $id):?Group
+    public function findById(int $id): ?Group
     {
         return $this->model::findOrFail($id);
     }
@@ -94,7 +94,7 @@ class GroupsRepository
      * @param $id
      * @return Group|null
      */
-    public function findOneWithTrashed($id):?Group
+    public function findOneWithTrashed($id): ?Group
     {
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
@@ -116,7 +116,7 @@ class GroupsRepository
                 $user = Auth::user();
 
                 foreach ($channels_ids as $channel_id) {
-                    $user->channels()->updateExistingPivot($channel_id,['channels_group_id'=>$group->channels_group_id]);
+                    $user->channels()->updateExistingPivot($channel_id, ['channels_group_id' => $group->channels_group_id]);
                 }
 
                 return true;
@@ -136,40 +136,29 @@ class GroupsRepository
      */
     public function detachChannel(Group $group, $channel_id)
     {
-        try{
-            Auth::user()->channels()->updateExistingPivot($channel_id,['channels_group_id'=>null]);
+        try {
+            Auth::user()->channels()->updateExistingPivot($channel_id, ['channels_group_id' => null]);
 
             return true;
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
     }
 
     /**
      * @param int $userId
-     * @param bool $withChannels
      * @return null|Collection
      */
-    public function findByUser(int $userId, $withChannels = false)
+    public function findByUser(int $userId)
     {
         $query = $this->model->newQuery()
+            ->with(['channels', 'avatar'])
             ->select(['channels_group.*'])
             ->leftJoin('channels_group_users as cgu', 'cgu.channels_group_id', '=', 'channels_group.channels_group_id')
             ->where('cgu.user_id', $userId)
             ->orWhere('channels_group.owner_id', $userId)
             ->groupBy(['channels_group.channels_group_id']);
 
-        $query = ($withChannels) ? $this->withChannels($query) : $query;
-
         return $query->get();
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    protected function withChannels(Builder $query)
-    {
-        return $query->with('channels');
     }
 }
