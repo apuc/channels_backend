@@ -34,6 +34,14 @@ use Illuminate\Support\Facades\DB;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property Collection $users
+ * @property Collection $integrations
+ * @property Collection $bots
+ * @property Collection $messages
+ * @property Collection $activeMeetings
+ * @property Collection $unread
+ * @property Avatar $avatar
+ * @property User $owner
+ * @property User $toUser
  */
 class Channel extends Model implements ChannelEntityInterface
 {
@@ -124,7 +132,7 @@ class Channel extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsTo|HasOne
      */
     public function avatar()
     {

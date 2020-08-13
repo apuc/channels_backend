@@ -97,6 +97,7 @@ class GroupsRepository
     public function findOneWithTrashed($id): ?Group
     {
         return $this->model::where($this->model->getRouteKeyName(), $id)
+            ->with('channels')
             ->withTrashed()
             ->first();
     }

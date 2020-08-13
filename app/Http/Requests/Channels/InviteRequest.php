@@ -6,14 +6,11 @@ use App\Models\Channels\Attachment;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class AttachmentRequest.
+ * Class InviteRequest.
  *
  * @package App\Http\Requests\Channels
  *
- * @property string $options
- * @property string $status
- * @property string $type
- * @property integer $message_id
+ * @property string $email
  */
 class InviteRequest extends FormRequest
 {
