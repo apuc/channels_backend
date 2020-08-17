@@ -29,7 +29,9 @@ class LeftSideBarResource extends JsonResource
         foreach ($collection as $item){
 
             if ($item instanceof Channel ) {
-                $data['channels'][] = (new ChannelResource($item))->toArray(app('request'));
+                $channelData = (new ChannelResource($item))->toArray(app('request'));
+                $channelData['group_id'] = $item->channels_group_id;
+                $data['channels'][] = $channelData;
             }
 
             if ($item instanceof Group ) {

@@ -153,7 +153,6 @@ class GroupsRepository
     public function findByUser(int $userId)
     {
         $query = $this->model->newQuery()
-            ->with(['channels', 'avatar'])
             ->select(['channels_group.*'])
             ->leftJoin('channels_group_users as cgu', 'cgu.channels_group_id', '=', 'channels_group.channels_group_id')
             ->where('cgu.user_id', $userId)

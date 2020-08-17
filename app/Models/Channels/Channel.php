@@ -69,6 +69,8 @@ class Channel extends Model implements ChannelEntityInterface
         'created_at', 'updated_at', 'deleted_at'
     ];
 
+    protected $with = ['users', 'toUser', 'owner'];
+
     /**
      * Статусы
      * @return array

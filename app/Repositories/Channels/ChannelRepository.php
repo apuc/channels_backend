@@ -154,7 +154,6 @@ class ChannelRepository
     {
         return $this->model->newQuery()
             ->select(['channel.*', 'cgu.channels_group_id'])
-            ->with(['users', 'avatar', 'unread', 'toUser', 'owner', 'owner.avatar', 'toUser.avatar'])
             ->leftJoin('channels_group_users as cgu', 'cgu.channel_id', '=', 'channel.channel_id')
             ->where(function (Builder $query) use ($userId) {
                 $query->where('cgu.user_id', $userId);
