@@ -2,10 +2,14 @@
 
 namespace App\Http\Resources\v1\Channels\Service;
 
+use App\Http\Resources\v1\ChannelResource;
+use App\Http\Resources\v1\GroupsResource;
 use App\Models\Channels\Channel;
-use App\Models\Contracts\ChannelEntityInterface;
+use App\Models\Channels\Group;
 use App\Traits\Avatar;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 /**
  * Список каналов и групп для левого меню
@@ -14,61 +18,29 @@ class LeftSideBarResource extends JsonResource
 {
     use Avatar;
 
-    protected const TYPE_CHANNEL = 'channel';
-    protected const TYPE_GROUP = 'group';
-
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function toArray($request)
+    public function getResponse(Collection $collection): array
     {
-        /**@var $this ChannelEntityInterface*/
-
         $data = [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'slug' => $this->getSlug(),
-            'owner_id' => $this->getOwnerId(),
-            'type' => $this->getType(),
-            'count' => $this->getCount(),
-            'avatar' => $this->getAvatar($this->avatar)
+            'channels' => [],
+            'groups' => [],
         ];
 
-        if ($this->getType() === self::TYPE_GROUP) {
-            $data['channels'] = $this->addChannels();
+        /** @var $item Channel|Group $item */
+        foreach ($collection as $item){
+
+            if ($item instanceof Channel ) {
+                $channelData = (new ChannelResource($item))->toArray(app('request'));
+                $channelData['group_id'] = $item->channels_group_id;
+                $data['channels'][] = $channelData;
+            }
+
+            if ($item instanceof Group ) {
+                $data['groups'][] = (new GroupsResource($item))->toArray(app('request'));
+            }
         }
 
-        if ($this->getType() === self::TYPE_CHANNEL) {
-            $data['channel_type'] = $this->type;
-            $data['unread_count'] = $this->getUnreadCount();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Метод для добавления каналов
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    protected function addChannels()
-    {
-        return self::collection($this->channels);
-    }
-
-    /**
-     * Непрочитанные сообщения
-     * @return int
-     */
-    protected function getUnreadCount()
-    {
-        if($this->type == Channel::TYPE_DIALOG){
-            return $this->dialogUnread->count();
-        }
-
-        return $this->chatUnread();
+        return [
+            'data' => $data
+        ];
     }
 }

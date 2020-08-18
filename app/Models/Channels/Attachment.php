@@ -11,6 +11,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Class Attachment.
  *
  * @package App\Models\Channels
+ * @property int $attachment_id
+ * @property int $message_id
+ * @property string $type
+ * @property string $status
+ * @property string $options
  */
 class Attachment extends Model
 {

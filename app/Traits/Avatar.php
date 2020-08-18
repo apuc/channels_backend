@@ -19,14 +19,8 @@ trait Avatar
      * @param AvatarInterface|null $avatar
      * @return array|null
      */
-    public function getAvatar($avatar)
+    public function getAvatar(?AvatarInterface $avatar)
     {
-        if($this->getType() == 'channel' && $this->isDialog()){
-            $avatar = auth('api')->id() == $this->owner_id
-                ? $this->toUser->avatar
-                : $this->owner->avatar;
-        }
-
         if (!$avatar) {
 
             $default = ($this->getType() == 'user' && $this->isBot()) ? '/bot_avatar.png' : '/no-avatar.png';

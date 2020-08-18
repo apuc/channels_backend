@@ -69,6 +69,8 @@ class User extends Authenticatable
         'push_endpoints' => 'array',
     ];
 
+    protected $with = ['avatar'];
+
     /**
      * Бот
      */

@@ -7,7 +7,10 @@ use App\Models\Contracts\ChannelEntityInterface;
 use App\Models\Traits\ChanelEntityTrait;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Channels\Group
@@ -18,9 +21,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $title
  * @property string $slug
  * @property string $status
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Group extends Model implements ChannelEntityInterface
 {
@@ -41,6 +44,8 @@ class Group extends Model implements ChannelEntityInterface
         'created_at', 'updated_at', 'deleted_at'
     ];
 
+    protected $with = ['avatar'];
+
     public static function getStatuses()
     {
         return [
@@ -50,7 +55,7 @@ class Group extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
@@ -63,7 +68,7 @@ class Group extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function channels()
     {
@@ -76,7 +81,7 @@ class Group extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function avatar()
     {
@@ -84,7 +89,7 @@ class Group extends Model implements ChannelEntityInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function owner()
     {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\v1\Channels;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Channels\AttachmentRepository;
 use App\Models\Channels\Attachment;
@@ -11,6 +10,7 @@ use App\Services\Channels\AttachmentService;
 use App\Http\Requests\Channels\AttachmentRequest;
 use App\Http\Requests\Files\AttachmentFileRequest;
 use App\Http\Resources\v1\AttachmentResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use\Illuminate\Http\Response;
 
 /**
@@ -45,7 +45,7 @@ class AttachmentsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -59,7 +59,7 @@ class AttachmentsController extends Controller
      *
      * @param  AttachmentRequest $request
      *
-     * @return AttachmentResource
+     * @return AttachmentResource|JsonResponse
      */
     public function store(AttachmentRequest $request)
     {
@@ -68,7 +68,7 @@ class AttachmentsController extends Controller
 
             return new AttachmentResource($attachment);
         } catch (\Throwable $e) {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,7 +92,7 @@ class AttachmentsController extends Controller
      * @param  AttachmentRequest $request
      * @param  int $id
      *
-     * @return AttachmentResource
+     * @return AttachmentResource|JsonResponse
      */
     public function update(AttachmentRequest $request, $id)
     {
@@ -102,14 +102,14 @@ class AttachmentsController extends Controller
 
             return new AttachmentResource($attachment);
         } catch (\Throwable $e) {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
      */
     public function destroy($id)
     {

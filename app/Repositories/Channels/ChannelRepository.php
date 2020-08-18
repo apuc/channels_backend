@@ -6,9 +6,10 @@ use App\Http\Requests\ChannelRequest;
 use App\Models\Channels\Channel;
 use App\Models\Channels\Message;
 use App\Traits\Sluggable;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\DialogRequest;
 use Illuminate\Support\Str;
 
 class ChannelRepository
@@ -58,7 +59,7 @@ class ChannelRepository
         return $this->model::create([
             'slug' => "{$owner}_{$str}_{$to}",
             'to_id' => $to,
-            'status'=>$this->model::STATUS_ACTIVE,
+            'status' => $this->model::STATUS_ACTIVE,
             'owner_id' => $owner,
             'type' => $this->model::TYPE_DIALOG,
             'private' => $this->model::PRIVATE_CHANNEL,
@@ -84,7 +85,7 @@ class ChannelRepository
             'avatar_id' => $request->avatar
         ]);
 
-        if ($result) {
+        if ( $result ) {
             return $channel;
         }
 
@@ -100,7 +101,7 @@ class ChannelRepository
      */
     public function destroy(Channel $channel)
     {
-        if ($channel->delete()) {
+        if ( $channel->delete() ) {
             return true;
         }
 
@@ -111,7 +112,7 @@ class ChannelRepository
      * @param int $id
      * @return Channel|null
      */
-    public function findById(int $id) :?Channel
+    public function findById(int $id): ?Channel
     {
         return $this->model::findOrFail($id);
     }
@@ -120,7 +121,7 @@ class ChannelRepository
      * @param $id
      * @return Channel|null
      */
-    public function findOneWithTrashed($id) :?Channel
+    public function findOneWithTrashed($id): ?Channel
     {
         return $this->model::where($this->model->getRouteKeyName(), $id)
             ->withTrashed()
@@ -128,8 +129,9 @@ class ChannelRepository
     }
 
     /**
+     * Получает каналы юзера которые не в группах
      * @param int $userId
-     * @return null|\Illuminate\Database\Eloquent\Collection
+     * @return null|Collection
      */
     public function findByUserWithoutGroups(int $userId)
     {
@@ -140,30 +142,39 @@ class ChannelRepository
                 $query->where('channels_group_users.user_id', $userId);
                 $query->whereNull('channels_group_users.channels_group_id');
             })
-//            ->orWhere(function (Builder $query) use ($userId) {
-//                $query->where('channel.owner_id', $userId);
-//                $query->where(function (Builder $query) use ($userId) {
-//                    $query->where('channels_group_users.user_id', '<>', $userId);
-//                    $query->orWhereNull('channels_group_users.user_id');
-//                });
-//            })
+            ->get();
+    }
+
+    /**
+     * Получает все каналы юзера
+     * @param int $userId
+     * @return Collection
+     */
+    public function findByUser(int $userId)
+    {
+        return $this->model->newQuery()
+            ->select(['channel.*', 'cgu.channels_group_id'])
+            ->leftJoin('channels_group_users as cgu', 'cgu.channel_id', '=', 'channel.channel_id')
+            ->where(function (Builder $query) use ($userId) {
+                $query->where('cgu.user_id', $userId);
+            })
             ->get();
     }
 
     /**
      * 20 каналов для главной отсортированых по дате последнего сообщения
-     * @return Channel[]|Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
+     * @return mixed
      */
     public function findPopular()
     {
-        $channels =  DB::table("channel")
+        $channels = DB::table("channel")
             ->select(
                 "channel.*",
                 DB::raw("(select created_at from message
                where message.channel_id = channel.channel_id
                order by message_id desc limit 1) as m_date")
-            )->orderBy('m_date','desc')->take(20)
-            ->where('private','=',$this->model::PUBLIC_CHANNEL)
+            )->orderBy('m_date', 'desc')->take(20)
+            ->where('private', '=', $this->model::PUBLIC_CHANNEL)
             ->whereNull('deleted_at')
             ->get();
 
@@ -173,15 +184,15 @@ class ChannelRepository
     /**
      * Получает пользователей канала для отправки пуш уведомлений
      * @param $channelId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getUsersToPush($channelId)
     {
         $channel = $this->findById($channelId);
 
         return $channel->users()->where([
-            ['push_endpoints','<>',null],
-            ['is_bot',0],
+            ['push_endpoints', '<>', null],
+            ['is_bot', 0],
         ])->get();
     }
 
@@ -189,12 +200,12 @@ class ChannelRepository
      * Сообщения канала
      *
      * @param Channel $channel
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function getChannelMessages(Channel $channel)
     {
         return $channel->messages()
-            ->orderBy('message_id','desc')
+            ->orderBy('message_id', 'desc')
             ->paginate(Message::MESSAGES_PER_PAGE);
     }
 }

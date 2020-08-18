@@ -10,13 +10,14 @@ use App\Http\Resources\v1\ChannelResource;
 use App\Http\Resources\v1\Channels\FullChannelResource;
 use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\User\FullUserResource;
-use App\Http\Resources\v1\User\FullUserResource as UserResource;
 use App\Models\Avatar;
 use App\Repositories\Channels\ChannelRepository;
 use App\Services\Channels\ChannelService;
 use App\Services\Files\AvatarService;
-use http\Exception;
+use DB;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -73,43 +74,55 @@ class ChannelsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index()
     {
-        $channels = Auth::user()->channels;
+        try {
+            $channels = $this->channelRepository->findByUser(Auth::id());
 
-        return ChannelResource::collection($channels);
+            return ChannelResource::collection($channels);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
      * Каналы для главной
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function popular()
     {
-        $channels = $this->channelRepository->findPopular();
+        try {
+            $channels = $this->channelRepository->findPopular();
 
-        return ChannelResource::collection($channels);
+            return ChannelResource::collection($channels);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
      * @param AvatarRequest $request
-     * @return AvatarResource
+     * @return AvatarResource|JsonResponse
      */
     public function avatar(AvatarRequest $request)
     {
-        $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'channel');
-        $avatar = $this->avatarService->save($avatarRequest);
+        try {
+            $avatarRequest = $this->avatarService->upload($request->file('avatar'), 'channel');
+            $avatar = $this->avatarService->save($avatarRequest);
 
-        return new AvatarResource($avatar);
+            return new AvatarResource($avatar);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      * @param ChannelRequest $request
      * @return ChannelResource|JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function store(ChannelRequest $request)
     {
@@ -117,7 +130,7 @@ class ChannelsController extends Controller
             $channel = $this->channelService->create($request);
 
             return new ChannelResource($channel);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -161,7 +174,7 @@ class ChannelsController extends Controller
      *
      * @param ChannelRequest $request
      * @param int $id
-     * @return ChannelResource
+     * @return ChannelResource|JsonResponse
      */
     public function update(ChannelRequest $request, $id)
     {
@@ -171,7 +184,7 @@ class ChannelsController extends Controller
 
             return new ChannelResource($channel);
         } catch (Throwable $e) {
-            abort(500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -183,7 +196,7 @@ class ChannelsController extends Controller
     public function destroy($id)
     {
         try {
-            \DB::transaction(function () use ($id) {
+            DB::transaction(function () use ($id) {
                 $channel = $this->channelRepository->findById($id);
                 $this->channelService->destroy($channel);
 
@@ -206,12 +219,17 @@ class ChannelsController extends Controller
 
     /**
      * @param Request $request
-     * @return ChannelResource
+     * @return ChannelResource|JsonResponse
      */
     public function addUser(Request $request)
     {
-        $channel = $this->channelService->addUser($request);
-        return new ChannelResource($channel);
+        try {
+            $channel = $this->channelService->addUser($request);
+
+            return new ChannelResource($channel);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -223,40 +241,55 @@ class ChannelsController extends Controller
         try {
             $this->channelService->deleteUser($request);
             return response()->json(['msg' => 'success'], 204);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
     }
 
     /**
      * @param $id
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function usersList($id)
     {
-        $channel = $this->channelRepository->findById($id);
-        return UserResource::collection($channel->users);
+        try {
+            $channel = $this->channelRepository->findById($id);
+            return FullUserResource::collection($channel->users);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function messagesList(Request $request)
     {
-        //канал добавляется в реквест в миделваре
-        $messages = $this->channelRepository->getChannelMessages($request->channel);
+        try {
+            //канал добавляется в реквест в миделваре
+            $messages = $this->channelRepository->getChannelMessages($request->channel);
 
-        return MessageResource::collection($messages);
+            return MessageResource::collection($messages);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
      * @param $id
+     * @return ResponseFactory|Application|JsonResponse|Response
      */
     public function delava($id)
     {
-        $avatar = Avatar::where('avatar_id', $id)->first();
-        $this->avatarService->destroy($avatar);
+        try {
+            $avatar = Avatar::where('avatar_id', $id)->first();
+            $this->avatarService->destroy($avatar);
+
+            return response('',Response::HTTP_NO_CONTENT);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -273,7 +306,7 @@ class ChannelsController extends Controller
             $integration = $this->channelService->addIntegration($request, $id);
 
             return new IntegrationResource($integration);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -292,7 +325,7 @@ class ChannelsController extends Controller
             $this->channelService->removeIntegration($channel, $integration);
 
             return response()->json(['msg' => 'success'], 200);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -303,7 +336,7 @@ class ChannelsController extends Controller
      * @param InviteRequest $request
      * @param $channel
      *
-     * @return UserResource|JsonResponse
+     * @return FullUserResource|JsonResponse
      */
     public function inviteByEmail(InviteRequest $request, $channel)
     {
@@ -311,7 +344,7 @@ class ChannelsController extends Controller
             $user = $this->channelService->addUserByEmail($request->email, intval($channel));
 
             return new FullUserResource($user);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -321,7 +354,7 @@ class ChannelsController extends Controller
      *
      * @param DialogRequest $request
      *
-     * @return ChannelResource
+     * @return ChannelResource|JsonResponse
      */
     public function createDialog(DialogRequest $request)
     {
@@ -329,8 +362,8 @@ class ChannelsController extends Controller
             $channel = $this->channelService->createDialog($request);
 
             return new ChannelResource($channel);
-        } catch (\Throwable $e) {
-            abort(500);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -339,7 +372,7 @@ class ChannelsController extends Controller
      *
      * @param $id
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function integrationsList($id)
     {
@@ -347,8 +380,8 @@ class ChannelsController extends Controller
             $channel = $this->channelRepository->findById($id);
 
             return IntegrationResource::collection($channel->integrations);
-        } catch (\Throwable $e) {
-            abort(500);
+        } catch (Throwable $e) {
+            return response()->json($e->getMessage(), 500);
         }
     }
 }

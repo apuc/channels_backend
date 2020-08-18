@@ -3,6 +3,7 @@
 /public/storage
 /public/js/app.js
 /storage/*.key
+/storage/clockwork
 /vendor
 /.idea
 /.vscode
